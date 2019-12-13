@@ -36,7 +36,7 @@
 		<acc:oa opId="1,2">
 			<li class="active"><a href="/product/getProductByMemId" target="main"><img src="../../../res/images/main/field.png" height="25px;" width="25px;">&nbsp;产品数据列表</a></li>
 		</acc:oa>
-		<li><a href="/messageData/goAddProductByMemId" target="main"><img src="../../../res/images/main/edit.png" height="25px;" width="25px;">&nbsp;添加产品数据</a></li>
+		<li><a href="/product/goAddProductByMemId" target="main"><img src="../../../res/images/main/edit.png" height="25px;" width="25px;">&nbsp;添加产品数据</a></li>
 		<acc:oa opId="1">
 			<li><a href="/member/memberList" target="main"><img src="../../../res/images/main/user.png" height="25px;" width="25px;">&nbsp;客户管理</a></li>
 		</acc:oa>

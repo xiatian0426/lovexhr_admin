@@ -102,20 +102,14 @@
 <body style=" font-size: 13px;">
 	<form action="/product/addOrUpdateProductById" name="messageDataForm" method="post" target="_self" id="editMessageDataFrom" enctype="multipart/form-data">
 
-        <c:if test="${bxProductResult.id != null}">
-            <input type="hidden" name="type" value="1">
-            <input type="hidden" name="id" value="${bxProductResult.id }">
-            <input type="hidden" name="memberId" value="${bxProductResult.bxCase.memberId }">
-            <input type="hidden" name="createId" value="${bxProductResult.bxCase.createId }">
-        </c:if>
-        <c:if test="${bxProductResult.id == null}">
-            <input type="hidden" name="type" value="0">
-            <input type="hidden" name="memberId" value="${memberId }">
-        </c:if>
+        <input type="hidden" name="type" value="1">
+        <input type="hidden" name="id" value="${bxProductResult.id }">
+        <input type="hidden" name="memberId" value="${bxProductResult.bxCase.memberId }">
+        <input type="hidden" name="createId" value="${bxProductResult.bxCase.createId }">
 		<div class="clearB"></div>
 		<div class="r_box" style="padding: 5px;">
 			<div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
-				产品信息修改
+                产品信息修改
 			</div>
 			<table  style=" font-size: 13px; " align="center" border="1">
                 <tr>

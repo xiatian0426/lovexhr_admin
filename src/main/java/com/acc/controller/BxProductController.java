@@ -5,7 +5,6 @@ import com.acc.model.*;
 import com.acc.service.IBxProductService;
 import com.acc.util.Constants;
 import com.acc.util.PictureChange;
-import com.acc.vo.FrontDataQuery;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -40,17 +39,16 @@ public class BxProductController {
      * 进入添加产品页
      * @param mav
      * @param request
-     * @param query
      * @return
      */
     @RequestMapping(value = "/goAddProductByMemId")
-    public ModelAndView goAddProductByMemId (ModelAndView mav, final HttpServletRequest request, @ModelAttribute FrontDataQuery query) {
+    public ModelAndView goAddProductByMemId (ModelAndView mav, final HttpServletRequest request) {
         Map<String, Object> model = mav.getModel();
         try {
             HttpSession session = request.getSession();
             BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
             model.put("memberId",staff.getId());
-            mav=new ModelAndView("/productData/editProductData", model);
+            mav=new ModelAndView("/productData/addProductData", model);
         } catch (Exception e) {
             _logger.error("进入添加产品页失败：" + ExceptionUtil.getMsg(e));
             mav = new ModelAndView(Constants.SERVICES_ERROR, model);
@@ -264,6 +262,9 @@ public class BxProductController {
                 if(bxProduct.getType()!=null && !"".equals(bxProduct.getType())){
                     if(file != null){
                         if(bxProduct.getType().equals("0")){
+                            HttpSession session = request.getSession();
+                            BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+                            bxProduct.setCreateId(staff.getId());
                             bxProductService.addProduct(bxProduct);
                         }else{
                             BxProduct oldBxProduct = bxProductService.getProductById(bxProduct.getId());
