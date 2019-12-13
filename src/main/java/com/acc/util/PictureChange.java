@@ -161,7 +161,6 @@ public class PictureChange {
         if (file!=null && file.length>0) {
             MultipartFile multipartFile;
             List<String> list = new ArrayList<String>();
-            System.out.println("deleteBoo============================"+deleteBoo);
             if(deleteBoo){
                 deleteFile(fileSavePath);
             }

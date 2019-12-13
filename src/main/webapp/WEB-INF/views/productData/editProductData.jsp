@@ -204,130 +204,38 @@
         </div>
     </form>
 
-    <form action="/product/addProductDetailImg" name="messageImgDataForm" method="post" target="_self" id="editMessageImgDataFrom" enctype="multipart/form-data">
-        <div class="clearB"></div>
-        <input type="hidden" name="productId" value="${bxProductResult.id }">
-        <div class="r_box" style="padding: 5px;">
-            <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
-                产品详情--信息修改
-            </div>
-            <table  style=" font-size: 13px; " align="center" border="1">
-                <tr>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;"><font color="red">*</font>&nbsp;产品详情信息1：</td>
-                    <td >
-                        <input type="file" name="file" value="">
-                    </td>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">排序：</td>
-                    <td >
-                        <input name="imageOrder" value="${bxProductResult.imageOrder}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">&nbsp;&nbsp;产品详情信息2：</td>
-                    <td >
-                        <input type="file" name="file" value="">
-                    </td>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">排序：</td>
-                    <td >
-                        <input name="imageOrder" value="${bxProductResult.imageOrder}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">&nbsp;&nbsp;产品详情信息3：</td>
-                    <td >
-                        <input type="file" name="file" value="">
-                    </td>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">排序：</td>
-                    <td >
-                        <input name="imageOrder" value="${bxProductResult.imageOrder}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">&nbsp;&nbsp;产品详情信息4：</td>
-                    <td >
-                        <input type="file" name="file" value="">
-                    </td>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">排序：</td>
-                    <td >
-                        <input name="imageOrder" value="${bxProductResult.imageOrder}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">&nbsp;&nbsp;产品详情信息5：</td>
-                    <td >
-                        <input type="file" name="file" value="">
-                    </td>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">排序：</td>
-                    <td >
-                        <input name="imageOrder" value="${bxProductResult.imageOrder}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">&nbsp;&nbsp;产品详情信息6：</td>
-                    <td >
-                        <input type="file" name="file" value="">
-                    </td>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">排序：</td>
-                    <td >
-                        <input name="imageOrder" value="${bxProductResult.imageOrder}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">&nbsp;&nbsp;产品详情信息7：</td>
-                    <td >
-                        <input type="file" name="file" value="">
-                    </td>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">排序：</td>
-                    <td >
-                        <input name="imageOrder" value="${bxProductResult.imageOrder}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">&nbsp;&nbsp;产品详情信息8：</td>
-                    <td >
-                        <input type="file" name="file" value="">
-                    </td>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">排序：</td>
-                    <td >
-                        <input name="imageOrder" value="${bxProductResult.imageOrder}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">&nbsp;&nbsp;产品详情信息9：</td>
-                    <td >
-                        <input type="file" name="file" value="">
-                    </td>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">排序：</td>
-                    <td >
-                        <input name="imageOrder" value="${bxProductResult.imageOrder}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">&nbsp;&nbsp;产品详情信息10：</td>
-                    <td >
-                        <input type="file" name="file" value="">
-                    </td>
-                    <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">排序：</td>
-                    <td >
-                        <input name="imageOrder" value="${bxProductResult.imageOrder}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                    </td>
-                </tr>
-            </table>
-            <div class="sub_div">
-                <input type="submit" class="sub_btn" value=" "/>
-                <input type="button" class="back_btn" onclick="javascript:history.go(-1);" value=" " />
-            </div>
+    <div class="clearB"></div>
+    <div class="r_box" style="padding: 5px;">
+        <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
+            产品详情--信息修改
         </div>
-    </form>
+        <table  style=" font-size: 13px; " align="center" border="1">
+            <c:if test="${not empty bxProductResult.bxProductImgList}">
+            <c:forEach items="${bxProductResult.bxProductImgList}" var="bxProductImg" varStatus="count">
+                <form action="/product/editProductDetailImg" name="messageImgDataForm" method="post" target="_self" id="editMessageImgDataFrom" enctype="multipart/form-data">
+                    <input type="hidden" name="productId" value="${bxProductResult.id }">
+                    <tr>
+                        <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;"><font color="red">*</font>&nbsp;产品详情信息：</td>
+                        <td >
+                            <input type="file" name="file" value="">
+                            <img src="${bxProductImg.imageUrl}" width="50" height="50"/>
+                        </td>
+                        <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">排序：</td>
+                        <td >
+                            <input name="imageOrder" value="${bxProductImg.imageOrder}" type="text" style="width: 172px;"
+                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                        </td>
+                        <td colspan="2" style="background:#A0E0F7; padding: 10px 20px; width: 150px;">
+                            <input type="submit" class="sub_btn" value=" "/>
+                        </td>
+                    </tr>
+                </form>
+            </c:forEach>
+            </c:if>
+        </table>
+        <div class="sub_div">
+            <input type="button" class="back_btn" onclick="javascript:history.go(-1);" value=" " />
+        </div>
+    </div>
 </body>
 </html>

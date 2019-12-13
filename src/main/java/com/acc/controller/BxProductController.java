@@ -464,6 +464,53 @@ public class BxProductController {
         return getProDetail(mav,request);
     }
     /**
+     * 后台管理--修改商品图片信息
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/editProductDetailImg", method = RequestMethod.POST)
+    public ModelAndView editProductDetailImg(ModelAndView mav,final HttpServletRequest request, final HttpServletResponse response, @ModelAttribute BxProductImg bxProductImg,
+                                            @RequestParam(value="file",required=false)MultipartFile[] file) throws IOException {
+        Map<String, Object> model = mav.getModel();
+        String result;
+        int status = 0;
+        try {
+            if(file != null){
+                String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                String fileSavePath=path + Constants.proDetailImgPath + bxProductImg.getProductId() + "/";
+                bxProductService.deleteProductDetailImgByProId(""+bxProductImg.getProductId());
+                Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
+                int re = Integer.valueOf((String)mapImg.get("code")).intValue();
+                if(re == 0){
+                    //删除老图片
+                    File oldFile = new File(fileSavePath+bxProductImg.getImageUrl());
+                    oldFile.delete();
+                    List<String> imgNameList = (List<String>)mapImg.get("list");
+                    if(imgNameList!=null && imgNameList.size()>0){
+                        bxProductImg.setImageUrl(imgNameList.get(0));
+                        bxProductService.insertProductImg(bxProductImg);
+                    }
+                    result = "添加成功";
+                }else{
+                    result = "添加失败!";
+                }
+            }else{
+                status = 2;
+                result = "文件不能为空!";
+            }
+        } catch (Exception e) {
+            status = -1;
+            result = "添加失败，请联系管理员!";
+            _logger.error("aeditProductDetailImg失败：" + ExceptionUtil.getMsg(e));
+            e.printStackTrace();
+        }
+        model.put("status", status);
+        model.put("result", result);
+        return getProDetail(mav,request);
+    }
+    /**
      * 后台管理--添加商品图片信息
      *
      * @param request
