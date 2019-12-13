@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="com.acc.dao.AccRoleMapper">
+
+	<resultMap id="accRole" type="com.acc.model.AccRole">
+        <result property="id" column="ID"/>
+        <result property="roleName" column="ROLE_NAME"/>
+        <result property="state" column="STATE"/>
+        <result property="roleMessageRight" column="ROLE_MESSAGERIGHT"/>
+        <result property="roleMessageRightName" column="ROLE_MESSAGERIGHT_NAME"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		ID,ROLE_NAME,STATE,ROLE_MESSAGERIGHT,ROLE_MESSAGERIGHT_NAME
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        INSERT INTO GRHX_ROLE (
+        	ID ,
+        	ROLE_NAME ,
+        	STATE,
+        	ROLE_MESSAGERIGHT,ROLE_MESSAGERIGHT_NAME
+        ) VALUES (
+        	#{id} ,
+        	#{roleName} ,
+        	#{state} ,
+        	#{roleMessageRight} ,
+        	#{roleMessageRightName}  
+        )
+    ]]>
+		<!--	
+			oracle: order="BEFORE" SELECT sequenceName.nextval AS ID FROM DUAL 
+			DB2: order="BEFORE"" values nextval for sequenceName
+		<selectKey resultType="java.lang.Long" order="BEFORE" keyProperty="userId">
+			SELECT sequenceName.nextval AS ID FROM DUAL 
+        </selectKey>
+		-->
+	</insert>
+    
+	<update id="update" >
+    <![CDATA[
+        UPDATE GRHX_ROLE SET
+	        ROLE_NAME = #{roleName} ,
+	        STATE = #{state} ,
+	        ROLE_MESSAGERIGHT = #{roleMessageRight} ,
+	        ROLE_MESSAGERIGHT_NAME = #{roleMessageRightName}
+        WHERE 
+	        ID = #{id} 
+    ]]>
+	</update>
+
+    <delete id="delete">
+    <![CDATA[
+        DELETE FROM GRHX_ROLE WHERE
+        ID = #{id} 
+    ]]>
+    </delete>
+    
+    <select id="getById" resultMap="accRole">
+		SELECT <include refid="columns" />
+	    <![CDATA[
+		    FROM GRHX_ROLE 
+	        WHERE 
+		        ID = #{id} 
+	    ]]>
+	</select>
+	
+	<sql id="findWhere">
+		<!-- ognl访问静态方法的表达式 为@class@method(args),以下为调用rapid中的Ognl.isNotEmpty()方法,还有其它方法如isNotBlank()可以使用，具体请查看Ognl类 -->
+		<where>	    
+	       <if test="@Ognl@isNotEmpty(id)">
+				AND ID = #{id}
+			</if>
+	       <if test="@Ognl@isNotEmpty(roleName)">
+				AND ROLE_NAME = #{roleName}
+			</if>
+	       <if test="@Ognl@isNotEmpty(state)">
+				AND STATE = #{state}
+			</if>
+		</where>
+	</sql>
+		
+    <select id="pageCount" resultType="long">
+        SELECT count(*) FROM GRHX_ROLE WHERE STATE = 0
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 offset,pageSize,lastRows 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="findPage" resultMap="accRole">
+    	SELECT <include refid="columns" />
+	    FROM GRHX_ROLE 
+		WHERE STATE = 0
+		<if test="sortColumns != null and sortColumns !=''">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+
+	<select id="getLinkManRoleAll" resultMap="accRole">
+    	SELECT <include refid="columns" />
+	    FROM GRHX_ROLE 
+	    WHERE STATE = 0
+    </select>
+    
+    <select id="getUserRoleAll" resultMap="accRole">
+    	SELECT <include refid="columns" />
+	    FROM GRHX_ROLE 
+	    WHERE STATE = 0
+    </select>
+    
+    <select id="getAll" resultMap="accRole">
+    	SELECT <include refid="columns" />
+	    FROM GRHX_ROLE 
+    </select>
+    
+	<select id="getAllValid" resultMap="accRole">
+    	SELECT <include refid="columns" />
+	    FROM GRHX_ROLE 
+	    WHERE STATE = 0
+    </select>
+</mapper>
+

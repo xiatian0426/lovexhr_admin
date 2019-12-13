@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="com.acc.dao.GrhxMessageDataMapper">
+
+	<resultMap id="grhxMessageData" type="com.acc.model.GrhxMessageData">
+        <result property="id" column="ID"/>
+        <result property="title" column="TITLE"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="date" column="DATE"/>
+        <result property="province" column="PROVINCE"/>
+        <result property="provincename" column="PROVINCENAME"/>
+        <result property="messagetype" column="MESSAGETYPE"/>
+        <result property="messagename" column="MESSAGENAME"/>
+        <result property="content" column="CONTENT"/>
+        <result property="webtype" column="WEBTYPE"/>
+        <result property="createid" column="CREATE_ID"/>
+        <result property="operaterid" column="OPERATERID"/>
+        <result property="operatetime" column="OPERATETIME"/>
+        <result property="userRealName" column="USERREALNAME"/>
+        <result property="busType" column="BUSTYPE"/>
+        <result property="frontmodule" column="FRONTMODULE"/>
+        <result property="isdelete" column="ISDELETE"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		ID,TITLE,CREATE_TIME,DATE,PROVINCE,MESSAGETYPE,WEBTYPE,CREATE_ID,OPERATERID,OPERATETIME,BUSTYPE,ISDELETE
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        INSERT INTO GRHX_MESSAGEDATA (
+        	ID ,
+        	TITLE ,
+        	CREATE_TIME ,
+        	DATE,
+        	PROVINCE,
+        	MESSAGETYPE,
+        	WEBTYPE,
+        	CREATE_ID,
+        	BUSTYPE
+        ) VALUES (
+        	#{id} ,
+        	#{title} ,
+        	#{createTime} ,
+        	#{date} ,
+        	#{province} ,
+        	#{messagetype} ,
+        	#{webtype} ,
+        	#{createid} ,
+        	#{busType}
+        )
+    ]]>
+	</insert>
+
+	<insert id="insertContent" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        INSERT INTO GRHX_MESSAGEDATA_CONTENT (
+        	ID ,
+        	CONTENT
+        ) VALUES (
+        	#{id} ,
+        	#{content}
+        )
+    ]]>
+	</insert>
+    
+	<update id="update" >
+    <![CDATA[
+        UPDATE GRHX_MESSAGEDATA SET
+	        TITLE = #{title} ,
+	        DATE = #{date} ,
+	        PROVINCE = #{province} ,
+	        MESSAGETYPE = #{messagetype} ,
+	        OPERATERID = #{operaterid} ,
+	        OPERATETIME = #{operatetime}
+        WHERE 
+	        ID = #{id} 
+    ]]>
+	</update>
+
+	<update id="updateContent" >
+    <![CDATA[
+        UPDATE GRHX_MESSAGEDATA_CONTENT SET
+	        CONTENT = #{content}
+        WHERE
+	        ID = #{id}
+    ]]>
+	</update>
+
+	<delete id="deleteContent">
+    <![CDATA[
+        DELETE FROM GRHX_MESSAGEDATA_CONTENT WHERE
+        ID = #{id}
+    ]]>
+    </delete>
+
+    <update id="delete" >
+    <![CDATA[
+        UPDATE GRHX_MESSAGEDATA SET
+	        ISDELETE = #{isdelete} 
+        WHERE 
+	        ID = #{id} 
+    ]]>
+	</update>
+	
+    <select id="getById" resultMap="grhxMessageData">
+		SELECT <include refid="columns" />
+	    <![CDATA[
+		    FROM GRHX_MESSAGEDATA 
+	        WHERE 
+		        ID = #{id} 
+	    ]]>
+	</select>
+	<select id="getByIdContent" resultMap="grhxMessageData">
+		SELECT content
+	    <![CDATA[
+		    FROM GRHX_MESSAGEDATA_CONTENT
+	        WHERE
+		        ID = #{id}
+	    ]]>
+	</select>
+
+	<sql id="findWhere">
+		<!-- ognl访问静态方法的表达式 为@class@method(args),以下为调用rapid中的Ognl.isNotEmpty()方法,还有其它方法如isNotBlank()可以使用，具体请查看Ognl类 -->
+		<where>	    
+			<if test="messagetypes != '' and messagetypes != null">  	
+				and m.MESSAGETYPE in (${messagetypes})
+			</if>			
+	       <if test="title != '' and title != null">
+				and m.TITLE like CONCAT('%',#{title},'%')
+			</if>
+			<if test="province != '' and province != null and province != 0 and province != '0'">
+				and m.PROVINCE like CONCAT(#{province},'%')
+			</if>
+			<if test="messagetype != '' and messagetype != null and messagetype != 0 and messagetype != '0'">
+				and m.MESSAGETYPE = #{messagetype}
+			</if>
+			<if test="isdelete != '' and isdelete != null">
+				and ISDELETE = #{isdelete}
+			</if>
+		</where>
+	</sql>
+	<sql id="findMapWhere">
+		<!-- ognl访问静态方法的表达式 为@class@method(args),以下为调用rapid中的Ognl.isNotEmpty()方法,还有其它方法如isNotBlank()可以使用，具体请查看Ognl类 -->
+		<where>
+	       <if test="title != '' and title != null">
+				and TITLE = #{title}
+			</if>
+			<if test="province != '' and province != null and province != 0 and province != '0'">
+				and PROVINCE = #{province}
+			</if>
+			<if test="messagetype != '' and messagetype != null and messagetype != 0 and messagetype != '0'">
+				and MESSAGETYPE = #{messagetype}
+			</if>
+			<if test="date != '' and date != null">
+				and DATE = #{date}
+			</if>
+		</where>
+	</sql>
+
+    <select id="pageCount" resultType="long">
+    	SELECT count(*) from 
+    	<if test="frontmodule != '' and frontmodule != null and frontmodule != 0 and frontmodule != '0'">
+    		(select n.MESSAGETYPE,n.CREATE_ID,n.PROVINCE,n.id,n.TITLE,n.DATE from 
+				GRHX_MESSAGEDATA n,GRHX_MESSAGEDATA_FRONT f
+				where n.ID = f.ID
+				AND f.FRONTMODULE = #{frontmodule}) m
+    	</if>
+        <if test="frontmodule == '' or frontmodule == null or frontmodule == 0 or frontmodule == '0'">
+    		GRHX_MESSAGEDATA m
+    	</if>
+		<include refid="findWhere"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 offset,pageSize,lastRows 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="findPage" resultMap="grhxMessageData">
+    	SELECT m.id,m.TITLE,m.DATE,p.PROVINCE_NAME PROVINCENAME,t.MESSAGE_NAME MESSAGENAME,u.USER_REALNAME USERREALNAME,r.frontmodule,m.ISDELETE from
+	    <if test="frontmodule != '' and frontmodule != null and frontmodule != 0 and frontmodule != '0'">
+    		(select n.MESSAGETYPE,n.CREATE_ID,n.PROVINCE,n.id,n.TITLE,n.DATE,n.ISDELETE from 
+				GRHX_MESSAGEDATA n,GRHX_MESSAGEDATA_FRONT f
+				where n.ID = f.ID
+				AND f.FRONTMODULE = #{frontmodule}) m
+    	</if>
+    	<if test="frontmodule == '' or frontmodule == null or frontmodule == 0 or frontmodule == '0'">
+    		GRHX_MESSAGEDATA m
+    	</if>
+		LEFT JOIN ACC_PROVINCE p ON m.PROVINCE=p.ID
+		LEFT JOIN GRHX_MESSAGE_TYPE t ON m.MESSAGETYPE=t.ID
+		LEFT JOIN BX_USER_INFO u ON m.CREATE_ID=u.ID
+		LEFT JOIN GRHX_MESSAGEDATA_FRONT r on m.ID = r.ID
+		<include refid="findWhere"/>
+		order by m.DATE desc
+		LIMIT #{skip},#{pageSize}
+    </select>
+
+	<select id="getAll" resultMap="grhxMessageData">
+    	SELECT <include refid="columns" />
+	    FROM GRHX_MESSAGEDATA
+    </select>
+
+    <select id="getByMessagetype" resultMap="grhxMessageData">
+    	SELECT <include refid="columns" />
+	    FROM GRHX_MESSAGEDATA
+	    where MESSAGETYPE = #{messagetype}
+    </select>
+
+    <select id="getByMap" resultMap="grhxMessageData">
+    	SELECT <include refid="columns" />
+	    FROM GRHX_MESSAGEDATA 
+	    <include refid="findMapWhere"/>
+    </select>
+
+	<select id="getByMessagetypeNum" resultMap="grhxMessageData">
+		SELECT <include refid="columns" />
+		FROM GRHX_MESSAGEDATA
+		where ISDELETE=0
+		and MESSAGETYPE = #{messagetype}
+		<if test="sign == 1">
+			order by DATE desc limit 3
+		</if>
+		/*热点信息取1-10  推荐项目取11-15  招标公告取16-18*/
+		<if test="sign == 2">
+			order by DATE desc limit 18
+		</if>
+	</select>
+</mapper>
+

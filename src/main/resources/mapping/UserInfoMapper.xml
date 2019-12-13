@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.acc.dao.UserInfoMapper">
+
+	<resultMap id="userInfo" type="com.acc.model.BxMember">
+		<result property="id" column="ID" />
+		<result property="userName" column="USER_NAME" />
+		<result property="userPassword" column="USER_PASSWORD" />
+		<result property="createDate" column="CREATE_DATE" />
+		<result property="status" column="STATUS" />
+		<result property="createrId" column="CREATER_ID" />
+		<result property="modifyDate" column="MODIFY_DATE" />
+		<result property="modifierId" column="MODIFIER_ID" />
+		<result property="roleId" column="ROLE_ID" />
+		<result property="manageDepart" column="MANAGEDEPART" />
+		<result property="departClass" column="DEPARTCLASS" />
+		<result property="userRealname" column="USER_REALNAME" />
+		
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		<![CDATA[
+			ID,USER_NAME,USER_PASSWORD,CREATE_DATE,STATUS,CREATER_ID,MODIFY_DATE,MODIFIER_ID,ROLE_ID,MANAGEDEPART,DEPARTCLASS,USER_REALNAME
+		]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO BX_MEMBER (
+				ID ,
+				USER_NAME ,
+				USER_PASSWORD ,
+				CREATE_DATE ,
+				STATUS ,
+				CREATER_ID ,
+				MODIFY_DATE ,
+				MODIFIER_ID ,
+				ROLE_ID ,
+				MANAGEDEPART ,
+				DEPARTCLASS ,
+				USER_REALNAME
+			) VALUES (
+				#{id} ,
+				#{userName} ,
+				#{userPassword} ,
+				#{createDate} ,
+				#{status} ,
+				#{createrId} ,
+				#{modifyDate} ,
+				#{modifierId} ,
+				#{roleId} ,
+				#{manageDepart} ,
+				#{departClass} ,
+				#{userRealname}
+			)
+		]]>
+		<!-- oracle: order="BEFORE" SELECT sequenceName.nextval AS ID FROM DUAL 
+			DB2: order="BEFORE"" values nextval for sequenceName <selectKey resultType="java.lang.Long" 
+			order="BEFORE" keyProperty="userId"> SELECT sequenceName.nextval AS ID FROM 
+			DUAL </selectKey> -->
+	</insert>
+
+	<update id="update">
+		<![CDATA[
+			UPDATE BX_MEMBER SET
+				USER_NAME = #{userName} ,
+				USER_PASSWORD = #{userPassword} ,
+				CREATE_DATE = #{createDate} ,
+				STATUS = #{status} ,
+				CREATER_ID = #{createrId} ,
+				MODIFY_DATE = #{modifyDate} ,
+				MODIFIER_ID = #{modifierId} ,
+				ROLE_ID = #{roleId} ,
+				MANAGEDEPART = #{manageDepart} ,
+				DEPARTCLASS = #{departClass} ,
+				USER_REALNAME = #{userRealname} 
+			WHERE 
+				ID = #{id} 
+		]]>
+	</update>
+
+	<delete id="delete">
+		<![CDATA[
+			DELETE FROM BX_MEMBER WHERE
+			ID = #{id} 
+		]]>
+	</delete>
+
+	<select id="getById" resultMap="userInfo">
+		SELECT
+		<include refid="columns" />
+		<![CDATA[
+				FROM BX_MEMBER 
+			WHERE 
+				ID = #{id} 
+		]]>
+	</select>
+	<select id="getByUserName" resultMap="userInfo">
+		SELECT
+		<include refid="columns" />
+		<![CDATA[
+			FROM BX_MEMBER 
+		WHERE 
+			USER_NAME = #{userName} 
+		]]>
+	</select>
+	<sql id="pageWhere">
+		<!-- ognl访问静态方法的表达式 为@class@method(args),以下为调用rapid中的Ognl.isNotEmpty()方法,还有其它方法如isNotBlank()可以使用，具体请查看Ognl类 -->
+		<where>
+			<if test="id != 0 and id != '' and id != null">
+				AND ID = #{id}
+			</if>
+			<if test="userName != '' and userName != null">
+				AND USER_NAME = #{userName}
+			</if>
+			<if test="userPassword != '' and userPassword != null">
+				AND USER_PASSWORD = #{userPassword}
+			</if>
+			<if test="createDateBegin != null">
+				AND CREATE_DATE >= #{createDateBegin}
+			</if>
+			<if test="createDateEnd != null">
+				AND CREATE_DATE &lt;= #{createDateEnd}
+			</if>
+			<if test="status != '' and status != null">
+				AND STATUS = #{status}
+			</if>
+			<if test="createrId != 0 and createrId != '' and createrId != null">
+				AND CREATER_ID = #{createrId}
+			</if>
+			<if test="modifyDateBegin != null">
+				AND MODIFY_DATE >= #{modifyDateBegin}
+			</if>
+			<if test="modifyDateEnd != null">
+				AND MODIFY_DATE &lt;= #{modifyDateEnd}
+			</if>
+			<if test="modifierId != 0 and modifierId != '' and modifierId != null">
+				AND MODIFIER_ID = #{modifierId}
+			</if>
+			<if test="roleId != '' and roleId != null">
+				AND ROLE_ID = #{roleId}
+			</if>
+			<if test="departClass != '' and departClass != null and departClass != 0">
+				AND DEPARTCLASS = #{departClass}
+			</if>
+			<if test="userRealname != ''and userRealname != null ">
+				AND USER_REALNAME = #{userRealname}
+			</if>
+				AND SYS_STATIC IS NULL
+		</where>
+	</sql>
+
+	<select id="pageCount" resultType="long">
+		SELECT count(*) FROM BX_MEMBER
+		<include refid="pageWhere" />
+	</select>
+	
+	<select id="getAll" resultMap="userInfo">
+		SELECT <include refid="columns" /> FROM BX_MEMBER WHERE SYS_STATIC IS NULL
+	</select>
+	<select id="getAll2" resultMap="userInfo">
+		SELECT <include refid="columns" /> FROM BX_MEMBER 
+	</select>
+	<!-- 查询启用的全部客户 -->
+	<select id="getAll3" resultMap="userInfo">
+		SELECT <include refid="columns" /> FROM BX_MEMBER WHERE SYS_STATIC IS NULL and STATUS=1
+	</select>
+	<!-- 分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页 因为分页查询将传 offset,pageSize,lastRows 
+		三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现 -->
+	<select id="findPage" resultMap="userInfo">
+		SELECT
+		<include refid="columns" />
+		FROM BX_MEMBER
+		<include refid="pageWhere" />
+		LIMIT #{skip},#{pageSize}
+		<!-- <if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if> -->
+	</select>
+	<update id="updateUserStatus">
+		UPDATE BX_MEMBER SET
+				STATUS = #{status}
+			WHERE 
+				ID = #{id} 
+	</update>
+	<select id="selectCustomerTotalWork" resultMap="userInfo" parameterType="String">
+		SELECT e.USER_REALNAME ,e.id,COUNT(v.ID) maxCustomerNum  FROM 	BX_MEMBER e, ACC_BUSINESS_CONTACT v WHERE e.id=v.CREATERID  AND DATE_FORMAT(v.CREATE_TIME,'%Y-%m-%d') = #{currentDate} GROUP BY e.id
+	</select>
+	<select id="getAllByMap" resultMap="userInfo">
+		SELECT <include refid="columns" /> FROM BX_MEMBER 
+		<include refid="pageWhere" />
+	</select>
+</mapper>
