@@ -5,6 +5,7 @@ import com.acc.model.*;
 import com.acc.service.IBxProductService;
 import com.acc.util.Constants;
 import com.acc.util.PictureChange;
+import com.acc.vo.FrontDataQuery;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -34,6 +35,28 @@ public class BxProductController {
 	
 	@Autowired
 	private IBxProductService bxProductService;
+
+    /**
+     * 进入添加产品页
+     * @param mav
+     * @param request
+     * @param query
+     * @return
+     */
+    @RequestMapping(value = "/goAddProductByMemId")
+    public ModelAndView goAddProductByMemId (ModelAndView mav, final HttpServletRequest request, @ModelAttribute FrontDataQuery query) {
+        Map<String, Object> model = mav.getModel();
+        try {
+            HttpSession session = request.getSession();
+            BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+            model.put("memberId",staff.getId());
+            mav=new ModelAndView("/productData/editProductData", model);
+        } catch (Exception e) {
+            _logger.error("进入添加产品页失败：" + ExceptionUtil.getMsg(e));
+            mav = new ModelAndView(Constants.SERVICES_ERROR, model);
+        }
+        return mav;
+    }
 
     /**
      * 根据会员id获取对应权限产品

@@ -40,7 +40,7 @@
 		.logo{margin-top:40px; margin-left:60px;}
 		@media screen and (max-width:1360px){
 			.main{padding-top:230px; width:880px;}
-			.main_l{margin-left:150px;width:433px; height:320px; margin-top:15px;}
+			.main_l{margin-left:150px;width:140px; height:320px; margin-top:15px;}
 			.main_r{width:280px; height:360px; border-radius:10px;}
 			.logo{margin-top:35px; margin-left:50px; margin-bottom:10px;}
 			.logo img{width:190px; height:54px;}

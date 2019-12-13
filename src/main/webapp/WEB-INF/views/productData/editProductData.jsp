@@ -101,14 +101,16 @@
 </head>
 <body style=" font-size: 13px;">
 	<form action="/product/addOrUpdateProductById" name="messageDataForm" method="post" target="_self" id="editMessageDataFrom" enctype="multipart/form-data">
-        <input type="hidden" name="id" value="${bxProductResult.id }">
-        <input type="hidden" name="memberId" value="${bxProductResult.bxCase.memberId }">
-        <input type="hidden" name="createId" value="${bxProductResult.bxCase.createId }">
+
         <c:if test="${bxProductResult.id != null}">
             <input type="hidden" name="type" value="1">
+            <input type="hidden" name="id" value="${bxProductResult.id }">
+            <input type="hidden" name="memberId" value="${bxProductResult.bxCase.memberId }">
+            <input type="hidden" name="createId" value="${bxProductResult.bxCase.createId }">
         </c:if>
         <c:if test="${bxProductResult.id == null}">
             <input type="hidden" name="type" value="0">
+            <input type="hidden" name="memberId" value="${memberId }">
         </c:if>
 		<div class="clearB"></div>
 		<div class="r_box" style="padding: 5px;">
