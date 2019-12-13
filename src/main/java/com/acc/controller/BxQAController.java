@@ -37,11 +37,10 @@ public class BxQAController {
 	/**
 	 * QA信息
 	 * @param request
-	 * @param response
 	 * @return
 	 */
 	@RequestMapping(value = "/getQAList", method = RequestMethod.GET)
-	public ModelAndView getQAList(ModelAndView mav, final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+	public ModelAndView getQAList(ModelAndView mav, final HttpServletRequest request) throws IOException {
         Map<String, Object> model = mav.getModel();
 	    try{
             HttpSession session = request.getSession();
@@ -61,74 +60,14 @@ public class BxQAController {
 	    return mav;
 	}
 
-    /**
-     * 管理端--删除QA信息
-     * @param request
-     * @param response
-     * @return
-     */
-    @RequestMapping(value = "/deleteById", method = RequestMethod.POST)
-    public void deleteById(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
-        PrintWriter out = response.getWriter();
-        Map<String,Object> result = new HashMap<String, Object>();
-        try{
-            String qaId = request.getParameter("id");
-            if(StringUtils.isNotEmpty(qaId)){
-                bxQAService.deleteById(qaId);
-                result.put("code",0);
-                result.put("message","删除成功!");
-            }
-        } catch (Exception e) {
-            result.put("code",-1);
-            result.put("message","删除失败!");
-            _logger.error("deleteRecruit失败：" + ExceptionUtil.getMsg(e));
-            e.printStackTrace();
-        }
-        out.print(JSON.toJSONString(result));
-        out.flush();
-        out.close();
-    }
-
-    /**
-     * 管理端--根据id查QA信息
-     * @param request
-     * @param response
-     * @return
-     */
-    @RequestMapping(value = "/getQAById", method = RequestMethod.GET)
-    public void getQAById(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
-        PrintWriter out = response.getWriter();
-        Map<String,Object> map = new HashMap<String, Object>();
-        try{
-            String qaId = request.getParameter("id");
-            if(StringUtils.isNotEmpty(qaId) ){
-                BxQA bxQA = bxQAService.getQAById(qaId);
-                map.put("bxQA",bxQA);
-            }
-        } catch (Exception e) {
-            _logger.error("getQAById失败：" + ExceptionUtil.getMsg(e));
-            e.printStackTrace();
-        }
-        out.print(JSON.toJSONString(map));
-        out.flush();
-        out.close();
-    }
 
     /**
      * 理端--根据id查QA信息
      * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value = "/updateById", method = RequestMethod.POST)
-    public void updateById(final HttpServletRequest request, final HttpServletResponse response, @ModelAttribute BxQA bxQA) throws IOException {
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
-        PrintWriter out = response.getWriter();
+    public ModelAndView updateById(ModelAndView mav,final HttpServletRequest request, @ModelAttribute BxQA bxQA) throws IOException {
         Map<String,Object> result = new HashMap<String, Object>();
         try{
             if(bxQA != null){
@@ -142,25 +81,23 @@ public class BxQAController {
             _logger.error("updateById失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
-        out.print(JSON.toJSONString(result));
-        out.flush();
-        out.close();
+        return getQAList(mav,request);
     }
 
     /**
      * 理端--添加QA信息
      * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value = "/addQA", method = RequestMethod.POST)
-    public void addQA(final HttpServletRequest request, final HttpServletResponse response, @ModelAttribute BxQA bxQA) throws IOException {
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
-        PrintWriter out = response.getWriter();
+    public ModelAndView addQA(ModelAndView mav,final HttpServletRequest request, @ModelAttribute BxQA bxQA) throws IOException {
         Map<String,Object> result = new HashMap<String, Object>();
         try{
             if(bxQA != null){
+                HttpSession session = request.getSession();
+                BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+                bxQA.setMemberId(staff.getId());
+                bxQA.setCreaterId(staff.getId());
                 bxQAService.insert(bxQA);
                 result.put("code",0);
                 result.put("message","保存成功!");
@@ -171,8 +108,6 @@ public class BxQAController {
             _logger.error("addQA失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
-        out.print(JSON.toJSONString(result));
-        out.flush();
-        out.close();
+        return getQAList(mav,request);
     }
 }

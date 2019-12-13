@@ -20,30 +20,29 @@
 		<!-- 引入分页 -->
 		<script src="${jsRoot}/page.js"></script>
 		<script type="text/javascript">
-			function deleteMessageData(id,isdelete){
-				$.ajax({
-					url:'/ajax/deleteByProdictId',
-					data:{
-						id:id,
-						isdelete:isdelete
-					},
-					dataType:'json',
-					type:'post',
-					cache:false,
-					async:false,
-					success:function(data) {
-						if(data.info=='1'){
-							alert("操作成功!");
-							location.reload();
-						}else{
-							alert("操作失败!");
-						}
-					},
-					error : function(){
-						alert("操作失败!");
-					}
-				});
-			}
+            function deleteById(id){
+                $.ajax({
+                    url:'/ajax/deleteQAById',
+                    data:{
+                        id:id
+                    },
+                    dataType:'json',
+                    type:'post',
+                    cache:false,
+                    async:false,
+                    success:function(data) {
+                        if(data.info=='1'){
+                            alert("操作成功!");
+                            location.reload();
+                        }else{
+                            alert("操作失败!");
+                        }
+                    },
+                    error : function(){
+                        alert("操作失败!");
+                    }
+                });
+            }
 		</script>
 	</head>
 <body style="width: 95%;  font-size: 13px;">
@@ -56,41 +55,47 @@
                 <th width="5%" align="center" height="38" align="center">
                     序号
                 </th>
-                <th width="13%" align="center">
+                <th width="20%" align="center">
                     问题
                 </th>
-                <th width="23%" align="center">
+                <th width="43%" align="center">
                     答案
                 </th>
                 <th width="5%" align="center">
                     排序
                 </th>
-                <th width="8%" align="center">
+                <th width="13%" align="center">
                     操作
                 </th>
             </tr>
             <c:forEach items="${list}" var="data" varStatus="count">
-                <form class="form-horizontal" id="qaDataListForm" action="/QA/goQa" method="POST">
+                <form class="form-horizontal" id="qaDataListForm" action="/QA/updateById" method="POST">
+                    <input type="hidden" name="id" value="${data.id }">
                     <tr>
                         <td align="center" height="33" align="center">
                             ${count.count}
                         </td>
                         <td align="center">
-                            ${data.ask}
+                            <input name="ask" value="${data.ask}" type="text" style="width: 90%;"
+                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                         </td>
                         <td align="center" title="${data.answer}">
-                            <c:if test="${fn:length(data.answer)>20 }">
-                                ${fn:substring(data.answer,0,20) }...
+                            <c:if test="${fn:length(data.answer)>40 }">
+                                <input name="answer" value="${fn:substring(data.answer,0,40) }..." type="text" style="width: 96%"
+                                       class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                             </c:if>
-                            <c:if test="${fn:length(data.answer)<=20 }">
-                                ${data.answer }
+                            <c:if test="${fn:length(data.answer)<=40 }">
+                                <input name="answer" value="${data.answer }" type="text" style="width: 96%"
+                                       class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                             </c:if>
+
                         </td>
                         <td align="center">
-                            ${data.qaOrder}
+                            <input name="qaOrder" value="${data.qaOrder}" type="text" style="width: 90%"
+                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                         </td>
                         <td align="center">
-                            <button type="button" class="btn btn-success" onclick="save('${data.id}')" target="_blank">保存</button>
+                            <button type="submit" class="btn btn-success">保存</button>
                             <button type="button" class="btn btn-success" onclick="deleteById('${data.id}','1')" target="_blank">删除</button>
                         </td>
                     </tr>
@@ -101,7 +106,7 @@
         <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
             添加QA信息
         </div>
-        <form class="form-horizontal" id="qaDataForm" action="/QA/goQa" method="POST">
+        <form class="form-horizontal" id="qaDataForm" action="/QA/addQA" method="POST">
             <div class="clearB"></div>
             <input type="hidden" name="productId" value="${bxProductResult.id }">
             <div class="r_box" style="padding: 5px;">
@@ -111,7 +116,7 @@
                             问题：
                         </td>
                         <td align="center" style="width: 40%;">
-                            <input id="ask" name="ask" value="" type="text" style="width: 90%;"
+                            <input name="ask" value="" type="text" style="width: 90%;"
                                    class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                         </td>
                         <td align="center" height="33" align="center" style="width: 10%;">
@@ -134,8 +139,8 @@
                     </tr>
                 </table>
                 <div class="sub_div">
-                    <input type="button" class="sub_btn" onclick="save('${data.id}')" target="_blank" value=" "/>
-                    <input type="button" class="delete_btn" onclick="save('${data.id}')" target="_blank" value=" "/>
+                    <input type="submit" class="sub_btn" value=" "/>
+                    <input type="button" class="reset_btn" value=" "/>
                 </div>
             </div>
         </form>
