@@ -227,8 +227,7 @@ public class BxProductController {
     public ModelAndView addOrUpdateProductById(ModelAndView mav,final HttpServletRequest request, @RequestParam(value="file",required=false)MultipartFile[] file, @ModelAttribute BxProduct bxProduct
                                   ) throws IOException {
         Map<String, Object> model = mav.getModel();
-        System.out.println(file.length);
-        String result = "";
+        String result;
         int status = 0;
         boolean boo = true;
         try {
@@ -284,6 +283,8 @@ public class BxProductController {
             _logger.error("updateProductById失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
+        model.put("status", status);
+        model.put("result", result);
         return getProDetail(mav,request);
     }
 
@@ -295,11 +296,9 @@ public class BxProductController {
     * @return
     */
     @RequestMapping(value = "/addProductVideo", method = RequestMethod.POST)
-    public void addProductVideo(final HttpServletRequest request, final HttpServletResponse response, @ModelAttribute BxProductVideo bxProductVideo,
+    public ModelAndView addProductVideo(ModelAndView mav,final HttpServletRequest request, final HttpServletResponse response, @ModelAttribute BxProductVideo bxProductVideo,
                                        @RequestParam(value="file",required=false)MultipartFile[] file) throws IOException {
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
-        PrintWriter out = response.getWriter();
+        Map<String, Object> model = mav.getModel();
         Map<String, Object> map = new HashMap<String, Object>();
         String result;
         int status = 0;
@@ -340,11 +339,9 @@ public class BxProductController {
             _logger.error("addProductVideo失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
-        map.put("status", status);
-        map.put("result", result);
-        out.print(JSON.toJSONString(map));
-        out.flush();
-        out.close();
+        model.put("status", status);
+        model.put("result", result);
+        return getProDetail(mav,request);
     }
     /**
      * 后台管理--删除商品视频信息
@@ -390,12 +387,9 @@ public class BxProductController {
      * @return
      */
     @RequestMapping(value = "/addProductDetailImg", method = RequestMethod.POST)
-    public void addProductDetailImg(final HttpServletRequest request, final HttpServletResponse response, @ModelAttribute BxProductImg bxProductImg,
+    public ModelAndView addProductDetailImg(ModelAndView mav,final HttpServletRequest request, final HttpServletResponse response, @ModelAttribute BxProductImg bxProductImg,
                                     @RequestParam(value="file",required=false)MultipartFile[] file) throws IOException {
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
-        PrintWriter out = response.getWriter();
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> model = mav.getModel();
         String result;
         int status = 0;
         try {
@@ -465,11 +459,9 @@ public class BxProductController {
             _logger.error("addProductImg失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
-        map.put("status", status);
-        map.put("result", result);
-        out.print(JSON.toJSONString(map));
-        out.flush();
-        out.close();
+        model.put("status", status);
+        model.put("result", result);
+        return getProDetail(mav,request);
     }
     /**
      * 后台管理--添加商品图片信息
