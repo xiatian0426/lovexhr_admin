@@ -485,7 +485,11 @@ public class BxProductController {
                 int re = Integer.valueOf((String)mapImg.get("code")).intValue();
                 if(re == 0){
                     //删除老图片
-                    File oldFile = new File(fileSavePath+bxProductImg.getImageUrl());
+                    String imgUrl = null;
+                    if(bxProductImg.getImageUrl()!=null && !"".equals(bxProductImg.getImageUrl())){
+                        imgUrl = bxProductImg.getImageUrl().split("/")[bxProductImg.getImageUrl().split("/").length-1];
+                    }
+                    File oldFile = new File(fileSavePath+imgUrl);
                     oldFile.delete();
                     List<String> imgNameList = (List<String>)mapImg.get("list");
                     if(imgNameList!=null && imgNameList.size()>0){

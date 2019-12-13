@@ -214,6 +214,9 @@
             <c:forEach items="${bxProductResult.bxProductImgList}" var="bxProductImg" varStatus="count">
                 <form action="/product/editProductDetailImg" name="messageImgDataForm" method="post" target="_self" id="editMessageImgDataFrom" enctype="multipart/form-data">
                     <input type="hidden" name="productId" value="${bxProductResult.id }">
+                    <c:if test="${bxProductResult.id != null && bxProductResult.id != 0}">
+                        <input type="hidden" name="imageUrl" value="${bxProductImg.imageUrl }">
+                    </c:if>
                     <tr>
                         <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;"><font color="red">*</font>&nbsp;产品详情信息：</td>
                         <td >
