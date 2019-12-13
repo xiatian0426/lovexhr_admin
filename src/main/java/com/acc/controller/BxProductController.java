@@ -99,16 +99,22 @@ public class BxProductController {
                     BxProductImg bxProductImg;
                     for(BxProduct bxProduct:bxProductList){
                         bxProductImg = new BxProductImg();
+                        bxProductImg.setId(bxProduct.getImgId());
                         bxProductImg.setImageUrl(basePath+ Constants.proDetailImgPath+bxProduct.getId()+"/"+bxProduct.getImageUrl());
                         bxProductImg.setImageOrder(bxProduct.getImageOrder());
                         bxProductImgList.add(bxProductImg);
                     }
                     bxProductResult.setBxProductImgList(bxProductImgList);
+                    //产品详情最多上传10个图片 所以需要生成
+                    List imgNulllist = new ArrayList();
+                    for (int i=0;i<10-bxProductImgList.size();i++){
+                        imgNulllist.add(1);
+                    }
+                    model.put("imgNulllist",imgNulllist);
                     BxCase bxCase = bxProductService.getCaseDetail(productId);
                     bxProductResult.setBxCase(bxCase);
                     model.put("bxProductResult",bxProductResult);
                 }
-
             }
             mav=new ModelAndView("/productData/editProductData", model);
         } catch (Exception e) {
@@ -477,28 +483,39 @@ public class BxProductController {
         String result;
         int status = 0;
         try {
-            if(file != null){
-                String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
-                String fileSavePath=path + Constants.proDetailImgPath + bxProductImg.getProductId() + "/";
-                bxProductService.deleteProductDetailImgByProId(""+bxProductImg.getProductId());
-                Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
-                int re = Integer.valueOf((String)mapImg.get("code")).intValue();
-                if(re == 0){
-                    //删除老图片
-                    String imgUrl = null;
-                    if(bxProductImg.getImageUrl()!=null && !"".equals(bxProductImg.getImageUrl())){
-                        imgUrl = bxProductImg.getImageUrl().split("/")[bxProductImg.getImageUrl().split("/").length-1];
-                    }
-                    File oldFile = new File(fileSavePath+imgUrl);
-                    oldFile.delete();
-                    List<String> imgNameList = (List<String>)mapImg.get("list");
-                    if(imgNameList!=null && imgNameList.size()>0){
-                        bxProductImg.setImageUrl(imgNameList.get(0));
-                        bxProductService.insertProductImg(bxProductImg);
-                    }
+            if(file != null && file.length>0){
+                if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
+                    bxProductImg.setImageUrl(null);
+                    bxProductService.updateProductImg(bxProductImg);
                     result = "添加成功";
                 }else{
-                    result = "添加失败!";
+                    String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                    String fileSavePath=path + Constants.proDetailImgPath + bxProductImg.getProductId() + "/";
+                    Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
+                    int re = Integer.valueOf((String)mapImg.get("code")).intValue();
+                    if(re == 0){
+                        //删除老图片
+                        String imgUrl = null;
+                        if(bxProductImg.getImageUrl()!=null && !"".equals(bxProductImg.getImageUrl())){
+                            imgUrl = bxProductImg.getImageUrl().split("/")[bxProductImg.getImageUrl().split("/").length-1];
+                        }
+                        File oldFile = new File(fileSavePath+imgUrl);
+                        oldFile.delete();
+                        List<String> imgNameList = (List<String>)mapImg.get("list");
+                        if(imgNameList!=null && imgNameList.size()>0){
+                            bxProductImg.setImageUrl(imgNameList.get(0));
+                            if(bxProductImg.getId()!=0){
+                                //更新
+                                bxProductService.updateProductImg(bxProductImg);
+                            }else{
+                                //添加
+                                bxProductService.insertProductImg(bxProductImg);
+                            }
+                        }
+                        result = "添加成功";
+                    }else{
+                        result = "添加失败!";
+                    }
                 }
             }else{
                 status = 2;

@@ -52,6 +52,8 @@ public class BxProduct implements java.io.Serializable, Cloneable{
 
     private int memberId;
 
+    private int imgId;
+
     /**
      * 用于确定是添加还是更新 0：添加 1：更新
      */
@@ -262,6 +264,14 @@ public class BxProduct implements java.io.Serializable, Cloneable{
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getImgId() {
+        return imgId;
+    }
+
+    public void setImgId(int imgId) {
+        this.imgId = imgId;
     }
 }
 

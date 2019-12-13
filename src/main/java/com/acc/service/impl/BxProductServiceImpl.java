@@ -121,6 +121,11 @@ public class BxProductServiceImpl implements IBxProductService {
     }
 
     @Override
+    public void updateProductImg(BxProductImg bxProductImg) throws Exception {
+        bxProductMapper.updateProductImg(bxProductImg);
+    }
+
+    @Override
     public BxProductImg getProductDetailImgById(String id) throws SelectException {
         return bxProductMapper.getProductDetailImgById(id);
     }

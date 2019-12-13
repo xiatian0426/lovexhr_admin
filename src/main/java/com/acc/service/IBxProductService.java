@@ -51,6 +51,8 @@ public interface IBxProductService {
 
     void insertProductImg(BxProductImg bxProductImg) throws Exception;
 
+    void updateProductImg(BxProductImg bxProductImg) throws Exception;
+
     BxProductImg getProductDetailImgById(String id) throws SelectException;
 
     BxProductVideo getProductDetailVideoById(String id) throws SelectException;

@@ -213,10 +213,11 @@
             <c:if test="${not empty bxProductResult.bxProductImgList}">
             <c:forEach items="${bxProductResult.bxProductImgList}" var="bxProductImg" varStatus="count">
                 <form action="/product/editProductDetailImg" name="messageImgDataForm" method="post" target="_self" id="editMessageImgDataFrom" enctype="multipart/form-data">
-                    <input type="hidden" name="productId" value="${bxProductResult.id }">
-                    <c:if test="${bxProductResult.id != null && bxProductResult.id != 0}">
-                        <input type="hidden" name="imageUrl" value="${bxProductImg.imageUrl }">
-                    </c:if>
+                        <input type="hidden" name="productId" value="${bxProductResult.id }">
+                        <c:if test="${bxProductImg.id != null && bxProductImg.id != 0}">
+                            <input type="hidden" name="id" value="${bxProductImg.id }">
+                            <input type="hidden" name="imageUrl" value="${bxProductImg.imageUrl }">
+                        </c:if>
                     <tr>
                         <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;"><font color="red">*</font>&nbsp;产品详情信息：</td>
                         <td >
@@ -234,6 +235,27 @@
                     </tr>
                 </form>
             </c:forEach>
+            </c:if>
+            <c:if test="${not empty imgNulllist}">
+                <c:forEach items="${imgNulllist}" var="bxProductImg" varStatus="count">
+                    <form action="/product/editProductDetailImg" name="messageImgDataForm" method="post" target="_self" id="editMessageImgDataFrom" enctype="multipart/form-data">
+                        <input type="hidden" name="productId" value="${bxProductResult.id }">
+                        <tr>
+                            <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;"><font color="red">*</font>&nbsp;产品详情信息：</td>
+                            <td >
+                                <input type="file" name="file" value="">
+                            </td>
+                            <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">排序：</td>
+                            <td >
+                                <input name="imageOrder" value="0" type="text" style="width: 172px;"
+                                       class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                            </td>
+                            <td colspan="2" style="background:#A0E0F7; padding: 10px 20px; width: 150px;">
+                                <input type="submit" class="sub_btn" value=" "/>
+                            </td>
+                        </tr>
+                    </form>
+                </c:forEach>
             </c:if>
         </table>
         <div class="sub_div">
