@@ -71,6 +71,25 @@ public class AjaxController {
         return model;
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/deleteProductDetailImgById", method = RequestMethod.POST)
+    public Map<String, Object> deleteProductDetailImgById (final HttpServletRequest request,
+                                                  final HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+        try {
+            String productId = request.getParameter("id");
+            if(StringUtils.isNotEmpty(productId)){
+                bxProductService.deleteProductDetailImgById(productId);
+                model.put("info","1");
+                model.put("message","删除成功!");
+            }
+        } catch (Exception e) {
+            _logger.error("删除产品信息失败：" + ExceptionUtil.getMsg(e));
+            model.put("info", "删除失败");
+        }
+        return model;
+    }
+
 	/**
 	 * 添加信息类型
 	 * @param request

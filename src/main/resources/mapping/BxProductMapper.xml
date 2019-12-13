@@ -93,6 +93,12 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
     ]]>
     </delete>
 
+    <delete id="deleteProductDetailImgById">
+        <![CDATA[
+        DELETE FROM BX_PRODUCT_IMG WHERE id=#{id}
+    ]]>
+    </delete>
+
     <delete id="deleteProVideoByProId">
         <![CDATA[
         DELETE FROM BX_PRODUCT_VIDEO WHERE PRODUCT_ID=#{productId}

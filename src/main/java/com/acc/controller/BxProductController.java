@@ -407,7 +407,7 @@ public class BxProductController {
                         String fileSavePath=path + Constants.proDetailImgPath + bxProductImg.getProductId() + "/";
                         if(bxProductImg.getIsFirst()!=null){
                             if("0".equals(bxProductImg.getIsFirst())){
-                                bxProductService.deleteProductDetailImgByProId(""+bxProductImg.getProductId());
+//                                bxProductService.deleteProductDetailImgByProId(""+bxProductImg.getProductId());
                             }
                             Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
                             int re = Integer.valueOf((String)mapImg.get("code")).intValue();

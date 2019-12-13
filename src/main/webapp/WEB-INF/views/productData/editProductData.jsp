@@ -73,6 +73,30 @@
 				return false;
 			}
 		}
+
+        function deleteProductDetailImgById(id){
+            $.ajax({
+                url:'/ajax/deleteProductDetailImgById',
+                data:{
+                    id:id
+                },
+                dataType:'json',
+                type:'post',
+                cache:false,
+                async:false,
+                success:function(data) {
+                    if(data.info=='1'){
+                        alert("操作成功!");
+                        location.reload();
+                    }else{
+                        alert("操作失败!");
+                    }
+                },
+                error : function(){
+                    alert("操作失败!");
+                }
+            });
+        }
 	</script>
 </head>
 <body style=" font-size: 13px;">
@@ -231,6 +255,7 @@
                         </td>
                         <td colspan="2" style="background:#A0E0F7; padding: 10px 20px; width: 150px;">
                             <input type="submit" class="sub_btn" value=" "/>
+                            <input type="button" class="delete_btn" onclick="deleteProductDetailImgById('${bxProductImg.id }');" value=" " />
                         </td>
                     </tr>
                 </form>

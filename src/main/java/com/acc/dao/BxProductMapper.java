@@ -22,6 +22,8 @@ public interface BxProductMapper {
 
     void deleteProImgByProId(@Param("productId") String productId) throws Exception;
 
+    void deleteProductDetailImgById(@Param("id") String id) throws Exception;
+
     void deleteProVideoByProId(@Param("productId") String productId) throws Exception;
 
     void deleteProByProId(@Param("id") String id) throws Exception;

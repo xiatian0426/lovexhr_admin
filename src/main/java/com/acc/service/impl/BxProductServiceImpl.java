@@ -136,8 +136,8 @@ public class BxProductServiceImpl implements IBxProductService {
     }
 
     @Override
-    public void deleteProductDetailImgByProId(String productId) throws Exception {
-        bxProductMapper.deleteProImgByProId(productId);
+    public void deleteProductDetailImgById(String productId) throws Exception {
+        bxProductMapper.deleteProductDetailImgById(productId);
     }
 
     @Override

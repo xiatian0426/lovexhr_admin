@@ -251,6 +251,7 @@ textarea{ width:800px; height:60px; border:1px #d9d9d9 solid; font-size:12px; co
 .sub_div{ padding:10px 0; background:#f6f6f6; border-top:1px #e6e6e6 solid; text-align:center;}
 .sub_btn{ width:85px; height:30px; border:none; margin-right:50px; background:url(../images/submit_btn.jpg) no-repeat;}
 .reset_btn{ width:85px; height:30px; border:none; background:url(../images/reset_btn.jpg) no-repeat;}
+.delete_btn{ width:85px; height:30px; border:none; background:url(../images/reset_btn.jpg) no-repeat;}
 .bc_btn{ width:85px; height:30px; display:inline-block; border:none; margin-right:50px; background:url(../images/bc_btn.jpg) no-repeat;}
 .back_btn{ width:85px; height:30px; display:inline-block; border:none; margin-right:50px; background:url(../images/back_btn.jpg) no-repeat;}
 .qx_btn{ width:85px; height:30px; display:inline-block; border:none; margin-right:50px; background:url(../images/qx_btn.jpg) no-repeat;}
