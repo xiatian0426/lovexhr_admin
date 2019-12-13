@@ -1,8 +1,10 @@
 package com.acc.controller;
 
 import com.acc.exception.ExceptionUtil;
+import com.acc.model.BxMember;
 import com.acc.model.BxQA;
 import com.acc.service.IBxQAService;
+import com.acc.util.Constants;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -12,9 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -37,26 +41,24 @@ public class BxQAController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getQAList", method = RequestMethod.GET)
-	public void getQAList(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("utf-8");
-	    response.setContentType("text/html;charset=utf-8");
-        PrintWriter out = response.getWriter();
-        Map<String,Object> map = new HashMap<String, Object>();
+	public ModelAndView getQAList(ModelAndView mav, final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+        Map<String, Object> model = mav.getModel();
 	    try{
-            String memberId = request.getParameter("memberId");
+            HttpSession session = request.getSession();
+            BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+            String memberId = String.valueOf(staff.getId());
             if(StringUtils.isNotEmpty(memberId) ){
                 Integer count = bxQAService.getQACount(memberId);
-                map.put("count",count);
+                model.put("count",count);
                 List<BxQA> bxQAList = bxQAService.getQAList(memberId);
-                map.put("list",bxQAList);
+                model.put("list",bxQAList);
             }
         } catch (Exception e) {
             _logger.error("getMemberById失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
-        out.print(JSON.toJSONString(map));
-	    out.flush();
-	    out.close();
+        mav=new ModelAndView("/qa/qaList", model);
+	    return mav;
 	}
 
     /**
