@@ -63,7 +63,7 @@ public class BxProductController {
      * @return
      */
     @RequestMapping(value = "/getProductByMemId", method = RequestMethod.GET)
-    public ModelAndView getProductByMemId(ModelAndView mav, final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+    public ModelAndView getProductByMemId(ModelAndView mav, final HttpServletRequest request) throws IOException {
         Map<String, Object> model = mav.getModel();
         try{
             HttpSession session = request.getSession();
@@ -119,11 +119,13 @@ public class BxProductController {
                     List<BxProductImg> bxProductImgList = new ArrayList<BxProductImg>();
                     BxProductImg bxProductImg;
                     for(BxProduct bxProduct:bxProductList){
-                        bxProductImg = new BxProductImg();
-                        bxProductImg.setId(bxProduct.getImgId());
-                        bxProductImg.setImageUrl(basePath+ Constants.proDetailImgPath+bxProduct.getId()+"/"+bxProduct.getImageUrl());
-                        bxProductImg.setImageOrder(bxProduct.getImageOrder());
-                        bxProductImgList.add(bxProductImg);
+                        if(bxProduct.getImgId()!=0){
+                            bxProductImg = new BxProductImg();
+                            bxProductImg.setId(bxProduct.getImgId());
+                            bxProductImg.setImageUrl(basePath+ Constants.proDetailImgPath+bxProduct.getId()+"/"+bxProduct.getImageUrl());
+                            bxProductImg.setImageOrder(bxProduct.getImageOrder());
+                            bxProductImgList.add(bxProductImg);
+                        }
                     }
                     bxProductResult.setBxProductImgList(bxProductImgList);
                     //产品详情最多上传10个图片 所以需要生成
@@ -315,7 +317,7 @@ public class BxProductController {
         }
         model.put("status", status);
         model.put("result", result);
-        return getProDetail(mav,request);
+        return getProductByMemId(mav,request);
     }
 
    /**
