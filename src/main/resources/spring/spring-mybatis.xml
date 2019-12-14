@@ -16,20 +16,7 @@
 	default-autowire="byName" default-lazy-init="false">
 	<mvc:annotation-driven />
 
-	<!-- 数据源定义 -->
-	<!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://127.0.0.1:3306/acc?useUnicode=true&amp;characterEncoding=utf8" />
-		<property name="username" value="root" />
-		<property name="password" value="111111AB" />
-		<property name="maxActive" value="100"/>  
-        <property name="maxIdle" value="30"/>  
-        <property name="maxWait" value="1000"/>  
-        <property name="validationQuery" value="select 1"/>
-	</bean>-->
-
- 	 <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+ 	 <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
  		destroy-method="close"> 
  		<property name="driverClassName" value="com.mysql.jdbc.Driver" /> 
  		<property name="url" value="jdbc:mysql://127.0.0.1:3306/bx?useUnicode=true&amp;characterEncoding=utf8" />
@@ -39,7 +26,21 @@
         <property name="maxIdle" value="30"/>  
         <property name="maxWait" value="1000"/>  
         <property name="validationQuery" value="select 1"/>
- 	</bean>
+ 	</bean>-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://116.62.146.75:3306/bx?useUnicode=true&amp;characterEncoding=utf8" />
+        <property name="username" value="acc_user" />
+        <property name="password" value="H2aHPFf1XIqeOhTE" />
+        <!--<property name="url" value="jdbc:mysql://39.105.44.125:3306/bx?useUnicode=true&amp;characterEncoding=utf8" />-->
+        <!--<property name="username" value="root" />-->
+        <!--<property name="password" value="lovexhr111@" />-->
+        <property name="maxActive" value="100"/>
+        <property name="maxIdle" value="30"/>
+        <property name="maxWait" value="1000"/>
+        <property name="validationQuery" value="select 1"/>
+    </bean>
 	<!-- log4jdbc可以将数据源执行的sql将占位符?替换成字符,并以日志打印出来. log4j配置: log4j.logger.jdbc.sqltiming=INFO 
 		详情请看: http://code.google.com/p/rapid-framework/wiki/log4jdbc 如oracle示例: 原来的sql: 
 		select * from user where birth_date = ? and username = ? and age > ? 转换后sql: 
