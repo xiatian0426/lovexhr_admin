@@ -107,7 +107,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 
     <delete id="deleteProByProId">
         <![CDATA[
-        DELETE FROM BX_PRODUCT WHERE id=#{productId}
+        DELETE FROM BX_PRODUCT WHERE id=#{id}
         ]]>
     </delete>
     <select id="getProDetail" resultMap="bxProduct">

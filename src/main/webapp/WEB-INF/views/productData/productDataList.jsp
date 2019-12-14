@@ -103,7 +103,7 @@
 							${data.productOrder}
 						</td>
                         <td align="center">
-                            <img src="${data.productImg}" width="100" height="100"/>
+                            <img src="${data.productImg}" width="70px" height="70px"/>
                         </td>
                         <td align="center">
                             <c:if test="${data.status==0}">
