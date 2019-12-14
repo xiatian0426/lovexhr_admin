@@ -54,6 +54,7 @@ public class BxQAController {
             }
         } catch (Exception e) {
             _logger.error("getMemberById失败：" + ExceptionUtil.getMsg(e));
+            mav = new ModelAndView(Constants.SERVICES_ERROR, model);
             e.printStackTrace();
         }
         mav=new ModelAndView("/qa/qaList", model);
