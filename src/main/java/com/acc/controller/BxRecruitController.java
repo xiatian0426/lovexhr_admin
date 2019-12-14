@@ -100,7 +100,6 @@ public class BxRecruitController {
                     if(bxRecruit.getImageUrl()!=null && !"".equals(bxRecruit.getImageUrl())){
                         imgUrl = bxRecruit.getImageUrl().split("/")[bxRecruit.getImageUrl().split("/").length-1];
                     }
-                    System.out.println("==="+fileSavePath+imgUrl);
                     new File(fileSavePath+imgUrl).delete();
                     //删除数据
                     bxRecruitService.deleteById(String.valueOf(bxRecruit.getId()));
