@@ -20,11 +20,13 @@
 		<!-- 引入分页 -->
 		<script src="${jsRoot}/page.js"></script>
 		<script type="text/javascript">
-            function deleteById(id){
+            function deleteById(id,memberId,imageUrl){
                 $.ajax({
-                    url:'/ajax/deleteQAById',
+                    url:'/ajax/deleteHonorById',
                     data:{
-                        id:id
+                        id:id,
+                        memberId:memberId,
+                        imageUrl:imageUrl
                     },
                     dataType:'json',
                     type:'post',
@@ -90,7 +92,7 @@
                         </td>
                         <td align="center">
                             <button type="submit" class="btn btn-success">保存</button>
-                            <button type="button" class="btn btn-success" onclick="deleteById('${data.id}')" target="_blank">删除</button>
+                            <button type="button" class="btn btn-success" onclick="deleteById('${data.id}','${data.memberId}','${data.imageUrl}')" target="_blank">删除</button>
                         </td>
                     </tr>
                 </form>

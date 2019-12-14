@@ -42,7 +42,6 @@ public class BxHonorController {
 	/**
 	 * 荣誉信息
 	 * @param request
-	 * @param response
 	 * @return
 	 */
 	@RequestMapping(value = "/getHonorList", method = RequestMethod.GET)
