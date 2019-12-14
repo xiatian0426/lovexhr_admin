@@ -78,7 +78,6 @@ public class BxRecruitController {
     /**
      * 管理端--上传招聘信息
      * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value = "/addRecruit", method = RequestMethod.POST)

@@ -71,7 +71,7 @@
                 </th>
             </tr>
             <c:forEach items="${list}" var="data" varStatus="count">
-                <form class="form-horizontal" id="qaDataListForm" action="/honor/updateById" method="POST" enctype="multipart/form-data">
+                <form class="form-horizontal" id="honorDataListForm" action="/honor/updateById" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="${data.id }">
                     <c:if test="${data.id!=null && data.id!=0}">
                         <input type="hidden" name="imageUrl" value="${data.imageUrl }">
@@ -102,34 +102,22 @@
         <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
             添加荣誉信息
         </div>
-        <form class="form-horizontal" id="qaDataForm" action="/QA/addQA" method="POST">
+        <form class="form-horizontal" id="honorDataForm" action="/honor/addHonor" method="POST" enctype="multipart/form-data">
             <div class="clearB"></div>
-            <input type="hidden" name="productId" value="${bxProductResult.id }">
             <div class="r_box" style="padding: 5px;">
                 <table width="60%" cellpadding="0" cellspacing="0" class="table-bordered" align="center">
                     <tr>
-                        <td align="center" height="33" align="center" style="width: 10%;">
-                            问题：
+                        <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
+                            荣誉图片：
                         </td>
                         <td align="center" style="width: 40%;">
-                            <input name="ask" value="" type="text" style="width: 90%;"
-                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                            <input type="file" name="file" value="">
                         </td>
-                        <td align="center" height="33" align="center" style="width: 10%;">
+                        <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
                             排序：
                         </td>
                         <td align="center" style="width: 40%;">
-                            <input id="qaOrder" name="qaOrder" value="" type="text" style="width: 90%"
-                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                        </td>
-                    </tr>
-                    <tr>
-
-                        <td align="center" height="33" align="center">
-                            答案：
-                        </td>
-                        <td align="center" colspan="3">
-                            <input id="answer" name="answer" value="" type="text" style="width: 96%"
+                            <input id="honorOrder" name="honorOrder" value="" type="text" style="width: 90%"
                                    class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                         </td>
                     </tr>

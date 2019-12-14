@@ -3,6 +3,7 @@ package com.acc.controller;
 import com.acc.exception.ExceptionUtil;
 import com.acc.model.BxHonor;
 import com.acc.model.BxMember;
+import com.acc.model.BxRecruit;
 import com.acc.service.IBxHonorService;
 import com.acc.util.Constants;
 import com.acc.util.PictureChange;
@@ -141,5 +142,58 @@ public class BxHonorController {
         }
         model.put("status", status);
         return getHonorList(mav,request);
+    }
+
+    /**
+     * 管理端--上传荣誉信息
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/addHonor", method = RequestMethod.POST)
+    public ModelAndView addHonor(ModelAndView mav, final HttpServletRequest request, @ModelAttribute BxHonor bxHonor, @RequestParam(value="file") MultipartFile[] file) throws IOException {
+        Map<String, Object> model = new HashMap<String, Object>();
+        String result;
+        int status = 0;
+        try{
+            if (bxHonor != null) {
+                if(file!=null && file.length>0){
+                    HttpSession session = request.getSession();
+                    BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+                    bxHonor.setMemberId(staff.getId());
+                    bxHonor.setCreaterId(staff.getId());
+                    String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                    String fileSavePath=path + Constants.honorImgPath + bxHonor.getMemberId() + "/";
+                    Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
+                    int re = Integer.valueOf((String)mapImg.get("code")).intValue();
+                    if(re==0){
+                        if(re==0){
+                            List<String> list = (List<String>)mapImg.get("list");
+                            if(list!=null && list.size()>0){
+                                bxHonor.setImageUrl(list.get(0));
+                                bxHonorService.insert(bxHonor);
+                            }
+                        }
+                        result = "添加成功!";
+                    }else if(re==-1){
+                        result = "没有文件";
+                    }else{
+                        result = "上传文件有问题";
+                    }
+                }else{
+                    result = "没有文件";
+                }
+            }else{
+                status = 1;
+                result = "参数有误，请联系管理员!";
+            }
+        } catch (Exception e) {
+            status = -1;
+            result = "添加失败，请联系管理员!";
+            _logger.error("addRecruit失败：" + ExceptionUtil.getMsg(e));
+            e.printStackTrace();
+        }
+        model.put("status", status);
+        model.put("result", result);
+        return getHonorList(mav, request);
     }
 }
