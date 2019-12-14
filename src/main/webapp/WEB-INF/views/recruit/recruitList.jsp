@@ -28,7 +28,11 @@
             <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
                 招聘信息图片
             </div>
-            <table  style=" font-size: 13px; " align="center" border="1">
+            <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
+                <img src="${bxRecruit.imageUrl}" width="40%" height="40%"/>
+            </div>
+            <br/>&nbsp;
+            <table  style=" font-size: 13px; " align="center" border="1" width="30%">
                 <form class="form-horizontal" id="recruitDataListForm" action="/recruit/addRecruit" method="POST" enctype="multipart/form-data">
                     <c:if test="${bxRecruit.id!=null && bxRecruit.id!=0 }">
                         <input type="hidden" name="id" value="${bxRecruit.id }">
@@ -36,7 +40,6 @@
                     </c:if>
                     <tr>
                         <td >
-                            <img src="${bxRecruit.imageUrl}" width="100px" height="100px"/>
                         </td>
                         <td >
                             <input type="file" name="file"/>
