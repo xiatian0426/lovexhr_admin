@@ -41,6 +41,11 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
         DELETE FROM BX_HONOR WHERE MEMBER_ID=#{memberId}
     ]]>
     </delete>
+    <delete id="deleteById">
+        <![CDATA[
+        DELETE FROM BX_HONOR WHERE id=#{id}
+    ]]>
+    </delete>
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         <![CDATA[
         INSERT INTO BX_HONOR (
@@ -61,11 +66,11 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
     ]]>
     </insert>
     <update id="updateById">
-        <![CDATA[
         UPDATE BX_HONOR
-        SET IMAGE_URL=#{imageUrl},HONOR_ORDER=#{honorOrder}
+        SET
+        <if test="imageUrl != null and imageUrl != ''">IMAGE_URL=#{imageUrl},</if>
+        HONOR_ORDER=#{honorOrder}
         WHERE id=#{id}
-        ]]>
     </update>
 
 </mapper>

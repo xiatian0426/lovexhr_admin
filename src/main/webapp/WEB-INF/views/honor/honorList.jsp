@@ -47,42 +47,50 @@
 	</head>
 <body style="width: 95%;  font-size: 13px;">
     <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
-        QA信息列表
+        荣誉信息列表
     </div>
     <div class="r_box" >
         <table width="100%" cellpadding="0" cellspacing="0" class="table-bordered">
             <tr>
-                <th width="5%" align="center" height="38" align="center">
+                <th width="10%" align="center" height="38" align="center">
                     序号
                 </th>
-                <th width="20%" align="center">
+                <th width="25%" align="center">
+                    预览
+                </th>
+                <th width="45%" align="center">
                     图片
                 </th>
-                <th width="43%" align="center">
+                <th width="5%" align="center">
                     排序
                 </th>
-                <th width="13%" align="center">
+                <th width="15%" align="center">
                     操作
                 </th>
             </tr>
             <c:forEach items="${list}" var="data" varStatus="count">
-                <form class="form-horizontal" id="qaDataListForm" action="/honor/updateById" method="POST">
+                <form class="form-horizontal" id="qaDataListForm" action="/honor/updateById" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="${data.id }">
+                    <c:if test="${data.id!=null && data.id!=0}">
+                        <input type="hidden" name="imageUrl" value="${data.imageUrl }">
+                    </c:if>
                     <tr>
                         <td align="center" height="33" align="center">
                             ${count.count}
                         </td>
                         <td align="center">
-                            <input name="imageUrl" value="${data.imageUrl}" type="text" style="width: 90%;"
-                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                            <img src="${data.imageUrl}" width="50" height="50"/>
                         </td>
-                        <td align="center" title="${data.answer}">
+                        <td align="center">
+                            <input type="file" name="file"/>
+                        </td>
+                        <td align="center">
                             <input name="honorOrder" value="${data.honorOrder}" type="text" style="width: 90%;"
                                    class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                         </td>
                         <td align="center">
                             <button type="submit" class="btn btn-success">保存</button>
-                            <button type="button" class="btn btn-success" onclick="deleteById('${data.id}','1')" target="_blank">删除</button>
+                            <button type="button" class="btn btn-success" onclick="deleteById('${data.id}')" target="_blank">删除</button>
                         </td>
                     </tr>
                 </form>
@@ -90,7 +98,7 @@
         </table>
         <br/>
         <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
-            添加QA信息
+            添加荣誉信息
         </div>
         <form class="form-horizontal" id="qaDataForm" action="/QA/addQA" method="POST">
             <div class="clearB"></div>
