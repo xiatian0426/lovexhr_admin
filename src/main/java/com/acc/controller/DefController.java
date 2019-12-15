@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.acc.model.BxMember;
+import com.acc.model.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +30,7 @@ public class DefController {
 	/**
 	 * 过滤器自动跳转到登录首页
 	 * @param request
-	 * @param response
-	 * @param model
-	 * @return 
+	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/index")
@@ -52,7 +50,7 @@ public class DefController {
 			final HttpServletResponse response) {
 		Map<String, Object> model = mav.getModel();
 		HttpSession session = request.getSession();
-        BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+        UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
 		String parameter = request.getParameter("prod");
 		model.put("parameter", parameter);
 		model.put("user", staff);
@@ -65,7 +63,7 @@ public class DefController {
 			final HttpServletResponse response) {
 		Map<String, Object> model = mav.getModel();
 		HttpSession session = request.getSession();
-        BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+        UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
 		model.put("user", staff);
 		mav.setViewName("/def/left");
 		return mav;

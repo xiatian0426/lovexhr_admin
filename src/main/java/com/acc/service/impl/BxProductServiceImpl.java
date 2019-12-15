@@ -1,7 +1,6 @@
 package com.acc.service.impl;
 
 import com.acc.dao.BxCaseMapper;
-import com.acc.dao.BxMemberMapper;
 import com.acc.dao.BxProductMapper;
 import com.acc.exception.SelectException;
 import com.acc.model.*;
@@ -20,17 +19,10 @@ import java.util.List;
 public class BxProductServiceImpl implements IBxProductService {
 
 	private static Logger _logger = LoggerFactory.getLogger(BxProductServiceImpl.class);
-	@Autowired
-	private BxMemberMapper bxMemberMapper;
     @Autowired
     private BxProductMapper bxProductMapper;
     @Autowired
     private BxCaseMapper bxCaseMapper;
-
-    @Override
-	public BxMember getMemberByWechat(String wechat) throws SelectException {
-		return bxMemberMapper.getMemberByWechat(wechat);
-	}
 
     @Override
     public List<BxProduct> getProductByPerm(String memberId) throws SelectException {

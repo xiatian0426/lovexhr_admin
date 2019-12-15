@@ -7,329 +7,315 @@
 
 package com.acc.vo;
 
-import java.io.Serializable;
+import com.acc.model.BxHonor;
+import com.acc.util.CalendarUtil;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
- * @author badqiu email:badqiu(a)gmail.com
+ * @author 
  * @version 1.0
  * @since 1.0
  */
 
-public class UserInfoQuery extends BaseQuery implements Serializable {
-	private static final long serialVersionUID = 3148176768559230877L;
-	/** id */
+
+public class UserInfoQuery extends BaseQuery implements java.io.Serializable, Cloneable{
+	
+	private static final long serialVersionUID = 1756258302889590552L;
+
 	private int id;
-	/** userName */
-	private String userName;
-	/** userPassword */
-	private String userPassword;
-	/** createDate */
-	private Date createDateBegin;
-	private Date createDateEnd;
-	private String createDateBeginString;
-	private String createDateEndString;
-	/** status */
-	private String status;
-	/** createrId */
-	private int createrId;
-	/** modifyDate */
-	private Date modifyDateBegin;
-	private Date modifyDateEnd;
-	/** modifierId */
-	private int modifierId;
-	/** roleId */
-	private String roleId;
-	/** managedepart */
-	private String manageDepart;
-	/** departclass */
-	private String departclass;
-	/** userRealname */
-	private String userRealname;
+    private String userName;
+
+    /**
+     * userPassword       db_column: USER_PASSWORD
+     */
+    private String userPassword;
 	
-	private String selState;//1:今天应联系  2：我的客户 3:7天未联系 4:15天未联系 5:30天未联系
-	private String nextTimeString;
-	private int ownerId;
-	private int customerId;
-	private String type;
-	private String fullName;
-	private String sortColumns;
-	private String province;
-	private String channel;
-	private String corsource;
-	private String telephone;
-	private String linkmanName;
-	private String level;
-	private String startCustomer;
-	private String endCustomer;
-	private String businessName;
-	private String userInfo;
-	public String getUserInfo() {
-		return userInfo;
-	}
+	private String name;
 
-	public void setUserInfo(String userInfo) {
-		this.userInfo = userInfo;
-	}
-
-	public String getBusinessName() {
-		return businessName;
-	}
-
-	public void setBusinessName(String businessName) {
-		this.businessName = businessName;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-
-	public int getId() {
-		return this.id;
-	}
+	private String company_name;
 	
-	public void setId(int value) {
-		this.id = value;
-	}
+	private String post_name;
 	
-	public String getUserName() {
-		return this.userName;
-	}
-	
-	public void setUserName(String value) {
-		this.userName = value;
-	}
-	
-	public String getUserPassword() {
-		return this.userPassword;
-	}
-	
-	public void setUserPassword(String value) {
-		this.userPassword = value;
-	}
-	
-	public Date getCreateDateBegin() {
-		return this.createDateBegin;
-	}
-	
-	public void setCreateDateBegin(Date value) {
-		this.createDateBegin = value;
-	}	
-	
-	public Date getCreateDateEnd() {
-		return this.createDateEnd;
-	}
-	
-	public void setCreateDateEnd(Date value) {
-		this.createDateEnd = value;
-	}
-	
-	public String getStatus() {
-		return this.status;
-	}
-	
-	public void setStatus(String value) {
-		this.status = value;
-	}
-	
-	public int getCreaterId() {
-		return this.createrId;
-	}
-	
-	public void setCreaterId(int value) {
-		this.createrId = value;
-	}
-	
-	public Date getModifyDateBegin() {
-		return this.modifyDateBegin;
-	}
-	
-	public void setModifyDateBegin(Date value) {
-		this.modifyDateBegin = value;
-	}	
-	
-	public Date getModifyDateEnd() {
-		return this.modifyDateEnd;
-	}
-	
-	public void setModifyDateEnd(Date value) {
-		this.modifyDateEnd = value;
-	}
-	
-	public int getModifierId() {
-		return this.modifierId;
-	}
-	
-	public void setModifierId(int value) {
-		this.modifierId = value;
-	}
-	
-	public String getRoleId() {
-		return this.roleId;
-	}
-	
-	public void setRoleId(String value) {
-		this.roleId = value;
-	}
-	
-	public String getManageDepart() {
-		return manageDepart;
-	}
+	private float years;
 
-	public void setManageDepart(String manageDepart) {
-		this.manageDepart = manageDepart;
-	}
+    private String signature;
 
-	public String getDepartClass() {
-		return this.departclass;
-	}
-	
-	public void setDepartclass(String value) {
-		this.departclass = value;
-	}
-	
-	public String getUserRealname() {
-		return this.userRealname;
-	}
-	
-	public void setUserRealname(String value) {
-		this.userRealname = value;
-	}
+    private String introduce;
 
-	public String getSelState() {
-		return selState;
-	}
+    private String memberImg;
 
-	public void setSelState(String selState) {
-		this.selState = selState;
-	}
+    private List<String> memberImgs = new ArrayList<String>();
 
-	public String getCreateDateBeginString() {
-		return createDateBeginString;
-	}
+    private String wechat;
 
-	public void setCreateDateBeginString(String createDateBeginString) {
-		this.createDateBeginString = createDateBeginString;
-	}
+    private String phone;
 
-	public String getCreateDateEndString() {
-		return createDateEndString;
-	}
+    private int createrId;
+    /**
+     * modifyDate       db_column: MODIFY_DATE
+     */
+    private String modifyDate;
+    /**
+     * modifierId       db_column: MODIFIER_ID
+     */
+    private String modifierId;
+    /**
+     * 0:添加 1：修改
+     */
+    private String type;
+    /**
+     * roleId       db_column: ROLE_ID
+     */
+    private String roleId;
+    /**
+     * manageDepart       db_column: MANAGEDEPART
+     */
+    private String manageDepart;
+    /**
+     * departClass       db_column: DEPARTCLASS
+     */
+    private String departClass;
+    /**
+     * userRealname       db_column: USER_REALNAME
+     */
+    private String userRealname;
+    /**
+     * maxCustomerNum       db_column: MAX_CUSTOMER_NUM
+     */
+    private String maxCustomerNum;
+    /**
+     * total
+     */
+    private Integer total;
 
-	public void setCreateDateEndString(String createDateEndString) {
-		this.createDateEndString = createDateEndString;
-	}
+    private Date createDate;
+    private String createDateString;
 
-	public String getNextTimeString() {
-		return nextTimeString;
-	}
+    private String status;
 
-	public void setNextTimeString(String nextTimeString) {
-		this.nextTimeString = nextTimeString;
-	}
+    private List<BxHonor> bxHonorList = new ArrayList<BxHonor>();
 
-	public int getOwnerId() {
-		return ownerId;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setOwnerId(int ownerId) {
-		this.ownerId = ownerId;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public int getCustomerId() {
-		return customerId;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setCustomerId(int customerId) {
-		this.customerId = customerId;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getCompany_name() {
+        return company_name;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setCompany_name(String company_name) {
+        this.company_name = company_name;
+    }
 
-	public String getSortColumns() {
-		return sortColumns;
-	}
+    public String getPost_name() {
+        return post_name;
+    }
 
-	public void setSortColumns(String sortColumns) {
-		this.sortColumns = sortColumns;
-	}
+    public void setPost_name(String post_name) {
+        this.post_name = post_name;
+    }
 
-	public String getProvince() {
-		return province;
-	}
+    public float getYears() {
+        return years;
+    }
 
-	public void setProvince(String province) {
-		this.province = province;
-	}
+    public void setYears(float years) {
+        this.years = years;
+    }
 
-	public String getChannel() {
-		return channel;
-	}
+    public String getSignature() {
+        return signature;
+    }
 
-	public void setChannel(String channel) {
-		this.channel = channel;
-	}
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
 
-	public String getCorsource() {
-		return corsource;
-	}
+    public String getIntroduce() {
+        return introduce;
+    }
 
-	public void setCorsource(String corsource) {
-		this.corsource = corsource;
-	}
+    public void setIntroduce(String introduce) {
+        this.introduce = introduce;
+    }
 
-	public String getTelephone() {
-		return telephone;
-	}
+    public String getMemberImg() {
+        return memberImg;
+    }
 
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
+    public void setMemberImg(String memberImg) {
+        this.memberImg = memberImg;
+    }
 
-	public String getLinkmanName() {
-		return linkmanName;
-	}
+    public List<BxHonor> getBxHonorList() {
+        return bxHonorList;
+    }
 
-	public void setLinkmanName(String linkmanName) {
-		this.linkmanName = linkmanName;
-	}
+    public void setBxHonorList(List<BxHonor> bxHonorList) {
+        this.bxHonorList = bxHonorList;
+    }
 
-	public String getLevel() {
-		return level;
-	}
+    public String getWechat() {
+        return wechat;
+    }
 
-	public void setLevel(String level) {
-		this.level = level;
-	}
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
+    }
 
-	public String getStartCustomer() {
-		return startCustomer;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public void setStartCustomer(String startCustomer) {
-		this.startCustomer = startCustomer;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	public String getEndCustomer() {
-		return endCustomer;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setEndCustomer(String endCustomer) {
-		this.endCustomer = endCustomer;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public String getDepartclass() {
-		return departclass;
-	}
-	
+    public int getCreaterId() {
+        return createrId;
+    }
+
+    public void setCreaterId(int createrId) {
+        this.createrId = createrId;
+    }
+
+    public List<String> getMemberImgs() {
+        return memberImgs;
+    }
+
+    public void setMemberImgs(List<String> memberImgs) {
+        this.memberImgs = memberImgs;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
+    public String getManageDepart() {
+        return manageDepart;
+    }
+
+    public void setManageDepart(String manageDepart) {
+        this.manageDepart = manageDepart;
+    }
+
+    public String getDepartClass() {
+        return departClass;
+    }
+
+    public void setDepartClass(String departClass) {
+        this.departClass = departClass;
+    }
+
+    public String getUserRealname() {
+        return userRealname;
+    }
+
+    public void setUserRealname(String userRealname) {
+        this.userRealname = userRealname;
+    }
+
+    public String getMaxCustomerNum() {
+        return maxCustomerNum;
+    }
+
+    public void setMaxCustomerNum(String maxCustomerNum) {
+        this.maxCustomerNum = maxCustomerNum;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getCreateDateString() {
+        if(getCreateDate()!=null){
+            return CalendarUtil.dateToString(getCreateDate(), "yyyy-MM-dd HH:mm:ss");
+        }else{
+            return "";
+        }
+    }
+
+    public void setCreateDateString(String createDateString) {
+        this.createDateString = createDateString;
+    }
+
+    public String getModifyDate() {
+        return modifyDate;
+    }
+
+    public void setModifyDate(String modifyDate) {
+        this.modifyDate = modifyDate;
+    }
+
+    public String getModifierId() {
+        return modifierId;
+    }
+
+    public void setModifierId(String modifierId) {
+        this.modifierId = modifierId;
+    }
 }
+

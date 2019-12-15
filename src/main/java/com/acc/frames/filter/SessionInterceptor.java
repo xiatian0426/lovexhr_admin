@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.acc.model.BxMember;
+import com.acc.model.UserInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
@@ -62,7 +62,7 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 				return true;
 			} else {
 
-                BxMember sessionUser = (BxMember) request.getSession().getAttribute(Constants.LOGINUSER);
+                UserInfo sessionUser = (UserInfo) request.getSession().getAttribute(Constants.LOGINUSER);
 				if (sessionUser != null) {
 					return true;
 				} else {

@@ -1,11 +1,10 @@
 package com.acc.controller;
 
 import com.acc.exception.ExceptionUtil;
-import com.acc.model.BxMember;
 import com.acc.model.BxQA;
+import com.acc.model.UserInfo;
 import com.acc.service.IBxQAService;
 import com.acc.util.Constants;
-import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +41,7 @@ public class BxQAController {
         Map<String, Object> model = mav.getModel();
 	    try{
             HttpSession session = request.getSession();
-            BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
             String memberId = String.valueOf(staff.getId());
             if(StringUtils.isNotEmpty(memberId) ){
                 Integer count = bxQAService.getQACount(memberId);
@@ -96,7 +93,7 @@ public class BxQAController {
         try{
             if(bxQA != null){
                 HttpSession session = request.getSession();
-                BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+                UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
                 bxQA.setMemberId(staff.getId());
                 bxQA.setCreaterId(staff.getId());
                 bxQAService.insert(bxQA);

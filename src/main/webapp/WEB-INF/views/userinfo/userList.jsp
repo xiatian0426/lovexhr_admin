@@ -36,24 +36,7 @@
 		<div class="r_box" style="margin-top: 10px;">
 			<div style="height: 15px; width: 100%;"><span></span></div>
 			<span class="infoLable">登录名称：</span>
-				<input name="userName" type="text" class="self-form-control" style="width: 100px;" value="${query.userName }"/>
-			<span class="infoLable">真实姓名：</span>
-				<input name="userRealname" type="text" class="self-form-control" style="width: 100px;" value="${query.userRealname }"/>
-			<span class="infoLable">用户角色：</span>
-				<select class="select-nosearch" name="roleId" style="width: 120px;height: 28px;">
-					<option value="" selected="selected">---请选择---</option>
-					<option value="1" <c:if test="${query.roleId=='1' }">selected="selected"</c:if>>管理员</option>
-					<option value="2" <c:if test="${query.roleId=='2' }">selected="selected"</c:if>>普通用户</option>
-				</select>
-			<span class="infoLable">所属部门：</span>
-				<select class="select-nosearch" name="departclass" style="width: 200px;height: 28px;">
-					<option value="" selected="selected">---请选择---</option>
-					<c:forEach items="${departList}" var="depart" varStatus="status">
-						<option value='${depart.depId}' <c:if test="${query.departclass==depart.depId }">selected="selected"</c:if>>
-							${depart.itemname} 
-						</option>
-					</c:forEach>
-				</select>
+            <input name="userName" type="text" class="self-form-control" style="width: 100px;" value="${query.userName }"/>
 			<button type="submit" class="btn btn-default"
 					style="background-color:#337ab7;">搜索</button>
 			<br />
@@ -65,23 +48,20 @@
 					<th width="5%" align="center" height="38" align="center">
 						序号
 					</th>
+                    <th width="15%" align="center">
+                        登录名
+                    </th>
 					<th width="15%" align="center">
-						登录名称
+						昵称
 					</th>
 					<th width="14%" align="center">
-						真实姓名
+						公司
 					</th>
 					<th width="14%" align="center">
-						角色
+						职务
 					</th>
 					<th width="14%" align="center">
-						部门
-					</th>
-					<th width="14%" align="center">
-						创建人
-					</th>
-					<th width="14%" align="center">
-						创建时间
+						从业年限
 					</th>
 					<th width="25%" align="center">
 						操作
@@ -96,24 +76,17 @@
 							${user.userName}
 						</td>
 						<td align="center">
-							${user.userRealname}
+							${user.name}
 						</td>
 						<td align="center">
-							<c:forEach items="${roleList}" var="role" varStatus="status">
-								<c:if test="${user.roleId eq role.id}">${role.roleName}</c:if>
-							</c:forEach>
+							${user.company_name}
 						</td>
 						<td align="center">
-							<c:forEach items="${deList}" var="de" varStatus="status">
-								<c:if test="${de.depId eq user.departClass}">${de.itemname }</c:if>
-							</c:forEach>
+							${user.post_name}
 						</td>
-						<td align="center">
-							${userInfoDictMap[user.createrId].userRealname }
-						</td>
-						<td align="center">
-							${user.createDateString}
-						</td>
+                        <td align="center">
+                            ${user.years}
+                        </td>
 						<td align="center">
 							<div class="btn-group">
 								<button type="button" class="btn btn-success" onclick="goEditUserInfo('${user.id}');" target="_blank">编辑</button>

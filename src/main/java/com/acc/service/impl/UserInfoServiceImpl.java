@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.acc.dao.UserInfoMapper;
-import com.acc.model.BxMember;
+import com.acc.model.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,19 +19,19 @@ import com.acc.service.IUserInfoService;
 
 @Service("userInfoService")
 @Transactional
-public class UserInfoServiceImpl extends BaseServiceImpl<BxMember> implements IUserInfoService {
+public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo> implements IUserInfoService {
 
 	private static Logger _logger = LoggerFactory.getLogger(UserInfoServiceImpl.class);
 	@Autowired
 	private UserInfoMapper userInfoMapper;
 	
 	@Override
-	public void insert(BxMember userInfo) throws InsertException {
+	public void insert(UserInfo userInfo) throws InsertException {
 		userInfoMapper.insert(userInfo);
 	}
 	
 	@Override
-	public BxMember getById(String userId) throws SelectException {
+	public UserInfo getById(String userId) throws SelectException {
 		try {
 			int id = Integer.parseInt(userId);
 			return userInfoMapper.getById(id);
@@ -42,7 +42,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<BxMember> implements IU
 	}
 
 	@Override
-	public BxMember getByUserName(String userName) throws SelectException {
+	public UserInfo getByUserName(String userName) throws SelectException {
 		try {
 			return userInfoMapper.getByUserName(userName);
 		} catch (Exception ex) {
@@ -52,44 +52,23 @@ public class UserInfoServiceImpl extends BaseServiceImpl<BxMember> implements IU
 	}
 
 	@Override
-	public List<BxMember> getAll() throws SelectException {
-		List<BxMember> list = userInfoMapper.getAll();
-		return list;
-	}
-	
-	public List<BxMember> getAll2() throws SelectException {
-		List<BxMember> list = userInfoMapper.getAll2();
+	public List<UserInfo> getAll() throws SelectException {
+		List<UserInfo> list = userInfoMapper.getAll();
 		return list;
 	}
 	
 	@Override
-	public List<BxMember> getAll3() throws SelectException {
-		List<BxMember> list = userInfoMapper.getAll3();
-		return list;
-	}
-	
-	@Override
-	public Map<Integer, BxMember> getAllMap() throws SelectException {
-		List<BxMember> list = getAll();
-		Map<Integer, BxMember> userInfoDictMap = new HashMap<Integer, BxMember>();
-		for (BxMember userInfo : list) {
+	public Map<Integer, UserInfo> getAllMap() throws SelectException {
+		List<UserInfo> list = getAll();
+		Map<Integer, UserInfo> userInfoDictMap = new HashMap<Integer, UserInfo>();
+		for (UserInfo userInfo : list) {
 			userInfoDictMap.put(userInfo.getId(), userInfo);
 		}
 		return userInfoDictMap;
 	}
 	
 	@Override
-	public Map<Integer, BxMember> getAllMap2() throws SelectException {
-		List<BxMember> list = getAll2();
-		Map<Integer, BxMember> userInfoDictMap = new HashMap<Integer, BxMember>();
-		for (BxMember userInfo : list) {
-			userInfoDictMap.put(userInfo.getId(), userInfo);
-		}
-		return userInfoDictMap;
-	}
-
-	@Override
-	public void update(BxMember userInfo) throws UpdateException {
+	public void update(UserInfo userInfo) throws UpdateException {
 		userInfoMapper.update(userInfo);
 	}
 
@@ -105,8 +84,8 @@ public class UserInfoServiceImpl extends BaseServiceImpl<BxMember> implements IU
 		userInfoMapper.updateUserStatus(id, status);
 	}
 	@Override
-	public List<BxMember> getAllByMap (Map<String, Object> map) throws SelectException{
-		List<BxMember> list = userInfoMapper.getAllByMap(map);
+	public List<UserInfo> getAllByMap (Map<String, Object> map) throws SelectException{
+		List<UserInfo> list = userInfoMapper.getAllByMap(map);
 		return list;
 	}
 }

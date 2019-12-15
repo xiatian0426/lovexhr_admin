@@ -46,7 +46,7 @@ public class BxProductController {
         Map<String, Object> model = mav.getModel();
         try {
             HttpSession session = request.getSession();
-            BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
             model.put("memberId",staff.getId());
             mav=new ModelAndView("/productData/addProductData", model);
         } catch (Exception e) {
@@ -59,7 +59,6 @@ public class BxProductController {
     /**
      * 根据会员id获取对应权限产品
      * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value = "/getProductByMemId", method = RequestMethod.GET)
@@ -67,7 +66,7 @@ public class BxProductController {
         Map<String, Object> model = mav.getModel();
         try{
             HttpSession session = request.getSession();
-            BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
             String memberId = String.valueOf(staff.getId());
             if(StringUtils.isNotEmpty(memberId)){
                 List<BxProduct> list = bxProductService.getProductByPerm(memberId);
@@ -94,7 +93,6 @@ public class BxProductController {
     /**
      * 管理端--点击修改/查看(回显)
      * @param request
-     * @param response
      * @return
      */
     @RequestMapping(value = "/getProDetail", method = RequestMethod.GET)
@@ -265,7 +263,7 @@ public class BxProductController {
                     if(file != null){
                         if(bxProduct.getType().equals("0")){
                             HttpSession session = request.getSession();
-                            BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+                            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
                             bxProduct.setCreateId(staff.getId());
                             bxProductService.addProduct(bxProduct);
                         }else{

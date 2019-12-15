@@ -2,12 +2,10 @@ package com.acc.controller;
 
 import com.acc.exception.ExceptionUtil;
 import com.acc.model.BxHonor;
-import com.acc.model.BxMember;
-import com.acc.model.BxRecruit;
+import com.acc.model.UserInfo;
 import com.acc.service.IBxHonorService;
 import com.acc.util.Constants;
 import com.acc.util.PictureChange;
-import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +46,7 @@ public class BxHonorController {
         Map<String,Object> model = new HashMap<String, Object>();
 	    try{
             HttpSession session = request.getSession();
-            BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
             String memberId = String.valueOf(staff.getId());
             if(StringUtils.isNotEmpty(memberId) ){
                 Integer count = bxHonorService.getHonorCount(memberId);
@@ -99,7 +95,7 @@ public class BxHonorController {
                         bxHonorService.updateById(bxHonor);
                     }else{
                         HttpSession session = request.getSession();
-                        BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+                        UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
                         bxHonor.setMemberId(staff.getId());
                         String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
                         String fileSavePath=path + Constants.honorImgPath + bxHonor.getMemberId() + "/";
@@ -158,7 +154,7 @@ public class BxHonorController {
             if (bxHonor != null) {
                 if(file!=null && file.length>0){
                     HttpSession session = request.getSession();
-                    BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+                    UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
                     bxHonor.setMemberId(staff.getId());
                     bxHonor.setCreaterId(staff.getId());
                     String path = (String)request.getSession().getServletContext().getAttribute("proRoot");

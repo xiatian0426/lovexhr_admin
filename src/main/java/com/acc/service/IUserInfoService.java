@@ -6,9 +6,9 @@ import java.util.Map;
 import com.acc.exception.InsertException;
 import com.acc.exception.SelectException;
 import com.acc.exception.UpdateException;
-import com.acc.model.BxMember;
+import com.acc.model.UserInfo;
 
-public interface IUserInfoService extends IBaseService<BxMember> {
+public interface IUserInfoService extends IBaseService<UserInfo> {
 
 	/**
 	 * 保存 用户
@@ -16,7 +16,7 @@ public interface IUserInfoService extends IBaseService<BxMember> {
 	 * @throws InsertException
 	 * @author TANGCY
 	 */
-	void  insert (BxMember userInfo) throws InsertException;
+	void  insert (UserInfo userInfo) throws InsertException;
 
 	/**
 	 * 获取全部用户信息
@@ -24,21 +24,14 @@ public interface IUserInfoService extends IBaseService<BxMember> {
 	 * @return
 	 * @throws SelectException
 	 */
-	List<BxMember> getAll () throws SelectException;
-	/**
-	 * 获取启用的全部用户信息
-	 * @param userId
-	 * @return
-	 * @throws SelectException
-	 */
-	List<BxMember> getAll3 () throws SelectException;
+	List<UserInfo> getAll () throws SelectException;
 	/**
 	 * 根据用户ID查询用户
 	 * @param userId
 	 * @return
 	 * @throws SelectException
 	 */
-    BxMember getById (String userId) throws SelectException;
+    UserInfo getById (String userId) throws SelectException;
 
 	/**
 	 * 修改用户-根据ID
@@ -47,7 +40,7 @@ public interface IUserInfoService extends IBaseService<BxMember> {
 	 * @author TANGCY
 	 * @since 2016年10月25日
 	 */
-	void update (BxMember userInfo) throws UpdateException;
+	void update (UserInfo userInfo) throws UpdateException;
 
 	/**
 	 * 根据用户名称查询用户
@@ -55,10 +48,9 @@ public interface IUserInfoService extends IBaseService<BxMember> {
 	 * @return
 	 * @throws SelectException
 	 */
-    BxMember getByUserName (String userName) throws SelectException;
+    UserInfo getByUserName (String userName) throws SelectException;
 
-	public Map<Integer, BxMember> getAllMap() throws SelectException;
-	public Map<Integer, BxMember> getAllMap2() throws SelectException;
+	public Map<Integer, UserInfo> getAllMap() throws SelectException;
 
 	/**
 	 * 修改用户状态
@@ -71,5 +63,5 @@ public interface IUserInfoService extends IBaseService<BxMember> {
 	 * @return
 	 * @throws SelectException
 	 */
-	List<BxMember> getAllByMap (Map<String, Object> map) throws SelectException;
+	List<UserInfo> getAllByMap (Map<String, Object> map) throws SelectException;
 }

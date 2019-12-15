@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.acc.model.BxMember;
+import com.acc.model.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +85,7 @@ public class AccAccountController {
 //				//TODO 测试需要暂时关闭验证码
 //				return new ModelAndView("/account/login",model);
 //			}
-            BxMember userInfo = userInfoService.getByUserName(userName);
+            UserInfo userInfo = userInfoService.getByUserName(userName);
 			if (userInfo == null) {
 				model.put("sign", -1);
 				loginMsg = "该用户不存在";

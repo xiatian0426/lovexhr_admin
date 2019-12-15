@@ -3,7 +3,7 @@ package com.acc.tags;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.acc.model.BxMember;
+import com.acc.model.UserInfo;
 import com.acc.util.Constants;
 
 /**
@@ -50,7 +50,7 @@ public class OptionAuthTag extends TagSupport {
 
 	@Override
 	public int doStartTag() throws JspException {
-        BxMember user = (BxMember)pageContext.getSession().getAttribute(Constants.LOGINUSER);
+        UserInfo user = (UserInfo)pageContext.getSession().getAttribute(Constants.LOGINUSER);
 		int falt= SKIP_BODY;
 		String roleId = user.getRoleId();
 		String[] roleIds = opId.split(",");

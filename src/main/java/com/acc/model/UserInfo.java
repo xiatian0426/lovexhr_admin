@@ -20,7 +20,7 @@ import java.util.List;
  */
 
 
-public class BxMember implements java.io.Serializable, Cloneable{
+public class UserInfo implements java.io.Serializable, Cloneable{
 	
 	private static final long serialVersionUID = 1756258302889590552L;
 

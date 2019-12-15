@@ -7,12 +7,6 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface IBxProductService {
-	/**
-	 * 根据id获取会员信息
-	 * @return
-	 * @throws SelectException
-	 */
-	BxMember getMemberByWechat(String wechat) throws SelectException;
 
     /**
      * 根据微信号获取对应权限产品

@@ -8,7 +8,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.acc.model.BxMember;
+import com.acc.model.UserInfo;
+import com.acc.vo.UserInfoQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,6 @@ import com.acc.util.CalendarUtil;
 import com.acc.util.Constants;
 import com.acc.vo.AccDepartVo;
 import com.acc.vo.Page;
-import com.acc.vo.UserInfoQuery;
 import com.alibaba.fastjson.JSON;
 
 
@@ -50,8 +50,6 @@ public class UserInfoController {
 	private IAccDepartService accDepartService;
 
 	/**
-	 * @param response
-	 * @param model
 	 * @return
 	 * @throws Exception
 	 */
@@ -69,8 +67,6 @@ public class UserInfoController {
 	/**
 	 * 用户列表
 	 * @param request
-	 * @param response
-	 * @param model
 	 * @return
 	 * @throws Exception
 	 */
@@ -78,35 +74,13 @@ public class UserInfoController {
 	public ModelAndView list (ModelAndView mav, final HttpServletRequest request, @ModelAttribute UserInfoQuery query) {
 		Map<String, Object> model = mav.getModel();
 		try {
-			List<AccRole> roleList = accRoleService.getUserRoleAll();
-			model.put("roleList", roleList);
-			//负责人
-			Map<Integer, BxMember> userInfoDictMap = userInfoService.getAllMap2();
-			model.put("userInfoDictMap", userInfoDictMap);
-			Page<BxMember> page = userInfoService.selectPage(query);
-			model.put("page", page);
-			model.put("query", query);
-
-			//获取全部部门(用于所属部门)
-			List<AccDepart> list = accDepartService.getDepartAll();
-			List<AccDepart> deList = accDepartService.getDepartAll();
-			model.put("deList", deList);
-			List<AccDepart> departList = new ArrayList<AccDepart>();
-			AccDepart ad;
-			for (int i = 0; i < list.size(); i++) {
-				ad = list.get(i);
-				if(ad.getDepId().length()==4){
-					ad.setItemname("&nbsp;|-&nbsp;"+ad.getItemname());
-				}else if(ad.getDepId().length()==6){
-					ad.setItemname("&nbsp;|&nbsp;&nbsp;&nbsp;|-&nbsp;"+ad.getItemname());
-				}else if(ad.getDepId().length()==8){
-					ad.setItemname("&nbsp;|&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|-&nbsp;"+ad.getItemname());
-				}else if(ad.getDepId().length()==10){
-					ad.setItemname("&nbsp;|&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|-&nbsp;"+ad.getItemname());
-				}
-				departList.add(ad);
-			}
-			model.put("departList", departList);
+            HttpSession session = request.getSession();
+            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
+            if(staff!=null && staff.getRoleId()!=null && staff.getRoleId().equals("1")){
+                Page<UserInfo> page = userInfoService.selectPage(query);
+                model.put("page", page);
+                model.put("query", query);
+            }
 			mav.setViewName("/userinfo/userList");
 		} catch (Exception e) {
 			_logger.error("转到用户列表页失败：" + ExceptionUtil.getMsg(e));
@@ -118,8 +92,6 @@ public class UserInfoController {
 	/**
 	 * 跳转到添加用户
 	 * @param request
-	 * @param response
-	 * @param model
 	 * @return
 	 * @throws Exception
 	 */
@@ -163,17 +135,15 @@ public class UserInfoController {
 	/**
 	 * 添加用户
 	 * @param request
-	 * @param response
-	 * @param model
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/add")
-	public ModelAndView add (ModelAndView mav, final HttpServletRequest request, @ModelAttribute BxMember user) {
+	public ModelAndView add (ModelAndView mav, final HttpServletRequest request, @ModelAttribute UserInfo user) {
 		Map<String, Object> model = mav.getModel();
 		try {
 			HttpSession session = request.getSession();
-            BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
 			user.setCreaterId(staff.getId());
 			user.setCreateDate(new Date());
 			//密码用MD5加密
@@ -192,7 +162,6 @@ public class UserInfoController {
 	 * 跳转修改用户信息
 	 * @param mav
 	 * @param request
-	 * @param user
 	 * @return
 	 */
 	@RequestMapping(value = "/goEdit")
@@ -202,7 +171,7 @@ public class UserInfoController {
 			String userId = request.getParameter("userId");
 			List<AccRole> roleList = accRoleService.getUserRoleAll();
 			model.put("roleList", roleList);
-            BxMember userInfo = userInfoService.getById(userId);
+            UserInfo userInfo = userInfoService.getById(userId);
 			model.put("userInfo", userInfo);
 			model.put("notice", request.getParameter("notice"));
 			//部门树结构
@@ -249,20 +218,18 @@ public class UserInfoController {
 	/**
 	 * 修改用户
 	 * @param request
-	 * @param response
-	 * @param model
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/editUser")
-	public ModelAndView editUser (final ModelAndView mav, final HttpServletRequest request, @ModelAttribute BxMember user) {
+	public ModelAndView editUser (final ModelAndView mav, final HttpServletRequest request, @ModelAttribute UserInfo user) {
 		String userId = request.getParameter("id");
 		try {
 			HttpSession session = request.getSession();
-            BxMember staff = (BxMember)session.getAttribute(Constants.LOGINUSER);
+            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
 			user.setModifierId(staff.getId()+"");
 			user.setModifyDate(CalendarUtil.getCurrentDate());
-            BxMember userInfo = userInfoService.getById(userId);
+            UserInfo userInfo = userInfoService.getById(userId);
 			//密码用MD5加密
 			if (StringUtils.isNotEmpty(user.getUserPassword())) {
 				user.setUserPassword(Md5PwdEncoder.getMD5Str(user.getUserPassword()));
@@ -296,7 +263,7 @@ public class UserInfoController {
 		String newUserName = request.getParameter("newUserName");
 		String oldUserName = request.getParameter("oldUserName");
 		try {
-            BxMember userInfo = userInfoService.getByUserName(newUserName.trim());
+            UserInfo userInfo = userInfoService.getByUserName(newUserName.trim());
 			//当前登录名称不存在
 			if (StringUtils.isNotEmpty(oldUserName) && (userInfo == null || oldUserName.equals(newUserName))) return false;
 		} catch (SelectException e) {
