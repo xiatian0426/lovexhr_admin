@@ -99,31 +99,6 @@ public class UserInfoController {
 	public ModelAndView goAdd (ModelAndView mav, final HttpServletRequest request) {
 		Map<String, Object> model = mav.getModel();
 		try {
-			List<AccRole> roleList = accRoleService.getUserRoleAll();
-			model.put("roleList", roleList);
-			//部门树结构
-			List<AccDepartVo> departTreeList = accDepartService.getDepartTreeAll();
-			String departItem =JSON.toJSONString(departTreeList);
-			model.put("departItem", departItem);
-
-			//获取全部部门(用于所属部门)
-			List<AccDepart> list = accDepartService.getDepartAll();
-			List<AccDepart> departList = new ArrayList<AccDepart>();
-			AccDepart ad;
-			for (int i = 0; i < list.size(); i++) {
-				ad = list.get(i);
-				if(ad.getDepId().length()==4){
-					ad.setItemname("&nbsp;|-&nbsp;"+ad.getItemname());
-				}else if(ad.getDepId().length()==6){
-					ad.setItemname("&nbsp;|&nbsp;&nbsp;&nbsp;|-&nbsp;"+ad.getItemname());
-				}else if(ad.getDepId().length()==8){
-					ad.setItemname("&nbsp;|&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|-&nbsp;"+ad.getItemname());
-				}else if(ad.getDepId().length()==10){
-					ad.setItemname("&nbsp;|&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|-&nbsp;"+ad.getItemname());
-				}
-				departList.add(ad);
-			}
-			model.put("departList", departList);
 			mav.setViewName("/userinfo/add");
 		} catch (Exception e) {
 			_logger.error("转到跳转到添加用户页失败：" + ExceptionUtil.getMsg(e));
@@ -142,15 +117,18 @@ public class UserInfoController {
 	public ModelAndView add (ModelAndView mav, final HttpServletRequest request, @ModelAttribute UserInfo user) {
 		Map<String, Object> model = mav.getModel();
 		try {
-			HttpSession session = request.getSession();
-            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
-			user.setCreaterId(staff.getId());
-			user.setCreateDate(new Date());
-			//密码用MD5加密
-			user.setUserPassword(Md5PwdEncoder.getMD5Str(user.getUserPassword()));
-			user.setStatus("1");//默认启用
-			userInfoService.insert(user);
-			mav.setViewName("redirect:/user/index");
+            UserInfo userInfo = userInfoService.getByUserName(user.getUserName());
+            if (userInfo == null) {
+                HttpSession session = request.getSession();
+                UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
+                user.setCreaterId(staff.getId());
+                user.setCreateDate(new Date());
+                //密码用MD5加密
+                user.setUserPassword(Md5PwdEncoder.getMD5Str(user.getUserPassword()));
+                user.setStatus("1");//默认启用
+                userInfoService.insert(user);
+                mav.setViewName("redirect:/user/index");
+            }
 		} catch (Exception e) {
 			_logger.error("转到添加用户页失败：" + ExceptionUtil.getMsg(e));
 			mav = new ModelAndView(Constants.SERVICES_ERROR, model);
@@ -225,11 +203,10 @@ public class UserInfoController {
 	@RequestMapping(value="/validateUserName")
 	public boolean validateUserName (final HttpServletRequest request) {
 		String newUserName = request.getParameter("newUserName");
-		String oldUserName = request.getParameter("oldUserName");
 		try {
             UserInfo userInfo = userInfoService.getByUserName(newUserName.trim());
 			//当前登录名称不存在
-			if (StringUtils.isNotEmpty(oldUserName) && (userInfo == null || oldUserName.equals(newUserName))) return false;
+			if (userInfo == null) return false;
 		} catch (SelectException e) {
 			return true;
 		}

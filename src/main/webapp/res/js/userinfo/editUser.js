@@ -15,8 +15,7 @@ function validateUserName (oldName) {
 	$.ajax({
 		url:'/user/validateUserName',
 		data:{
-			newUserName:userName,
-			oldUserName:oldName
+			newUserName:userName
 		},
 		dataType:'json',
 		type:'post',
@@ -30,22 +29,6 @@ function validateUserName (oldName) {
 		}
 	});
 	return status;
-}
-
-function save(){
-	//用户名
-	var oldUserName = $("#oldUserName").val();
-	var userName = $("#userName").val();
-	if(userName == ''){
-		$("#userName").validationEngine("showPrompt","登录名称不能是空","error");
-		$(this).focus();
-		return false;
-	}else if (validateUserName (oldUserName)) {
-		$("#userName").validationEngine("showPrompt","登录名称已存在","error");
-		$(this).focus();
-		return false;
-	}
-	return true;
 }
 
 //禁用或者启用用户

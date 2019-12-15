@@ -42,17 +42,6 @@
 				alert("操作失败");
 				window.close();
 			}
-			//为登录名称添加光标失去事件
-			$("#userName").blur(function(){
-				//用户名
-				var oldUserName = $("#oldUserName").val();
-				var userName = $("#userName").val();
-				if(userName == ''){
-					$("#userName").validationEngine("showPrompt","登录名称不能是空","error");
-				}else if (validateUserName (oldUserName)) {
-					$("#userName").validationEngine("showPrompt","登录名称已存在","error");
-				}
-			});
 		})
 		function save(){
 			var roleId = $("#roleId").val();

@@ -33,48 +33,30 @@
 	<link href="${toolRoot}/bootstrap/css/bootstrap-self.css" rel="stylesheet">
 	<script src="${toolRoot}/bootstrap/js/bootstrap.min.js"></script>
 	<script teye="text/javascript">
-		var departItem;
-		//栏目树初始化设置
-		var setting1 = {
-			check: {
-				enable: true,
-				chkboxType:{ "Y" : "ps", "N" : "ps" }
-			},
-			data:{
-				simpleData: {
-					enable: true,
-					rootPId: '0'
-				}
-			},
-			view: {
-				showIcon: false,
-				dblClickExpand: dblClickExpand
-			},
-			callback: {
-				onCheck:onCheck
-			}
-		};
-		$(function(){
-			//开启表单验证
-			$("#userForm").validationEngine();
-			departItem = ${departItem};
-			$.fn.zTree.init($("#departItem"), setting1, departItem);
-		})
-		//双击节点不展开
-		function dblClickExpand(treeId, treeNode) {
-			return treeNode.level = 0;
-		};
-		function onCheck(){
-			//加载已选产品树
-			var treeObj = $.fn.zTree.getZTreeObj("departItem");
-			var nodes = treeObj.getCheckedNodes(true);
-			var msg = "";
-		    for (var i = 0; i < nodes.length; i++) {
-		        msg += nodes[i].id+",";
-		    }
-		    $("#manageDepart").val(msg);
-		}
+        $(function(){
+            //开启表单验证
+            $("#userForm").validationEngine();
+            //为登录名称添加光标失去事件
+            $("#userName").blur(function(){
+                //用户名
+                var userName = $("#userName").val();
+                if(userName == ''){
+                    $("#userName").validationEngine("showPrompt","登录名称不能是空","error");
+                }else if (validateUserName (userName)) {
+                    $("#userName").validationEngine("showPrompt","登录名称已存在","error");
+                }
+            });
+        })
 		function save(){
+            //用户名
+            var userName = $("#userName").val();
+            if(userName == ''){
+                $("#userName").validationEngine("showPrompt","登录名称不能是空","error");
+                return false;
+            }else if (validateUserName (userName)) {
+                $("#userName").validationEngine("showPrompt","登录名称已存在","error");
+                return false;
+            }
 			var roleId = $("#roleId").val();
 			if(roleId=='0'){
 				$("#roleId").validationEngine("showPrompt","请选择所属角色","error");
@@ -82,86 +64,105 @@
 				return false;
 			}
 		}
-
-        //为登录名称添加光标失去事件
-        $("#userName").blur(function(){
-            //用户名
-            var oldUserName = $("#oldUserName").val();
-            var userName = $("#userName").val();
-            if(userName == ''){
-                $("#userName").validationEngine("showPrompt","登录名称不能是空","error");
-            }else if (validateUserName (oldUserName)) {
-                $("#userName").validationEngine("showPrompt","登录名称已存在","error");
-            }
-        });
 	</script>
 </head>
 <body style=" font-size: 13px;">
 	<form action="/user/add" name="userForm" method="post" target="main" id="userForm" onsubmit="return save();">
-		<input type="hidden" name="manageDepart" id="manageDepart" value="">
-        <input id="oldUserName" name="oldUserName" type="hidden" value="${userInfo.userName }"/>
 		<div class="clearB"></div>
 		<div class="r_box" style="padding: 0; width: 777px;">
 			<div class="adress" >
 				当前位置：后台用户添加
 			</div>
-			<table  style=" font-size: 13px; " align=center>
-				<tr>
-					<td style="background:#A0E0F7;padding: 10px 15px;">登录名称：</td>
-					<td>
-						<span>
-							<input id="userName" name="userName" type="text" style="width: 172px;" class="validate[required,noSpecialCaracters] text-input self-form-control"/>
-							<font color="red">*</font>
-						</span>
-					</td>
-					<td style="background:#A0E0F7;padding: 10px 15px;">登录密码：</td>
-					<td>
-						<span>
-							<input id="userPassword" name="userPassword" type="password" style="width: 172px;" class="validate[required,maxSize[12]] text-input self-form-control"/>
-							<font color="red">*</font>
-						</span>
-					</td>
-				</tr>
-				<tr>
-					<td style="background:#A0E0F7;padding: 10px 15px;">真实姓名：</td>
-					<td>
-						<span>
-							<input id="userRealname" name="userRealname" type="text" style="width: 172px;" class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
-							<font color="red">*</font>
-						</span>
-					</td>
-					<td style="background:#A0E0F7;padding: 10px 15px;">所属角色：</td>
-					<td>
-						<select class="select-nosearch" name='roleId' id="roleId" style="width: 172px;">
-							<option value='0'>请选择</option>
-							<c:forEach items="${roleList}" var="role" varStatus="status">
-								<option value='${role.id}'>
-									${role.roleName} 
-								</option>
-							</c:forEach>
-						</select>
-						<font color="red">*</font>
-					</td>
-				</tr>
-				<tr>
-					<td style="background:#A0E0F7;padding: 10px 15px;">所属部门：</td>
-					<td>
-						<select name="departClass" class="select-nosearch validate[required,noSpecialCaracters,,maxSize[12]]" style="width: 172px;">
-							<c:forEach items="${departList}" var="depart" varStatus="status">
-								<option value='${depart.depId}'>
-									${depart.itemname} 
-								</option>
-							</c:forEach>
-						</select>
-					</td>
-					<td style="background:#A0E0F7;padding: 10px 15px;">负责部门：</td>
-					<td>
-						<div class="move_sel_tree" style="height:150px; width: 172px; overflow:scroll;">
-				            <ul id="departItem" class="ztree"></ul>
-				        </div>
-					</td>
-				</tr>
-			</table>
+            <table  style=" font-size: 13px; " align=center>
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">登录名称：</td>
+                    <td>
+                        <input id="userName" name="userName" value="" type="text" style="width: 172px;" class="validate[required,noSpecialCaracters] text-input self-form-control"/>
+                    </td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">登录密码：</td>
+                    <td>
+                        <input id="userPassword" name="userPassword" type="password" value="" style="width: 172px;" class="validate[maxSize[12]] text-input self-form-control" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">昵称：</td>
+                    <td>
+                        <input id="name" name="name" value="" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">真实姓名：</td>
+                    <td>
+                        <input id="userRealname" name="userRealname" value="" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">公司：</td>
+                    <td>
+                        <input id="company_name" name="company_name" value="" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">职务：</td>
+                    <td>
+                        <input id="post_name" name="post_name" value="" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">从业年限：</td>
+                    <td>
+                        <input id="years" name="years" value="" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">个性签名：</td>
+                    <td>
+                        <input id="signature" name="signature" value="" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">自我介绍：</td>
+                    <td>
+                        <input id="introduce" name="introduce" value="" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">头像：</td>
+                    <td>
+                        <input id="memberImg" name="memberImg" value="" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">微信号：</td>
+                    <td>
+                        <input id="wechat" name="wechat" value="" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">手机：</td>
+                    <td>
+                        <input id="phone" name="phone" value="" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">角色：</td>
+                    <td>
+                        <select class="select-nosearch" name='roleId' id="roleId" style="width: 172px;">
+                            <option value='0'>
+                                客户
+                            </option>
+                            <option value='1'>
+                                管理员
+                            </option>
+                        </select>
+                    </td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;"></td>
+                    <td>
+
+                    </td>
+                </tr>
+            </table>
 			<div class="sub_div">
 				<input type="submit" class="sub_btn" value=" "/>
 				<input type="reset" class="reset_btn" value=" " />
