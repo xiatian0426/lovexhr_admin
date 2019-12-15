@@ -169,44 +169,9 @@ public class UserInfoController {
 		Map<String, Object> model = mav.getModel();
 		try {
 			String userId = request.getParameter("userId");
-			List<AccRole> roleList = accRoleService.getUserRoleAll();
-			model.put("roleList", roleList);
             UserInfo userInfo = userInfoService.getById(userId);
 			model.put("userInfo", userInfo);
 			model.put("notice", request.getParameter("notice"));
-			//部门树结构
-			List<AccDepartVo> departTreeList = accDepartService.getDepartTreeAll();
-			String departItem =JSON.toJSONString(departTreeList);
-			model.put("departItem", departItem);
-			model.put("manageDepart", userInfo.getManageDepart());
-			//已经拥有的部门树结构
-			List<String> upDepartItem = new ArrayList<String>();
-			if(userInfo.getManageDepart()!=null){
-				String[] str = userInfo.getManageDepart().split(",");
-				for (int i = 0; i < str.length; i++) {
-					upDepartItem.add(str[i]);
-				}
-			}
-			model.put("upDepartItem", JSON.toJSONString(upDepartItem));
-
-			//获取全部部门(用于所属部门)
-			List<AccDepart> list = accDepartService.getDepartAll();
-			List<AccDepart> departList = new ArrayList<AccDepart>();
-			AccDepart ad;
-			for (int i = 0; i < list.size(); i++) {
-				ad = list.get(i);
-				if(ad.getDepId().length()==4){
-					ad.setItemname("&nbsp;|-&nbsp;"+ad.getItemname());
-				}else if(ad.getDepId().length()==6){
-					ad.setItemname("&nbsp;|&nbsp;&nbsp;&nbsp;|-&nbsp;"+ad.getItemname());
-				}else if(ad.getDepId().length()==8){
-					ad.setItemname("&nbsp;|&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|-&nbsp;"+ad.getItemname());
-				}else if(ad.getDepId().length()==10){
-					ad.setItemname("&nbsp;|&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|-&nbsp;"+ad.getItemname());
-				}
-				departList.add(ad);
-			}
-			model.put("departList", departList);
 			mav.setViewName("/userinfo/editUser");
 		} catch (Exception e) {
 			_logger.error("转到添加用户页失败：" + ExceptionUtil.getMsg(e));
@@ -236,8 +201,7 @@ public class UserInfoController {
 			} else {
 				user.setUserPassword(userInfo.getUserPassword());
 			}
-			user.setCreaterId(userInfo.getCreaterId());
-			user.setCreateDate(userInfo.getCreateDate());
+			user.setModifierId(String.valueOf(staff.getId()));
 			user.setStatus(userInfo.getStatus());
 			userInfoService.update(user);
 			mav.getModel().put("userId", userId);

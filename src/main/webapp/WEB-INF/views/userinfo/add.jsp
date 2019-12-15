@@ -82,11 +82,24 @@
 				return false;
 			}
 		}
+
+        //为登录名称添加光标失去事件
+        $("#userName").blur(function(){
+            //用户名
+            var oldUserName = $("#oldUserName").val();
+            var userName = $("#userName").val();
+            if(userName == ''){
+                $("#userName").validationEngine("showPrompt","登录名称不能是空","error");
+            }else if (validateUserName (oldUserName)) {
+                $("#userName").validationEngine("showPrompt","登录名称已存在","error");
+            }
+        });
 	</script>
 </head>
 <body style=" font-size: 13px;">
 	<form action="/user/add" name="userForm" method="post" target="main" id="userForm" onsubmit="return save();">
 		<input type="hidden" name="manageDepart" id="manageDepart" value="">
+        <input id="oldUserName" name="oldUserName" type="hidden" value="${userInfo.userName }"/>
 		<div class="clearB"></div>
 		<div class="r_box" style="padding: 0; width: 777px;">
 			<div class="adress" >

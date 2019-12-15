@@ -30,34 +30,9 @@
 	<link href="${toolRoot}/bootstrap/css/bootstrap-self.css" rel="stylesheet">
 	<script src="${toolRoot}/bootstrap/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
-		var departItem;
-		//栏目树初始化设置
-		var setting1 = {
-			check: {
-				enable: true,
-				chkboxType:{ "Y" : "ps", "N" : "ps" }
-			},
-			data:{
-				simpleData: {
-					enable: true,
-					rootPId: '0'
-				}
-			},
-			view: {
-				showIcon: false,
-				dblClickExpand: dblClickExpand
-			},
-			callback: {
-				onCheck:onCheck
-			}
-		};
 		$(function(){
 			//开启表单验证
 			$("#editUserFrom").validationEngine();
-			departItem = ${departItem};
-			$.fn.zTree.init($("#departItem"), setting1, departItem);
-			checkedHasRightBox("departItem",${upDepartItem});
-			
 			var notice = $("#notice").val();
 			if(notice == 1){
 				alert("操作成功");
@@ -79,32 +54,6 @@
 				}
 			});
 		})
-		//双击节点不展开
-		function dblClickExpand(treeId, treeNode) {
-			return treeNode.level = 0;
-		};
-		function onCheck(){
-			//加载已选产品树
-			var treeObj = $.fn.zTree.getZTreeObj("departItem");
-			var nodes = treeObj.getCheckedNodes(true);
-			var msg = "";
-		    for (var i = 0; i < nodes.length; i++) {
-		        msg += nodes[i].id+",";
-		    }
-		    $("#manageDepart").val(msg);
-		}
-		//已有权限的复选框回显
-		function checkedHasRightBox(nodeParam,classIdList){
-			var zTreeObj = $.fn.zTree.getZTreeObj(nodeParam);
-			var nodes = zTreeObj.getNodes();
-			for(var i=0;i<classIdList.length;i++){
-				var node = zTreeObj.getNodeByParam("classId",classIdList[i]);
-				if(node != null){
-					node.checked=true;
-				}
-			}
-			zTreeObj.refresh();
-		}
 		function save(){
 			var roleId = $("#roleId").val();
 			if(roleId=='0'){
@@ -117,7 +66,6 @@
 </head>
 <body style=" font-size: 13px;">
 	<form action="/user/editUser" name="userForm" method="post" target="_self" id="editUserFrom" onsubmit="return save();">
-		<input type="hidden" name="manageDepart" id="manageDepart" value="${manageDepart }">
 		<div class="clearB"></div>
 		<div class="r_box" style="padding: 0; width: 777px;">
 			<div class="adress" >
@@ -125,55 +73,95 @@
 			</div>
 			<input name="id" type="hidden" value="${userInfo.id }"/>
 			<input id="notice" value="${notice}" type="hidden"/>
-			
-			<input id="oldUserName" name="oldUserName" type="hidden" value="${userInfo.userName }"/>
 			<table  style=" font-size: 13px; " align=center>
 				<tr>
 					<td style="background:#A0E0F7;padding: 10px 15px;">登录名称：</td>
 					<td>
-						<input id="userName" name="userName" value="${userInfo.userName}" type="text" style="width: 172px;" class="validate[required,noSpecialCaracters] text-input self-form-control"/>
+						<input id="userName" name="userName" readonly="readonly" value="${userInfo.userName}" type="text" style="width: 172px;" class="validate[required,noSpecialCaracters] text-input self-form-control"/>
 					</td>
 					<td style="background:#A0E0F7;padding: 10px 15px;">登录密码：</td>
 					<td>
-						<input id="userPassword" name="userPassword" type="password" style="width: 172px;" class="validate[maxSize[12]] text-input self-form-control" />
+						<input id="userPassword" name="userPassword" type="password"  style="width: 172px;" class="validate[maxSize[12]] text-input self-form-control" />
 					</td>
 				</tr>
 				<tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">昵称：</td>
+                    <td>
+                        <input id="name" name="name" value="${userInfo.name}" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
 					<td style="background:#A0E0F7;padding: 10px 15px;">真实姓名：</td>
 					<td>
 						<input id="userRealname" name="userRealname" value="${userInfo.userRealname}" type="text" style="width: 172px;" 
 							class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
 					</td>
-					<td style="background:#A0E0F7;padding: 10px 15px;">所属角色：</td>
-					<td>
-						<select class="select-nosearch" name='roleId' id="roleId" style="width: 172px;">
-							<option value='0'>请选择</option>
-							<c:forEach items="${roleList}" var="role" varStatus="status">
-								<option value='${role.id}' <c:if test="${userInfo.roleId eq role.id }">selected = selected</c:if> >
-									${role.roleName} 
-								</option>
-							</c:forEach>
-						</select>
-					</td>
 				</tr>
-				<tr>
-					<td style="background:#A0E0F7;padding: 10px 15px;">所属部门：</td>
-					<td>
-						<select name="departClass" class="select-nosearch validate[required,noSpecialCaracters,,maxSize[12]]" style="width: 172px;">
-							<c:forEach items="${departList}" var="depart" varStatus="status">
-								<option value='${depart.depId}'>
-									${depart.itemname} 
-								</option>
-							</c:forEach>
-						</select>
-					</td>
-					<td style="background:#A0E0F7;padding: 10px 15px;">负责部门：</td>
-					<td>
-						<div class="move_sel_tree" style="height:150px; width: 172px; overflow:scroll;">
-				            <ul id="departItem" class="ztree"></ul>
-				        </div>
-					</td>
-				</tr>
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">公司：</td>
+                    <td>
+                        <input id="company_name" name="company_name" value="${userInfo.company_name}" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">职务：</td>
+                    <td>
+                        <input id="post_name" name="post_name" value="${userInfo.post_name}" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">从业年限：</td>
+                    <td>
+                        <input id="years" name="years" value="${userInfo.years}" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">个性签名：</td>
+                    <td>
+                        <input id="signature" name="signature" value="${userInfo.signature}" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">自我介绍：</td>
+                    <td>
+                        <input id="introduce" name="introduce" value="${userInfo.introduce}" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">头像：</td>
+                    <td>
+                        <input id="memberImg" name="memberImg" value="${userInfo.memberImg}" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">微信号：</td>
+                    <td>
+                        <input id="wechat" name="wechat" value="${userInfo.wechat}" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">手机：</td>
+                    <td>
+                        <input id="phone" name="phone" value="${userInfo.phone}" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">角色：</td>
+                    <td>
+                        <select class="select-nosearch" name='roleId' id="roleId" style="width: 172px;">
+                            <option value='0' <c:if test="${userInfo.roleId eq '0' }">selected = selected</c:if>>
+                               客户
+                            </option>
+                            <option value='1' <c:if test="${userInfo.roleId eq '1' }">selected = selected</c:if>>
+                                管理员
+                            </option>
+                        </select>
+                    </td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;"></td>
+                    <td>
+
+                    </td>
+                </tr>
 			</table>
 			<div class="sub_div">
 				<input type="submit" class="sub_btn" value=" "/>

@@ -38,7 +38,7 @@ public class UserInfo implements java.io.Serializable, Cloneable{
 	
 	private String post_name;
 	
-	private float years;
+	private int years;
 
     private String signature;
 
@@ -129,11 +129,11 @@ public class UserInfo implements java.io.Serializable, Cloneable{
         this.post_name = post_name;
     }
 
-    public float getYears() {
+    public int getYears() {
         return years;
     }
 
-    public void setYears(float years) {
+    public void setYears(int years) {
         this.years = years;
     }
 

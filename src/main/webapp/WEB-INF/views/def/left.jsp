@@ -47,7 +47,7 @@
             <li><a href="/recruit/getRecruitList" target="main"><img src="../../../res/images/main/user.png" height="25px;" width="25px;">&nbsp;招聘管理</a></li>
         </acc:oa>
 		<acc:oa opId="1">
-			<li><a href="/user/list" target="main"><img src="../../../res/images/main/user.png" height="25px;" width="25px;">&nbsp;后台用户管理</a></li>
+			<li><a href="/user/index" target="main"><img src="../../../res/images/main/user.png" height="25px;" width="25px;">&nbsp;后台用户管理</a></li>
 		</acc:oa>
 		<%--<acc:oa opId="1">--%>
 			<%--<li><a href="/manage/roleList" target="main"><img src="../../../res/images/main/form.png" height="25px;" width="25px;">&nbsp;用户角色查询</a></li>--%>

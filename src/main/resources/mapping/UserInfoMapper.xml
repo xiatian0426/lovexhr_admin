@@ -3,26 +3,38 @@
 <mapper namespace="com.acc.dao.UserInfoMapper">
 
 	<resultMap id="userInfo" type="com.acc.model.UserInfo">
-		<result property="id" column="ID" />
-		<result property="userName" column="USER_NAME" />
-		<result property="userPassword" column="USER_PASSWORD" />
-		<result property="createDate" column="CREATE_DATE" />
-		<result property="status" column="STATUS" />
-		<result property="createrId" column="CREATER_ID" />
-		<result property="modifyDate" column="MODIFY_DATE" />
-		<result property="modifierId" column="MODIFIER_ID" />
-		<result property="roleId" column="ROLE_ID" />
-		<result property="manageDepart" column="MANAGEDEPART" />
-		<result property="departClass" column="DEPARTCLASS" />
-		<result property="userRealname" column="USER_REALNAME" />
-		
+        <result property="id" column="ID" jdbcType="INTEGER"/>
+        <result property="userName" column="USER_NAME" />
+        <result property="userPassword" column="USER_PASSWORD" />
+        <result property="name" column="NAME" jdbcType="VARCHAR"/>
+        <result property="company_name" column="COMPANY_NAME" jdbcType="VARCHAR"/>
+        <result property="post_name" column="POST_NAME" jdbcType="VARCHAR"/>
+        <result property="years" column="YEARS" jdbcType="INTEGER"/>
+        <result property="signature" column="SIGNATURE" jdbcType="VARCHAR"/>
+        <result property="wechat" column="WECHAT" jdbcType="VARCHAR"/>
+        <result property="phone" column="PHONE" jdbcType="VARCHAR"/>
+        <result property="introduce" column="INTRODUCE" jdbcType="VARCHAR"/>
+        <result property="memberImg" column="MEMBER_IMG" jdbcType="VARCHAR"/>
+        <result property="roleId" column="ROLE_ID" />
+        <result property="manageDepart" column="MANAGEDEPART" />
+        <result property="departClass" column="DEPARTCLASS" />
+        <result property="userRealname" column="USER_REALNAME" />
 	</resultMap>
 
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="columns">
-		<![CDATA[
-			ID,USER_NAME,USER_PASSWORD,CREATE_DATE,STATUS,CREATER_ID,MODIFY_DATE,MODIFIER_ID,ROLE_ID,MANAGEDEPART,DEPARTCLASS,USER_REALNAME
-		]]>
+		ID,USER_NAME,USER_PASSWORD,NAME,
+        COMPANY_NAME,
+        POST_NAME,
+        YEARS,
+        SIGNATURE,
+        INTRODUCE,
+        MEMBER_IMG,
+        WECHAT,
+        PHONE,
+        CREATE_DATE,
+        STATUS,
+        CREATER_ID,ROLE_ID,MANAGEDEPART,DEPARTCLASS,USER_REALNAME
 	</sql>
 
 	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
@@ -61,15 +73,19 @@
 			order="BEFORE" keyProperty="userId"> SELECT sequenceName.nextval AS ID FROM 
 			DUAL </selectKey> -->
 	</insert>
-
 	<update id="update">
 		<![CDATA[
 			UPDATE BX_MEMBER SET
-				USER_NAME = #{userName} ,
 				USER_PASSWORD = #{userPassword} ,
-				CREATE_DATE = #{createDate} ,
-				STATUS = #{status} ,
-				CREATER_ID = #{createrId} ,
+				NAME = #{name} ,
+				COMPANY_NAME = #{company_name} ,
+				POST_NAME = #{post_name} ,
+				YEARS = #{years} ,
+				SIGNATURE = #{signature} ,
+				INTRODUCE = #{introduce} ,
+				MEMBER_IMG = #{memberImg} ,
+				WECHAT = #{wechat} ,
+				PHONE = #{phone} ,
 				MODIFY_DATE = #{modifyDate} ,
 				MODIFIER_ID = #{modifierId} ,
 				ROLE_ID = #{roleId} ,
