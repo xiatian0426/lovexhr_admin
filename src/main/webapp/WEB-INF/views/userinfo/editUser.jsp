@@ -54,7 +54,8 @@
 	</script>
 </head>
 <body style=" font-size: 13px;">
-	<form action="/user/editUser" name="userForm" method="post" target="_self" id="editUserFrom" onsubmit="return save();">
+	<form action="/user/editUser" name="userForm" method="post" target="_self" id="editUserFrom" onsubmit="return save();" enctype="multipart/form-data">
+        <input type="hidden" name="memberImg" value="${userInfo.memberImg}"/>
 		<div class="clearB"></div>
 		<div class="r_box" style="padding: 0; width: 777px;">
 			<div class="adress" >
@@ -118,8 +119,8 @@
                     </td>
                     <td style="background:#A0E0F7;padding: 10px 15px;">头像：</td>
                     <td>
-                        <input id="memberImg" name="memberImg" value="${userInfo.memberImg}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                        <input type="file" name="file"/>
+                        <img src="${userInfo.memberImg}" width="50" height="50"/>
                     </td>
                 </tr>
                 <tr>

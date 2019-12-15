@@ -104,12 +104,10 @@ public class BxRecruitController {
                     Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
                     int re = Integer.valueOf((String)mapImg.get("code")).intValue();
                     if(re==0){
-                        if(re==0){
-                            List<String> list = (List<String>)mapImg.get("list");
-                            if(list!=null && list.size()>0){
-                                bxRecruit.setImageUrl(list.get(0));
-                                bxRecruitService.insert(bxRecruit);
-                            }
+                        List<String> list = (List<String>)mapImg.get("list");
+                        if(list!=null && list.size()>0){
+                            bxRecruit.setImageUrl(list.get(0));
+                            bxRecruitService.insert(bxRecruit);
                         }
                         result = "添加成功!";
                     }else if(re==-1){

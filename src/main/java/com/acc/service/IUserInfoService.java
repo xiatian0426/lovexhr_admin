@@ -42,6 +42,7 @@ public interface IUserInfoService extends IBaseService<UserInfo> {
 	 */
 	void update (UserInfo userInfo) throws UpdateException;
 
+    void updateImg (UserInfo userInfo) throws UpdateException;
 	/**
 	 * 根据用户名称查询用户
 	 * @param userName

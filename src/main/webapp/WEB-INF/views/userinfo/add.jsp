@@ -67,7 +67,7 @@
 	</script>
 </head>
 <body style=" font-size: 13px;">
-	<form action="/user/add" name="userForm" method="post" target="main" id="userForm" onsubmit="return save();">
+	<form action="/user/add" name="userForm" method="post" target="main" id="userForm" onsubmit="return save();" enctype="multipart/form-data">
 		<div class="clearB"></div>
 		<div class="r_box" style="padding: 0; width: 777px;">
 			<div class="adress" >
@@ -129,8 +129,7 @@
                     </td>
                     <td style="background:#A0E0F7;padding: 10px 15px;">头像：</td>
                     <td>
-                        <input id="memberImg" name="memberImg" value="" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                        <input type="file" id="memberImg" name="file">
                     </td>
                 </tr>
                 <tr>

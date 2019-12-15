@@ -1,5 +1,6 @@
 package com.acc.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.acc.model.UserInfo;
+import com.acc.util.PictureChange;
 import com.acc.vo.UserInfoQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -17,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.acc.exception.ExceptionUtil;
@@ -114,7 +118,7 @@ public class UserInfoController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/add")
-	public ModelAndView add (ModelAndView mav, final HttpServletRequest request, @ModelAttribute UserInfo user) {
+	public ModelAndView add (ModelAndView mav, final HttpServletRequest request, @ModelAttribute UserInfo user,@RequestParam(value="file") MultipartFile[] file) {
 		Map<String, Object> model = mav.getModel();
 		try {
             UserInfo userInfo = userInfoService.getByUserName(user.getUserName());
@@ -127,6 +131,19 @@ public class UserInfoController {
                 user.setUserPassword(Md5PwdEncoder.getMD5Str(user.getUserPassword()));
                 user.setStatus("1");//默认启用
                 userInfoService.insert(user);
+                if(file!=null && file.length>0){
+                    String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                    String fileSavePath=path + Constants.memberImgPath + user.getId() + "/";
+                    Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
+                    int re = Integer.valueOf((String)mapImg.get("code")).intValue();
+                    if(re==0){
+                        List<String> list = (List<String>)mapImg.get("list");
+                        if(list!=null && list.size()>0){
+                            user.setMemberImg(list.get(0));
+                            userInfoService.updateImg(user);
+                        }
+                    }
+                }
                 mav.setViewName("redirect:/user/index");
             }
 		} catch (Exception e) {
@@ -148,6 +165,14 @@ public class UserInfoController {
 		try {
 			String userId = request.getParameter("userId");
             UserInfo userInfo = userInfoService.getById(userId);
+            if(userInfo!=null){
+                String path = request.getContextPath();
+                String basePath = request.getScheme() + "://"
+                        + request.getServerName() + ":" + request.getServerPort()
+                        + path + "/";
+                String fileSavePath=basePath + Constants.memberImgPath + userInfo.getId() + "/";
+                userInfo.setMemberImg(fileSavePath+userInfo.getMemberImg());
+            }
 			model.put("userInfo", userInfo);
 			model.put("notice", request.getParameter("notice"));
 			mav.setViewName("/userinfo/editUser");
@@ -165,9 +190,31 @@ public class UserInfoController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/editUser")
-	public ModelAndView editUser (final ModelAndView mav, final HttpServletRequest request, @ModelAttribute UserInfo user) {
+	public ModelAndView editUser (final ModelAndView mav, final HttpServletRequest request, @ModelAttribute UserInfo user,@RequestParam(value="file") MultipartFile[] file) {
 		String userId = request.getParameter("id");
 		try {
+            if(file!=null && file.length>0){
+                if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
+                    user.setMemberImg(null);
+                }else{
+                    String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                    String fileSavePath=path + Constants.memberImgPath + user.getId() + "/";
+                    String imgUrl = null;
+                    if(user.getMemberImg()!=null && !"".equals(user.getMemberImg())){
+                        imgUrl = user.getMemberImg().split("/")[user.getMemberImg().split("/").length-1];
+                    }
+                    new File(fileSavePath+imgUrl).delete();
+                    //生成新图片
+                    Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
+                    int re = Integer.valueOf((String)mapImg.get("code")).intValue();
+                    if(re==0){
+                        List<String> list = (List<String>)mapImg.get("list");
+                        if(list!=null && list.size()>0){
+                            user.setMemberImg(list.get(0));
+                        }
+                    }
+                }
+            }
 			HttpSession session = request.getSession();
             UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
 			user.setModifierId(staff.getId()+"");

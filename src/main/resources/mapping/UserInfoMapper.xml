@@ -41,7 +41,6 @@
 	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
 			INSERT INTO BX_MEMBER (
-				ID ,
 				USER_NAME ,
 				USER_PASSWORD ,
 				NAME ,
@@ -61,7 +60,6 @@
 				DEPARTCLASS ,
 				USER_REALNAME
 			) VALUES (
-				#{id} ,
 				#{userName} ,
 				#{userPassword} ,
 				#{name},
@@ -88,7 +86,6 @@
 			DUAL </selectKey> -->
 	</insert>
 	<update id="update">
-		<![CDATA[
 			UPDATE BX_MEMBER SET
 				USER_PASSWORD = #{userPassword} ,
 				NAME = #{name} ,
@@ -97,7 +94,7 @@
 				YEARS = #{years} ,
 				SIGNATURE = #{signature} ,
 				INTRODUCE = #{introduce} ,
-				MEMBER_IMG = #{memberImg} ,
+				<if test="memberImg != null and memberImg != ''">MEMBER_IMG = #{memberImg} ,</if>
 				WECHAT = #{wechat} ,
 				PHONE = #{phone} ,
 				MODIFY_DATE = now() ,
@@ -108,8 +105,14 @@
 				USER_REALNAME = #{userRealname} 
 			WHERE 
 				ID = #{id} 
-		]]>
 	</update>
+
+    <update id="updateImg">
+        UPDATE BX_MEMBER SET
+        MEMBER_IMG = #{memberImg}
+        WHERE
+        ID = #{id}
+    </update>
 
 	<delete id="delete">
 		<![CDATA[

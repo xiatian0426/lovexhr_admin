@@ -18,6 +18,8 @@ public interface UserInfoMapper  extends BaseMapper<UserInfo>{
 	List<UserInfo> getAll() throws SelectException;
 
 	void update(UserInfo userInfo) throws UpdateException;
+
+    void updateImg(UserInfo userInfo) throws UpdateException;
 	void updateUserStatus(@Param("id") int id, @Param("status") String status) throws UpdateException;
 	List<UserInfo> getAllByMap(Map<String, Object> map) throws SelectException;
 }

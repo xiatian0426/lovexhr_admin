@@ -72,6 +72,11 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo> implements IU
 		userInfoMapper.update(userInfo);
 	}
 
+    @Override
+    public void updateImg(UserInfo userInfo) throws UpdateException {
+        userInfoMapper.updateImg(userInfo);
+    }
+
 	@Override
 	public void updateUserStatus(String userId, String status) throws UpdateException {
 		int id = 0;
