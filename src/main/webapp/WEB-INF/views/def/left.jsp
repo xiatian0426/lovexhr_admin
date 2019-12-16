@@ -37,14 +37,17 @@
 			<li class="active"><a href="/product/getProductByMemId" target="main"><img src="../../../res/images/main/field.png" height="25px;" width="25px;">&nbsp;产品数据列表</a></li>
             <li><a href="/product/goAddProductByMemId" target="main"><img src="../../../res/images/main/edit.png" height="25px;" width="25px;">&nbsp;添加产品数据</a></li>
         </acc:oa>
-        <acc:oa opId="1">
+        <acc:oa opId="1,2">
             <li><a href="/honor/getHonorList" target="main"><img src="../../../res/images/main/user.png" height="25px;" width="25px;">&nbsp;荣誉管理</a></li>
         </acc:oa>
-        <acc:oa opId="1">
+        <acc:oa opId="1,2">
             <li><a href="/QA/getQAList" target="main"><img src="../../../res/images/main/user.png" height="25px;" width="25px;">&nbsp;QA管理</a></li>
         </acc:oa>
-        <acc:oa opId="1">
+        <acc:oa opId="1,2">
             <li><a href="/recruit/getRecruitList" target="main"><img src="../../../res/images/main/user.png" height="25px;" width="25px;">&nbsp;招聘管理</a></li>
+        </acc:oa>
+        <acc:oa opId="2">
+            <li><a href="/user/index" target="main"><img src="../../../res/images/main/user.png" height="25px;" width="25px;">&nbsp;个人信息管理</a></li>
         </acc:oa>
 		<acc:oa opId="1">
 			<li><a href="/user/index" target="main"><img src="../../../res/images/main/user.png" height="25px;" width="25px;">&nbsp;后台用户管理</a></li>

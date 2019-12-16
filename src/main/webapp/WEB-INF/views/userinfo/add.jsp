@@ -148,7 +148,7 @@
                     <td style="background:#A0E0F7;padding: 10px 15px;">角色：</td>
                     <td>
                         <select class="select-nosearch" name='roleId' id="roleId" style="width: 172px;">
-                            <option value='0'>
+                            <option value='2'>
                                 客户
                             </option>
                             <option value='1'>

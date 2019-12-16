@@ -139,7 +139,7 @@
                     <td style="background:#A0E0F7;padding: 10px 15px;">角色：</td>
                     <td>
                         <select class="select-nosearch" name='roleId' id="roleId" style="width: 172px;">
-                            <option value='0' <c:if test="${userInfo.roleId eq '0' }">selected = selected</c:if>>
+                            <option value='2' <c:if test="${userInfo.roleId eq '2' }">selected = selected</c:if>>
                                客户
                             </option>
                             <option value='1' <c:if test="${userInfo.roleId eq '1' }">selected = selected</c:if>>
