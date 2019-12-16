@@ -47,12 +47,6 @@ public class UserInfoController {
 	@Autowired
 	private IUserInfoService userInfoService;
 
-	@Autowired
-	private IAccRoleService accRoleService;
-
-	@Autowired
-	private IAccDepartService accDepartService;
-
 	/**
 	 * @return
 	 * @throws Exception
@@ -164,6 +158,12 @@ public class UserInfoController {
 		Map<String, Object> model = mav.getModel();
 		try {
 			String userId = request.getParameter("userId");
+			if(userId==null || userId.equals("")){
+                HttpSession session = request.getSession();
+                UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
+                System.out.println(staff.getId());
+                userId = String.valueOf(staff.getId());
+            }
             UserInfo userInfo = userInfoService.getById(userId);
             if(userInfo!=null){
                 String path = request.getContextPath();

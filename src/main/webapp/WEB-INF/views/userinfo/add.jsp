@@ -58,7 +58,7 @@
                 return false;
             }
 			var roleId = $("#roleId").val();
-			if(roleId=='0'){
+			if(roleId==''){
 				$("#roleId").validationEngine("showPrompt","请选择所属角色","error");
 				$(this).focus();
 				return false;
@@ -148,7 +148,7 @@
                     <td style="background:#A0E0F7;padding: 10px 15px;">角色：</td>
                     <td>
                         <select class="select-nosearch" name='roleId' id="roleId" style="width: 172px;">
-                            <option value='2'>
+                            <option value='0'>
                                 客户
                             </option>
                             <option value='1'>
