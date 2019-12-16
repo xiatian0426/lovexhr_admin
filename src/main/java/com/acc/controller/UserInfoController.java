@@ -161,7 +161,6 @@ public class UserInfoController {
 			if(userId==null || userId.equals("")){
                 HttpSession session = request.getSession();
                 UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
-                System.out.println(staff.getId());
                 userId = String.valueOf(staff.getId());
             }
             UserInfo userInfo = userInfoService.getById(userId);
@@ -175,7 +174,9 @@ public class UserInfoController {
             }
 			model.put("userInfo", userInfo);
 			model.put("notice", request.getParameter("notice"));
-			mav.setViewName("/userinfo/editUser");
+            String customerFlag = request.getParameter("customerFlag");
+            model.put("customerFlag", customerFlag);
+            mav.setViewName("/userinfo/editUser");
 		} catch (Exception e) {
 			_logger.error("转到添加用户页失败：" + ExceptionUtil.getMsg(e));
 			mav = new ModelAndView(Constants.SERVICES_ERROR, model);
@@ -230,8 +231,11 @@ public class UserInfoController {
 			user.setStatus(userInfo.getStatus());
 			userInfoService.update(user);
 			mav.getModel().put("userId", userId);
-			mav.getModel().put("notice", 1);
-
+			if(user.getCustomerFlag()!=null && user.getCustomerFlag().equals("1")){
+                mav.getModel().put("notice", 2);
+            }else{
+                mav.getModel().put("notice", 1);
+            }
 		} catch (Exception e) {
 			_logger.error("修改用户失败：" + ExceptionUtil.getMsg(e));
 			mav.getModel().put("userId", userId);

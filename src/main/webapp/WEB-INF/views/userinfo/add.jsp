@@ -71,7 +71,7 @@
 		<div class="clearB"></div>
 		<div class="r_box" style="padding: 0; width: 777px;">
 			<div class="adress" >
-				当前位置：后台用户添加
+				当前位置：用户信息添加
 			</div>
             <table  style=" font-size: 13px; " align=center>
                 <tr>

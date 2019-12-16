@@ -95,6 +95,8 @@ public class UserInfo implements java.io.Serializable, Cloneable{
 
     private String status;
 
+    private String customerFlag;
+
     private List<BxHonor> bxHonorList = new ArrayList<BxHonor>();
 
     public int getId() {
@@ -315,6 +317,14 @@ public class UserInfo implements java.io.Serializable, Cloneable{
 
     public void setModifierId(String modifierId) {
         this.modifierId = modifierId;
+    }
+
+    public String getCustomerFlag() {
+        return customerFlag;
+    }
+
+    public void setCustomerFlag(String customerFlag) {
+        this.customerFlag = customerFlag;
     }
 }
 

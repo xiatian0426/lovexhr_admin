@@ -41,7 +41,9 @@
 			}else if(notice == -1){
 				alert("操作失败");
 				window.close();
-			}
+			}if(notice == 2){
+                alert("操作成功");
+            }
 		})
 		function save(){
 			var roleId = $("#roleId").val();
@@ -55,11 +57,12 @@
 </head>
 <body style=" font-size: 13px;">
 	<form action="/user/editUser" name="userForm" method="post" target="_self" id="editUserFrom" onsubmit="return save();" enctype="multipart/form-data">
+        <input type="hidden" name="customerFlag" value="${customerFlag}"/>
         <input type="hidden" name="memberImg" value="${userInfo.memberImg}"/>
 		<div class="clearB"></div>
 		<div class="r_box" style="padding: 0; width: 777px;">
 			<div class="adress" >
-				当前位置：后台用户修改
+				当前位置：用户信息修改
 			</div>
 			<input name="id" type="hidden" value="${userInfo.id }"/>
 			<input id="notice" value="${notice}" type="hidden"/>
