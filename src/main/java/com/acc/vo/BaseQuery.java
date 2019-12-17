@@ -10,7 +10,7 @@ public class BaseQuery {
 	private int pageSize;
 	private String pageIndex;
 	public int getPageSize() {
-		if (pageSize <=0) pageSize = 20;
+		if (pageSize <=0) pageSize = 10;
 		return pageSize;
 	}
 

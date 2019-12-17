@@ -43,7 +43,7 @@ public class BxQAController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getQAList", method = {RequestMethod.POST,RequestMethod.GET})
-	public ModelAndView getQAList(ModelAndView mav, final HttpServletRequest request, QAQuery query) throws IOException {
+	public ModelAndView getQAList(ModelAndView mav, final HttpServletRequest request,@ModelAttribute QAQuery query) throws IOException {
         Map<String, Object> model = mav.getModel();
 	    try{
             HttpSession session = request.getSession();
@@ -98,7 +98,7 @@ public class BxQAController {
             _logger.error("updateById失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
-        return getQAList(mav,request,null);
+        return getQAList(mav,request,new QAQuery());
     }
 
     /**
@@ -127,6 +127,6 @@ public class BxQAController {
             _logger.error("addQA失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
-        return getQAList(mav,request,null);
+        return getQAList(mav,request,new QAQuery());
     }
 }
