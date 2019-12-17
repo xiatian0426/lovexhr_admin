@@ -73,7 +73,9 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
         UPDATE BX_QA SET
             ASK = #{ask},
             <if test="qaOrder != null and qaOrder != 0">QA_ORDER=#{qaOrder},</if>
-            ANSWER = #{answer}
+            ANSWER = #{answer},
+            MODIFY_DATE = now() ,
+            MODIFIER_ID = #{modifierId}
         WHERE ID = #{id}
     </update>
 
@@ -81,7 +83,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
         INSERT INTO BX_QA (
         	ASK,
             ANSWER,
-            <if test="memberId != null and memberId != 0">MEMBER_ID,</if>
+            MEMBER_ID,
             STATUS,
             CREATE_DATE,
             CREATER_ID,
@@ -89,7 +91,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
         ) VALUES (
         	#{ask} ,
         	#{answer},
-        	<if test="memberId != null and memberId != 0">#{memberId} ,</if>
+        	#{memberId} ,
         	0 ,
         	now() ,
         	#{createrId} ,

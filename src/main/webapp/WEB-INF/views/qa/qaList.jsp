@@ -150,14 +150,28 @@
                         </td>
                     </tr>
                     <tr>
-
                         <td align="center" height="33" align="center">
                             答案：
                         </td>
-                        <td align="center" colspan="3">
-                            <input id="answer" name="answer" value="" type="text" style="width: 96%"
+                        <td align="center">
+                            <input id="answer" name="answer" value="" type="text" style="width: 90%"
                                    class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                         </td>
+                        <c:if test="${userInfoList != null}">
+                            <td align="center" height="33" align="center">
+                                所属人：
+                            </td>
+                            <td align="center">
+                                <select class="select-nosearch" name="memberId" style="width: 90%;height: 28px;">
+                                    <option value="" selected="selected">---请选择---</option>
+                                    <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
+                                        <option value='${userInfo.id}'>
+                                                ${userInfo.userName}
+                                        </option>
+                                    </c:forEach>
+                                </select>
+                            </td>
+                        </c:if>
                     </tr>
                 </table>
                 <div class="sub_div">

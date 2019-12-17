@@ -4,6 +4,7 @@ import com.acc.exception.ExceptionUtil;
 import com.acc.model.BxQA;
 import com.acc.model.UserInfo;
 import com.acc.service.IBxQAService;
+import com.acc.service.IUserInfoService;
 import com.acc.util.Constants;
 import com.acc.vo.Page;
 import com.acc.vo.QAQuery;
@@ -33,6 +34,9 @@ public class BxQAController {
 	@Autowired
 	private IBxQAService bxQAService;
 
+    @Autowired
+    private IUserInfoService userInfoService;
+
 	/**
 	 * QA信息
 	 * @param request
@@ -48,6 +52,8 @@ public class BxQAController {
             if(staff!=null){
                 query.setSortColumns("c.CREATE_DATE desc");
                 if(staff.getRoleId()!=null && staff.getRoleId().equals(Constants.ROLEIDO)){
+                    List<UserInfo> userInfoList = userInfoService.getAll();
+                    model.put("userInfoList", userInfoList);
                     page = bxQAService.selectPage(query);
                 }else{
                     String memberId = String.valueOf(staff.getId());
@@ -79,6 +85,9 @@ public class BxQAController {
         Map<String,Object> result = new HashMap<String, Object>();
         try{
             if(bxQA != null){
+                HttpSession session = request.getSession();
+                UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
+                bxQA.setModifierId(String.valueOf(staff.getId()));
                 bxQAService.updateById(bxQA);
                 result.put("code",0);
                 result.put("message","更新成功!");
@@ -104,7 +113,9 @@ public class BxQAController {
             if(bxQA != null){
                 HttpSession session = request.getSession();
                 UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
-                bxQA.setMemberId(staff.getId());
+                if(bxQA.getMemberId()==0){
+                    bxQA.setMemberId(staff.getId());
+                }
                 bxQA.setCreaterId(staff.getId());
                 bxQAService.insert(bxQA);
                 result.put("code",0);
