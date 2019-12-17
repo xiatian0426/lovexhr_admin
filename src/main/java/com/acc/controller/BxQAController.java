@@ -5,6 +5,8 @@ import com.acc.model.BxQA;
 import com.acc.model.UserInfo;
 import com.acc.service.IBxQAService;
 import com.acc.util.Constants;
+import com.acc.vo.Page;
+import com.acc.vo.QAQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,25 +38,33 @@ public class BxQAController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/getQAList", method = RequestMethod.GET)
-	public ModelAndView getQAList(ModelAndView mav, final HttpServletRequest request) throws IOException {
+	@RequestMapping(value = "/getQAList", method = {RequestMethod.POST,RequestMethod.GET})
+	public ModelAndView getQAList(ModelAndView mav, final HttpServletRequest request, QAQuery query) throws IOException {
         Map<String, Object> model = mav.getModel();
 	    try{
             HttpSession session = request.getSession();
             UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
-            String memberId = String.valueOf(staff.getId());
-            if(StringUtils.isNotEmpty(memberId) ){
-                Integer count = bxQAService.getQACount(memberId);
-                model.put("count",count);
-                List<BxQA> bxQAList = bxQAService.getQAList(memberId);
-                model.put("list",bxQAList);
+            Page<BxQA> page = null;
+            if(staff!=null){
+                query.setSortColumns("c.CREATE_DATE desc");
+                if(staff.getRoleId()!=null && staff.getRoleId().equals(Constants.ROLEIDO)){
+                    page = bxQAService.selectPage(query);
+                }else{
+                    String memberId = String.valueOf(staff.getId());
+                    if(StringUtils.isNotEmpty(memberId) ){
+                        query.setMemberId(Integer.valueOf(memberId));
+                        page = bxQAService.selectPage(query);
+                    }
+                }
             }
+            model.put("page", page);
+            model.put("query", query);
+            mav=new ModelAndView("/qa/qaList", model);
         } catch (Exception e) {
             _logger.error("getMemberById失败：" + ExceptionUtil.getMsg(e));
             mav = new ModelAndView(Constants.SERVICES_ERROR, model);
             e.printStackTrace();
         }
-        mav=new ModelAndView("/qa/qaList", model);
 	    return mav;
 	}
 
@@ -79,7 +89,7 @@ public class BxQAController {
             _logger.error("updateById失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
-        return getQAList(mav,request);
+        return getQAList(mav,request,null);
     }
 
     /**
@@ -106,6 +116,6 @@ public class BxQAController {
             _logger.error("addQA失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
-        return getQAList(mav,request);
+        return getQAList(mav,request,null);
     }
 }

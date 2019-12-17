@@ -74,7 +74,7 @@ public class UserInfoController {
 		try {
             HttpSession session = request.getSession();
             UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
-            if(staff!=null && staff.getRoleId()!=null && staff.getRoleId().equals("1")){
+            if(staff!=null && staff.getRoleId()!=null && staff.getRoleId().equals(Constants.ROLEIDO)){
                 Page<UserInfo> page = userInfoService.selectPage(query);
                 model.put("page", page);
                 model.put("query", query);
@@ -231,7 +231,7 @@ public class UserInfoController {
 			user.setStatus(userInfo.getStatus());
 			userInfoService.update(user);
 			mav.getModel().put("userId", userId);
-			if(user.getCustomerFlag()!=null && user.getCustomerFlag().equals("1")){
+			if(user.getCustomerFlag()!=null && user.getCustomerFlag().equals(Constants.ROLEIDO)){
                 mav.getModel().put("notice", 2);
             }else{
                 mav.getModel().put("notice", 1);

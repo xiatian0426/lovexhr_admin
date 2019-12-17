@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface BxQAMapper {
+public interface BxQAMapper extends BaseMapper<BxQA>{
 
     List<BxQA> getQAList(@Param("memberId") String memberId) throws SelectException;
 
@@ -17,6 +17,4 @@ public interface BxQAMapper {
     BxQA getQAById(@Param("id") String id) throws SelectException;
 
     void updateById(BxQA bxQA) throws Exception;
-
-    void insert(BxQA bxQA) throws Exception;
 }

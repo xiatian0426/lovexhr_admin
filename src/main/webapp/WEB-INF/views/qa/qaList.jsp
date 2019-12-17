@@ -20,6 +20,10 @@
 		<!-- 引入分页 -->
 		<script src="${jsRoot}/page.js"></script>
 		<script type="text/javascript">
+            $(function(){
+                //函数来源page.js
+                page("qaListForm", ${page.pageInfo}, "pageQAList");
+            });
             function deleteById(id){
                 $.ajax({
                     url:'/ajax/deleteQAById',
@@ -45,63 +49,81 @@
             }
 		</script>
 	</head>
-<body style="width: 95%;  font-size: 13px;">
+<div style="width: 95%;  font-size: 13px;">
     <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
         QA信息列表
     </div>
-    <div class="r_box" >
-        <table width="100%" cellpadding="0" cellspacing="0" class="table-bordered">
-            <tr>
-                <th width="5%" align="center" height="38" align="center">
-                    序号
-                </th>
-                <th width="20%" align="center">
-                    问题
-                </th>
-                <th width="43%" align="center">
-                    答案
-                </th>
-                <th width="5%" align="center">
-                    排序
-                </th>
-                <th width="13%" align="center">
-                    操作
-                </th>
-            </tr>
-            <c:forEach items="${list}" var="data" varStatus="count">
-                <form class="form-horizontal" id="qaDataListForm" action="/QA/updateById" method="POST">
-                    <input type="hidden" name="id" value="${data.id }">
-                    <tr>
-                        <td align="center" height="33" align="center">
-                            ${count.count}
-                        </td>
-                        <td align="center">
-                            <input name="ask" value="${data.ask}" type="text" style="width: 90%;"
-                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                        </td>
-                        <td align="center" title="${data.answer}">
-                            <c:if test="${fn:length(data.answer)>40 }">
-                                <input name="answer" value="${fn:substring(data.answer,0,40) }..." type="text" style="width: 96%"
+    <form class="form-horizontal" id="qaListForm" action="/QA/getQAList" method="POST">
+        <div class="r_box" style="margin-top: 10px;">
+            <div style="height: 15px; width: 100%;"><span></span></div>
+            <span class="infoLable">问题：</span>
+            <input name="userName" type="text" class="self-form-control" style="width: 100px;" value="${query.ask }"/>
+            <button type="submit" class="btn btn-default"
+                    style="background-color:#337ab7;">搜索</button>
+            <br />
+            <div><span></span></div>
+        </div>
+        <div class="r_box" >
+            <table width="100%" cellpadding="0" cellspacing="0" class="table-bordered">
+                <tr>
+                    <th width="5%" align="center" height="38" align="center">
+                        序号
+                    </th>
+                    <th width="20%" align="center">
+                        问题
+                    </th>
+                    <th width="43%" align="center">
+                        答案
+                    </th>
+                    <th width="5%" align="center">
+                        排序
+                    </th>
+                    <th width="13%" align="center">
+                        操作
+                    </th>
+                </tr>
+                <c:forEach items="${page.result}" var="data" varStatus="count">
+                    <form class="form-horizontal" id="qaDataListForm" action="/QA/updateById" method="POST">
+                        <input type="hidden" name="id" value="${data.id }">
+                        <tr>
+                            <td align="center" height="33" align="center">
+                                    ${count.count}
+                            </td>
+                            <td align="center">
+                                <input name="ask" value="${data.ask}" type="text" style="width: 90%;"
                                        class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                            </c:if>
-                            <c:if test="${fn:length(data.answer)<=40 }">
-                                <input name="answer" value="${data.answer }" type="text" style="width: 96%"
-                                       class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                            </c:if>
+                            </td>
+                            <td align="center" title="${data.answer}">
+                                <c:if test="${fn:length(data.answer)>40 }">
+                                    <input name="answer" value="${fn:substring(data.answer,0,40) }..." type="text" style="width: 96%"
+                                           class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                                </c:if>
+                                <c:if test="${fn:length(data.answer)<=40 }">
+                                    <input name="answer" value="${data.answer }" type="text" style="width: 96%"
+                                           class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                                </c:if>
 
-                        </td>
-                        <td align="center">
-                            <input name="qaOrder" value="${data.qaOrder}" type="text" style="width: 90%"
-                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                        </td>
-                        <td align="center">
-                            <button type="submit" class="btn btn-success">保存</button>
-                            <button type="button" class="btn btn-success" onclick="deleteById('${data.id}','1')" target="_blank">删除</button>
-                        </td>
-                    </tr>
-                </form>
-            </c:forEach>
-        </table>
+                            </td>
+                            <td align="center">
+                                <input name="qaOrder" value="${data.qaOrder}" type="text" style="width: 90%"
+                                       class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                            </td>
+                            <td align="center">
+                                <button type="submit" class="btn btn-success">保存</button>
+                                <button type="button" class="btn btn-success" onclick="deleteById('${data.id}','1')" target="_blank">删除</button>
+                            </td>
+                        </tr>
+                    </form>
+                </c:forEach>
+                <tr>
+                    <td colspan="8" height="40" bgcolor="#D9F3FD" align="left" class="pageQAList">
+                        <%-- 共${page.recordCount}条|当前${page.currentPage}/${page.pageCount}页 --%>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+    <div class="r_box" >
         <br/>
         <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
             添加QA信息
@@ -145,5 +167,6 @@
             </div>
         </form>
     </div>
+</div>
 </body>
 </html>

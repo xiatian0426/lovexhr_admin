@@ -5,7 +5,7 @@ import com.acc.model.BxQA;
 
 import java.util.List;
 
-public interface IBxQAService {
+public interface IBxQAService extends IBaseService<BxQA>{
 	/**
 	 * QA信息
 	 * @return
