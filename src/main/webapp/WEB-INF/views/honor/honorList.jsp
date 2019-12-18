@@ -61,10 +61,10 @@
             <div style="height: 15px; width: 100%;"><span></span></div>
             <span class="infoLable">所属人：</span>
             <select class="select-nosearch" name="memberId" style="width: 200px;height: 28px;">
-                <option value="" selected="selected">---请选择---</option>
+                <option value="0" selected="selected">---请选择---</option>
                 <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
                     <option value='${userInfo.id}'<c:if test="${userInfo.id==query.memberId }">selected="selected"</c:if>>
-                            ${userInfo.userName}
+                        ${userInfo.userName}
                     </option>
                 </c:forEach>
             </select>
@@ -73,70 +73,67 @@
             <br />
             <div><span></span></div>
         </div>
-        <div class="r_box" >
-            <table width="100%" cellpadding="0" cellspacing="0" class="table-bordered">
-                <tr>
-                    <th width="10%" align="center" height="38" align="center">
-                        序号
-                    </th>
-                    <th width="25%" align="center">
-                        预览
-                    </th>
-                    <th width="45%" align="center">
-                        图片
-                    </th>
-                    <th width="5%" align="center">
-                        排序
-                    </th>
-                    <c:if test="${userInfoList != null}">
-                        <th width="10%" align="center">
-                            所属人
-                        </th>
-                    </c:if>
-                    <th width="15%" align="center">
-                        操作
-                    </th>
-                </tr>
-                <c:forEach items="${page.result}" var="data" varStatus="count">
-                    <form class="form-horizontal" id="honorDataListForm" action="/honor/updateById" method="POST" enctype="multipart/form-data">
-                        <input type="hidden" name="id" value="${data.id }">
-                        <c:if test="${data.id!=null && data.id!=0}">
-                            <input type="hidden" name="imageUrl" value="${data.imageUrl }">
-                        </c:if>
-                        <tr>
-                            <td align="center" height="33" align="center">
-                                ${count.count}
-                            </td>
-                            <td align="center">
-                                <img src="${data.imageUrl}" width="50" height="50"/>
-                            </td>
-                            <td align="center">
-                                <input type="file" name="file"/>
-                            </td>
-                            <td align="center">
-                                <input name="honorOrder" value="${data.honorOrder}" type="text" style="width: 90%;"
-                                       class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                            </td>
-                            <c:if test="${userInfoList != null}">
-                                <td align="center">
-                                    ${userInfoDictMap[data.memberId].userRealname }
-                                </td>
-                            </c:if>
-                            <td align="center">
-                                <button type="submit" class="btn btn-success">保存</button>
-                                <button type="button" class="btn btn-success" onclick="deleteById('${data.id}','${data.memberId}','${data.imageUrl}')" target="_blank">删除</button>
-                            </td>
-                        </tr>
-                    </form>
-                </c:forEach>
-                <tr>
-                    <td colspan="8" height="40" bgcolor="#D9F3FD" align="left" class="pageHonorList">
-                        <%-- 共${page.recordCount}条|当前${page.currentPage}/${page.pageCount}页 --%>
-                    </td>
-                </tr>
-            </table>
-        </div>
+        <div class="pageHonorList" style="height:52px;margin-top:-30px;"></div>
     </form>
+    <div class="r_box" style="border:0px dashed #00F" >
+        <table width="100%" cellpadding="0" cellspacing="0" class="table-bordered">
+            <tr>
+                <th width="10%" align="center" height="38" align="center">
+                    序号
+                </th>
+                <th width="25%" align="center">
+                    预览
+                </th>
+                <th width="45%" align="center">
+                    图片
+                </th>
+                <th width="5%" align="center">
+                    排序
+                </th>
+                <c:if test="${userInfoList != null}">
+                    <th width="10%" align="center">
+                        所属人
+                    </th>
+                </c:if>
+                <th width="15%" align="center">
+                    操作
+                </th>
+            </tr>
+            <c:forEach items="${page.result}" var="data" varStatus="count">
+                <form class="form-horizontal" id="honorDataListForm" action="/honor/updateById" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="${data.id }">
+                    <c:if test="${data.id!=null && data.id!=0}">
+                        <input type="hidden" name="imageUrl" value="${data.imageUrl }">
+                    </c:if>
+                    <tr>
+                        <td align="center" height="33" align="center">
+                            ${count.count}
+                        </td>
+                        <td align="center">
+                            <img src="${data.imageUrl}" width="50" height="50"/>
+                        </td>
+                        <td align="center">
+                            <input type="file" name="file"/>
+                        </td>
+                        <td align="center">
+                            <input name="honorOrder" value="${data.honorOrder}" type="text" style="width: 90%;"
+                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                        </td>
+                        <c:if test="${userInfoList != null}">
+                            <td align="center">
+                                ${userInfoDictMap[data.memberId].userRealname }
+                            </td>
+                        </c:if>
+                        <td align="center">
+                            <button type="submit" class="btn btn-success">保存</button>
+                            <button type="button" class="btn btn-success" onclick="deleteById('${data.id}','${data.memberId}','${data.imageUrl}')" target="_blank">删除</button>
+                        </td>
+                    </tr>
+                </form>
+            </c:forEach>
+        </table>
+    </div>
+
     <div class="r_box" >
         <br/>
         <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
