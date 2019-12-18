@@ -57,7 +57,16 @@
         <div class="r_box" style="margin-top: 10px;">
             <div style="height: 15px; width: 100%;"><span></span></div>
             <span class="infoLable">问题：</span>
-            <input name="userName" type="text" class="self-form-control" style="width: 100px;" value="${query.ask }"/>
+            <input name="ask" type="text" class="self-form-control" style="width: 100px;" value="${query.ask }"/>
+            <span class="infoLable">所属人：</span>
+            <select class="select-nosearch" name="memberId" style="width: 200px;height: 28px;">
+                <option value="" selected="selected">---请选择---</option>
+                <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
+                    <option value='${userInfo.id}'<c:if test="${userInfo.id==query.memberId }">selected="selected"</c:if>>
+                            ${userInfo.userName}
+                    </option>
+                </c:forEach>
+            </select>
             <button type="submit" class="btn btn-default"
                     style="background-color:#337ab7;">搜索</button>
             <br />
@@ -78,6 +87,11 @@
                     <th width="5%" align="center">
                         排序
                     </th>
+                    <c:if test="${userInfoList != null}">
+                        <th width="10%" align="center">
+                            所属人
+                        </th>
+                    </c:if>
                     <th width="13%" align="center">
                         操作
                     </th>
@@ -108,6 +122,11 @@
                                 <input name="qaOrder" value="${data.qaOrder}" type="text" style="width: 90%"
                                        class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                             </td>
+                            <c:if test="${userInfoList != null}">
+                                <td align="center">
+                                        ${userInfoDictMap[data.memberId].userRealname }
+                                </td>
+                            </c:if>
                             <td align="center">
                                 <button type="submit" class="btn btn-success">保存</button>
                                 <button type="button" class="btn btn-success" onclick="deleteById('${data.id}','1')" target="_blank">删除</button>
