@@ -3,6 +3,7 @@ package com.acc.controller;
 import com.acc.exception.ExceptionUtil;
 import com.acc.model.*;
 import com.acc.service.IBxProductService;
+import com.acc.service.IUserInfoService;
 import com.acc.util.Constants;
 import com.acc.util.PictureChange;
 import com.alibaba.fastjson.JSON;
@@ -35,6 +36,9 @@ public class BxProductController {
 	@Autowired
 	private IBxProductService bxProductService;
 
+    @Autowired
+    private IUserInfoService userInfoService;
+
     /**
      * 进入添加产品页
      * @param mav
@@ -45,9 +49,8 @@ public class BxProductController {
     public ModelAndView goAddProductByMemId (ModelAndView mav, final HttpServletRequest request) {
         Map<String, Object> model = mav.getModel();
         try {
-            HttpSession session = request.getSession();
-            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
-            model.put("memberId",staff.getId());
+            List<UserInfo> userInfoList = userInfoService.getAll();
+            model.put("userInfoList", userInfoList);
             mav=new ModelAndView("/productData/addProductData", model);
         } catch (Exception e) {
             _logger.error("进入添加产品页失败：" + ExceptionUtil.getMsg(e));
@@ -147,73 +150,6 @@ public class BxProductController {
     }
 
     /**
-     * 根据产品id获取产品详情
-     * @param request
-     * @param response
-     * @return
-     */
-    @RequestMapping(value = "/getProductDetail", method = RequestMethod.GET)
-    public void getProductDetail(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
-        PrintWriter out = response.getWriter();
-        String result = "";
-        try{
-            String productId = request.getParameter("productId");
-            if(StringUtils.isNotEmpty(productId)){
-                List<BxProduct> list = bxProductService.getDetailByProductId(productId);
-                if(list != null && list.size()>0){
-                    String path = request.getContextPath();
-                    String basePath = request.getScheme() + "://"
-                            + request.getServerName() + ":" + request.getServerPort()
-                            + path + "/";
-                    BxProduct resultBxProduct = new BxProduct();
-                    resultBxProduct.setId(list.get(0).getId());
-                    resultBxProduct.setProductName(list.get(0).getProductName());
-                    resultBxProduct.setProductVideo(basePath+ Constants.proVideoPath+list.get(0).getId()+"/"+list.get(0).getProductVideo());
-                    List<String> imgUrlList = new ArrayList<String>();
-                    for(BxProduct bxProduct:list){
-                        imgUrlList.add(basePath+ Constants.proDetailImgPath+bxProduct.getId()+"/"+bxProduct.getImageUrl());
-                    }
-                    resultBxProduct.setImgUrlList(imgUrlList);
-                    result = JSON.toJSONString(resultBxProduct);
-                }
-            }
-        } catch (Exception e) {
-            _logger.error("getDetailByProductId失败：" + ExceptionUtil.getMsg(e));
-            e.printStackTrace();
-        }
-        out.print(result);
-        out.flush();
-        out.close();
-    }
-    /**
-     * 获取案例产品详情
-     * @param request
-     * @param response
-     * @return
-     */
-    @RequestMapping(value = "/getCaseDetail", method = RequestMethod.GET)
-    public void getCaseDetail(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
-        PrintWriter out = response.getWriter();
-        String result = "";
-        try{
-            String productId = request.getParameter("productId");
-            if(StringUtils.isNotEmpty(productId)){
-                BxCase bxCase = bxProductService.getCaseDetail(productId);
-                result = JSON.toJSONString(bxCase);
-            }
-        } catch (Exception e) {
-            _logger.error("getCaseDetail失败：" + ExceptionUtil.getMsg(e));
-            e.printStackTrace();
-        }
-        out.print(result);
-        out.flush();
-        out.close();
-    }
-    /**
      * 管理端--点击删除
      * @param request
      * @param response
@@ -261,12 +197,15 @@ public class BxProductController {
             if (bxProduct != null) {
                 if(bxProduct.getType()!=null && !"".equals(bxProduct.getType())){
                     if(file != null){
-                        if(bxProduct.getType().equals("0")){
+                        if(bxProduct.getType().equals("0")){//添加
                             HttpSession session = request.getSession();
                             UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
+                            if(bxProduct.getMemberId()==0){
+                                bxProduct.setMemberId(staff.getId());
+                            }
                             bxProduct.setCreateId(staff.getId());
                             bxProductService.addProduct(bxProduct);
-                        }else{
+                        }else{//修改
                             BxProduct oldBxProduct = bxProductService.getProductById(bxProduct.getId());
                             if(oldBxProduct==null){
                                 boo = false;
@@ -374,13 +313,143 @@ public class BxProductController {
         return getProDetail(mav,request);
     }
     /**
+     * 后台管理--修改商品图片信息
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/editProductDetailImg", method = RequestMethod.POST)
+    public ModelAndView editProductDetailImg(ModelAndView mav,final HttpServletRequest request, final HttpServletResponse response, @ModelAttribute BxProductImg bxProductImg,
+                                             @RequestParam(value="file",required=false)MultipartFile[] file) throws IOException {
+        Map<String, Object> model = mav.getModel();
+        String result;
+        int status = 0;
+        try {
+            if(file != null && file.length>0){
+                if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
+                    bxProductImg.setImageUrl(null);
+                    bxProductService.updateProductImg(bxProductImg);
+                    result = "添加成功";
+                }else{
+                    String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                    String fileSavePath=path + Constants.proDetailImgPath + bxProductImg.getProductId() + "/";
+                    Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
+                    int re = Integer.valueOf((String)mapImg.get("code")).intValue();
+                    if(re == 0){
+                        //删除老图片
+                        String imgUrl = null;
+                        if(bxProductImg.getImageUrl()!=null && !"".equals(bxProductImg.getImageUrl())){
+                            imgUrl = bxProductImg.getImageUrl().split("/")[bxProductImg.getImageUrl().split("/").length-1];
+                        }
+                        File oldFile = new File(fileSavePath+imgUrl);
+                        oldFile.delete();
+                        List<String> imgNameList = (List<String>)mapImg.get("list");
+                        if(imgNameList!=null && imgNameList.size()>0){
+                            bxProductImg.setImageUrl(imgNameList.get(0));
+                            if(bxProductImg.getId()!=0){
+                                //更新
+                                bxProductService.updateProductImg(bxProductImg);
+                            }else{
+                                //添加
+                                bxProductService.insertProductImg(bxProductImg);
+                            }
+                        }
+                        result = "添加成功";
+                    }else{
+                        result = "添加失败!";
+                    }
+                }
+            }else{
+                status = 2;
+                result = "文件不能为空!";
+            }
+        } catch (Exception e) {
+            status = -1;
+            result = "添加失败，请联系管理员!";
+            _logger.error("aeditProductDetailImg失败：" + ExceptionUtil.getMsg(e));
+            e.printStackTrace();
+        }
+        model.put("status", status);
+        model.put("result", result);
+        return getProDetail(mav,request);
+    }
+    /**
+     * 根据产品id获取产品详情
+     * @param request
+     * @param response
+     * @return
+     *//*
+    @RequestMapping(value = "/getProductDetail", method = RequestMethod.GET)
+    public void getProductDetail(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+        request.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");
+        PrintWriter out = response.getWriter();
+        String result = "";
+        try{
+            String productId = request.getParameter("productId");
+            if(StringUtils.isNotEmpty(productId)){
+                List<BxProduct> list = bxProductService.getDetailByProductId(productId);
+                if(list != null && list.size()>0){
+                    String path = request.getContextPath();
+                    String basePath = request.getScheme() + "://"
+                            + request.getServerName() + ":" + request.getServerPort()
+                            + path + "/";
+                    BxProduct resultBxProduct = new BxProduct();
+                    resultBxProduct.setId(list.get(0).getId());
+                    resultBxProduct.setProductName(list.get(0).getProductName());
+                    resultBxProduct.setProductVideo(basePath+ Constants.proVideoPath+list.get(0).getId()+"/"+list.get(0).getProductVideo());
+                    List<String> imgUrlList = new ArrayList<String>();
+                    for(BxProduct bxProduct:list){
+                        imgUrlList.add(basePath+ Constants.proDetailImgPath+bxProduct.getId()+"/"+bxProduct.getImageUrl());
+                    }
+                    resultBxProduct.setImgUrlList(imgUrlList);
+                    result = JSON.toJSONString(resultBxProduct);
+                }
+            }
+        } catch (Exception e) {
+            _logger.error("getDetailByProductId失败：" + ExceptionUtil.getMsg(e));
+            e.printStackTrace();
+        }
+        out.print(result);
+        out.flush();
+        out.close();
+    }*/
+    /**
+     * 获取案例产品详情
+     * @param request
+     * @param response
+     * @return
+     */
+    /*@RequestMapping(value = "/getCaseDetail", method = RequestMethod.GET)
+    public void getCaseDetail(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+        request.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");
+        PrintWriter out = response.getWriter();
+        String result = "";
+        try{
+            String productId = request.getParameter("productId");
+            if(StringUtils.isNotEmpty(productId)){
+                BxCase bxCase = bxProductService.getCaseDetail(productId);
+                result = JSON.toJSONString(bxCase);
+            }
+        } catch (Exception e) {
+            _logger.error("getCaseDetail失败：" + ExceptionUtil.getMsg(e));
+            e.printStackTrace();
+        }
+        out.print(result);
+        out.flush();
+        out.close();
+    }*/
+
+    /**
      * 后台管理--删除商品视频信息
      *
      * @param request
      * @param response
      * @return
      */
-    @RequestMapping(value = "/deleteProductDetailVideoById", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/deleteProductDetailVideoById", method = RequestMethod.POST)
     public void deleteProductDetailVideoById(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf-8");
@@ -408,7 +477,7 @@ public class BxProductController {
         out.print(JSON.toJSONString(result));
         out.flush();
         out.close();
-    }
+    }*/
     /**
      * 后台管理--添加商品图片信息
      *
@@ -416,7 +485,7 @@ public class BxProductController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/addProductDetailImg", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/addProductDetailImg", method = RequestMethod.POST)
     public ModelAndView addProductDetailImg(ModelAndView mav,final HttpServletRequest request, final HttpServletResponse response, @ModelAttribute BxProductImg bxProductImg,
                                     @RequestParam(value="file",required=false)MultipartFile[] file) throws IOException {
         Map<String, Object> model = mav.getModel();
@@ -492,67 +561,6 @@ public class BxProductController {
         model.put("status", status);
         model.put("result", result);
         return getProDetail(mav,request);
-    }
-    /**
-     * 后台管理--修改商品图片信息
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    @RequestMapping(value = "/editProductDetailImg", method = RequestMethod.POST)
-    public ModelAndView editProductDetailImg(ModelAndView mav,final HttpServletRequest request, final HttpServletResponse response, @ModelAttribute BxProductImg bxProductImg,
-                                            @RequestParam(value="file",required=false)MultipartFile[] file) throws IOException {
-        Map<String, Object> model = mav.getModel();
-        String result;
-        int status = 0;
-        try {
-            if(file != null && file.length>0){
-                if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
-                    bxProductImg.setImageUrl(null);
-                    bxProductService.updateProductImg(bxProductImg);
-                    result = "添加成功";
-                }else{
-                    String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
-                    String fileSavePath=path + Constants.proDetailImgPath + bxProductImg.getProductId() + "/";
-                    Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
-                    int re = Integer.valueOf((String)mapImg.get("code")).intValue();
-                    if(re == 0){
-                        //删除老图片
-                        String imgUrl = null;
-                        if(bxProductImg.getImageUrl()!=null && !"".equals(bxProductImg.getImageUrl())){
-                            imgUrl = bxProductImg.getImageUrl().split("/")[bxProductImg.getImageUrl().split("/").length-1];
-                        }
-                        File oldFile = new File(fileSavePath+imgUrl);
-                        oldFile.delete();
-                        List<String> imgNameList = (List<String>)mapImg.get("list");
-                        if(imgNameList!=null && imgNameList.size()>0){
-                            bxProductImg.setImageUrl(imgNameList.get(0));
-                            if(bxProductImg.getId()!=0){
-                                //更新
-                                bxProductService.updateProductImg(bxProductImg);
-                            }else{
-                                //添加
-                                bxProductService.insertProductImg(bxProductImg);
-                            }
-                        }
-                        result = "添加成功";
-                    }else{
-                        result = "添加失败!";
-                    }
-                }
-            }else{
-                status = 2;
-                result = "文件不能为空!";
-            }
-        } catch (Exception e) {
-            status = -1;
-            result = "添加失败，请联系管理员!";
-            _logger.error("aeditProductDetailImg失败：" + ExceptionUtil.getMsg(e));
-            e.printStackTrace();
-        }
-        model.put("status", status);
-        model.put("result", result);
-        return getProDetail(mav,request);
-    }
+    }*/
+
 }

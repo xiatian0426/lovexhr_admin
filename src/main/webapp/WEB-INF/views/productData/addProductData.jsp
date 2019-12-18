@@ -89,7 +89,6 @@
 <body style=" font-size: 13px;">
 <form action="/product/addOrUpdateProductById" name="messageDataForm" method="post" target="_self" id="editMessageDataFrom" enctype="multipart/form-data">
     <input type="hidden" name="type" value="0">
-    <input type="hidden" name="memberId" value="${memberId }">
     <div class="clearB"></div>
     <div class="r_box" style="padding: 5px;">
         <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
@@ -178,6 +177,23 @@
                            class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                 </td>
             </tr>
+            <c:if test="${userInfoList != null}">
+                <tr>
+                    <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>
+                        &nbsp;所属人：
+                    </td>
+                    <td>
+                        <select class="select-nosearch" name="memberId" style="width: 90%;height: 28px;">
+                            <option value="0" selected="selected">---请选择---</option>
+                            <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
+                                <option value='${userInfo.id}'>
+                                        ${userInfo.userName}
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </td>
+                </tr>
+            </c:if>
         </table>
         <div class="sub_div">
             <input type="submit" class="sub_btn" value=" "/>

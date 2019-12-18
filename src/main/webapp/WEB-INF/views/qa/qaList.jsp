@@ -184,7 +184,7 @@
                             </td>
                             <td align="center">
                                 <select class="select-nosearch" name="memberId" style="width: 90%;height: 28px;">
-                                    <option value="" selected="selected">---请选择---</option>
+                                    <option value="0" selected="selected">---请选择---</option>
                                     <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
                                         <option value='${userInfo.id}'>
                                                 ${userInfo.userName}
