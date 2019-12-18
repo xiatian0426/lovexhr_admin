@@ -46,6 +46,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfo> implements IU
 		try {
 			return userInfoMapper.getByUserName(userName);
 		} catch (Exception ex) {
+		    ex.printStackTrace();
 			_logger.error("[获取用户失败,无效的用户,userName="+userName+"]");
 		}
 		return null;

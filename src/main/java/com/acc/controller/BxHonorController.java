@@ -4,8 +4,11 @@ import com.acc.exception.ExceptionUtil;
 import com.acc.model.BxHonor;
 import com.acc.model.UserInfo;
 import com.acc.service.IBxHonorService;
+import com.acc.service.IUserInfoService;
 import com.acc.util.Constants;
 import com.acc.util.PictureChange;
+import com.acc.vo.HonorQuery;
+import com.acc.vo.Page;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,42 +39,52 @@ public class BxHonorController {
 	@Autowired
 	private IBxHonorService bxHonorService;
 
+    @Autowired
+    private IUserInfoService userInfoService;
+
 	/**
 	 * 荣誉信息
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/getHonorList", method = RequestMethod.GET)
-	public ModelAndView getHonorList(ModelAndView mav, final HttpServletRequest request) throws IOException {
+	@RequestMapping(value = "/getHonorList", method = {RequestMethod.GET,RequestMethod.POST})
+	public ModelAndView getHonorList(ModelAndView mav, final HttpServletRequest request,@ModelAttribute HonorQuery query) throws IOException {
         Map<String,Object> model = new HashMap<String, Object>();
 	    try{
             HttpSession session = request.getSession();
             UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
-            String memberId = String.valueOf(staff.getId());
-            if(StringUtils.isNotEmpty(memberId) ){
-                Integer count = bxHonorService.getHonorCount(memberId);
-                model.put("count",count);
-                List<BxHonor> bxHonorList = bxHonorService.getHonorList(memberId);
+            Page<BxHonor> page = null;
+            if(staff!=null){
                 String path = request.getContextPath();
                 String basePath = request.getScheme() + "://"
                         + request.getServerName() + ":" + request.getServerPort()
                         + path + "/";
-                List<String> imageUrl = new ArrayList<String>();
+                query.setSortColumns("c.CREATE_DATE desc");
+                if(staff.getRoleId()!=null && staff.getRoleId().equals(Constants.ROLEIDO)){
+                    List<UserInfo> userInfoList = userInfoService.getAll();
+                    model.put("userInfoList", userInfoList);
+                    page = bxHonorService.selectPage(query);
+                }else{
+                    String memberId = String.valueOf(staff.getId());
+                    if(StringUtils.isNotEmpty(memberId) ){
+                        query.setMemberId(Integer.valueOf(memberId));
+                        page = bxHonorService.selectPage(query);
+                    }
+                }
                 String url;
-                for (BxHonor bxHonor:bxHonorList){
+                for (BxHonor bxHonor:page.getResult()){
                     url = basePath+ Constants.honorImgPath+bxHonor.getMemberId()+"/"+bxHonor.getImageUrl();
                     bxHonor.setImageUrl(url);
-                    imageUrl.add(url);
                 }
-                model.put("list",bxHonorList);
-                model.put("imageUrl",imageUrl);
             }
+            model.put("page", page);
+            model.put("query", query);
+            mav=new ModelAndView("/honor/honorList", model);
         } catch (Exception e) {
             _logger.error("bxHonorService失败：" + ExceptionUtil.getMsg(e));
             mav = new ModelAndView(Constants.SERVICES_ERROR, model);
             e.printStackTrace();
         }
-        mav=new ModelAndView("/honor/honorList", model);
         return mav;
 	}
 
@@ -89,37 +102,40 @@ public class BxHonorController {
         try {
             if (bxHonor != null) {
                 if(file!=null && file.length>0){
-                    if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
-                        //删除该代理商的整个荣誉文件夹
-                        bxHonor.setImageUrl(null);
-                        bxHonorService.updateById(bxHonor);
-                    }else{
-                        HttpSession session = request.getSession();
-                        UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
-                        bxHonor.setMemberId(staff.getId());
-                        String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
-                        String fileSavePath=path + Constants.honorImgPath + bxHonor.getMemberId() + "/";
-                        Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
-                        int re = Integer.valueOf((String)mapImg.get("code")).intValue();
-                        if(re==0){
-                            String imgUrl = null;
-                            if(bxHonor.getImageUrl()!=null && !"".equals(bxHonor.getImageUrl())){
-                                imgUrl = bxHonor.getImageUrl().split("/")[bxHonor.getImageUrl().split("/").length-1];
-                            }
-                            new File(fileSavePath+imgUrl).delete();
-                            List<String> list = (List<String>)mapImg.get("list");
-                            if(list!=null && list.size()>0){
-                                bxHonor.setImageUrl(list.get(0));
-                                //操作新的文件
-                                bxHonorService.updateById(bxHonor);
-                            }
-                            result = "添加/更新成功!";
-                        }else if(re==-1){
-                            status = 3;
-                            result = "没有文件!";
+                    HttpSession session = request.getSession();
+                    UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
+                    if(staff!=null){
+                        bxHonor.setModifierId(String.valueOf(staff.getId()));
+                        if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
+                            bxHonor.setImageUrl(null);
+                            bxHonorService.updateById(bxHonor);
                         }else{
-                            status = 2;
-                            result = "上传文件有问题!";
+                            BxHonor oldBxHonor = bxHonorService.getHonorById(bxHonor.getId());
+                            bxHonor.setMemberId(oldBxHonor.getMemberId());
+                            String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                            String fileSavePath=path + Constants.honorImgPath + bxHonor.getMemberId() + "/";
+                            Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
+                            int re = Integer.valueOf((String)mapImg.get("code")).intValue();
+                            if(re==0){
+                                String imgUrl = null;
+                                if(bxHonor.getImageUrl()!=null && !"".equals(bxHonor.getImageUrl())){
+                                    imgUrl = bxHonor.getImageUrl().split("/")[bxHonor.getImageUrl().split("/").length-1];
+                                }
+                                new File(fileSavePath+imgUrl).delete();
+                                List<String> list = (List<String>)mapImg.get("list");
+                                if(list!=null && list.size()>0){
+                                    bxHonor.setImageUrl(list.get(0));
+                                    //操作新的文件
+                                    bxHonorService.updateById(bxHonor);
+                                }
+                                result = "添加/更新成功!";
+                            }else if(re==-1){
+                                status = 3;
+                                result = "没有文件!";
+                            }else{
+                                status = 2;
+                                result = "上传文件有问题!";
+                            }
                         }
                     }
                 }else{
@@ -137,7 +153,7 @@ public class BxHonorController {
             e.printStackTrace();
         }
         model.put("status", status);
-        return getHonorList(mav,request);
+        return getHonorList(mav,request,new HonorQuery());
     }
 
     /**
@@ -155,7 +171,9 @@ public class BxHonorController {
                 if(file!=null && file.length>0){
                     HttpSession session = request.getSession();
                     UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
-                    bxHonor.setMemberId(staff.getId());
+                    if(bxHonor.getMemberId()==0){
+                        bxHonor.setMemberId(staff.getId());
+                    }
                     bxHonor.setCreaterId(staff.getId());
                     String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
                     String fileSavePath=path + Constants.honorImgPath + bxHonor.getMemberId() + "/";
@@ -190,6 +208,6 @@ public class BxHonorController {
         }
         model.put("status", status);
         model.put("result", result);
-        return getHonorList(mav, request);
+        return getHonorList(mav, request,new HonorQuery());
     }
 }

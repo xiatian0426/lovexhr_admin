@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface BxHonorMapper {
+public interface BxHonorMapper  extends BaseMapper<BxHonor>{
 
     List<BxHonor> getHonorList(@Param("memberId") String memberId) throws SelectException;
 
@@ -15,8 +15,6 @@ public interface BxHonorMapper {
     void deleteByMemId(@Param("memberId") int memberId) throws Exception;
 
     void deleteById(@Param("id") int id) throws Exception;
-
-    void insert(BxHonor bxHonor) throws Exception;
 
     void updateById(BxHonor bxHonor) throws Exception;
 

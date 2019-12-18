@@ -70,7 +70,7 @@
                     操作
                 </th>
             </tr>
-            <c:forEach items="${list}" var="data" varStatus="count">
+            <c:forEach items="${page.result}" var="data" varStatus="count">
                 <form class="form-horizontal" id="honorDataListForm" action="/honor/updateById" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="${data.id }">
                     <c:if test="${data.id!=null && data.id!=0}">
@@ -119,6 +119,21 @@
                         <td align="center" style="width: 40%;">
                             <input id="honorOrder" name="honorOrder" value="" type="text" style="width: 90%"
                                    class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
+                            所属人：
+                        </td>
+                        <td align="center" style="width: 40%;">
+                            <select class="select-nosearch" name="memberId" style="width: 90%;height: 28px;">
+                                <option value="" selected="selected">---请选择---</option>
+                                <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
+                                    <option value='${userInfo.id}'>
+                                            ${userInfo.userName}
+                                    </option>
+                                </c:forEach>
+                            </select>
                         </td>
                     </tr>
                 </table>
