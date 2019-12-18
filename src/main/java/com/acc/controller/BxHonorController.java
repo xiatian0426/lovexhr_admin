@@ -61,6 +61,8 @@ public class BxHonorController {
                         + path + "/";
                 query.setSortColumns("c.CREATE_DATE desc");
                 if(staff.getRoleId()!=null && staff.getRoleId().equals(Constants.ROLEIDO)){
+                    Map<Integer, UserInfo> userInfoDictMap = userInfoService.getAllMap();
+                    model.put("userInfoDictMap", userInfoDictMap);
                     List<UserInfo> userInfoList = userInfoService.getAll();
                     model.put("userInfoList", userInfoList);
                     page = bxHonorService.selectPage(query);
