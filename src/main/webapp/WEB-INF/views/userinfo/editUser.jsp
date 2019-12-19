@@ -138,23 +138,25 @@
                                class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
                     </td>
                 </tr>
-                <tr>
-                    <td style="background:#A0E0F7;padding: 10px 15px;">角色：</td>
-                    <td>
-                        <select class="select-nosearch" name='roleId' id="roleId" style="width: 172px;">
-                            <option value='0' <c:if test="${userInfo.roleId eq '0' }">selected = selected</c:if>>
-                               客户
-                            </option>
-                            <option value='1' <c:if test="${userInfo.roleId eq '1' }">selected = selected</c:if>>
-                                管理员
-                            </option>
-                        </select>
-                    </td>
-                    <td style="background:#A0E0F7;padding: 10px 15px;"></td>
-                    <td>
+                <c:if test="${userInfo.roleId eq '1' }">
+                    <tr>
+                        <td style="background:#A0E0F7;padding: 10px 15px;">角色：</td>
+                        <td>
+                            <select class="select-nosearch" name='roleId' id="roleId" style="width: 172px;">
+                                <option value='0' <c:if test="${userInfo.roleId eq '0' }">selected = selected</c:if>>
+                                    客户
+                                </option>
+                                <option value='1' <c:if test="${userInfo.roleId eq '1' }">selected = selected</c:if>>
+                                    管理员
+                                </option>
+                            </select>
+                        </td>
+                        <td style="background:#A0E0F7;padding: 10px 15px;"></td>
+                        <td>
 
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+                </c:if>
 			</table>
 			<div class="sub_div">
 				<input type="submit" class="sub_btn" value=" "/>

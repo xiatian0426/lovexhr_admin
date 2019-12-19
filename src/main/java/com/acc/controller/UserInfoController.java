@@ -97,6 +97,9 @@ public class UserInfoController {
 	public ModelAndView goAdd (ModelAndView mav, final HttpServletRequest request) {
 		Map<String, Object> model = mav.getModel();
 		try {
+            HttpSession session = request.getSession();
+            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
+            model.put("staff", staff);
 			mav.setViewName("/userinfo/add");
 		} catch (Exception e) {
 			_logger.error("转到跳转到添加用户页失败：" + ExceptionUtil.getMsg(e));
@@ -119,22 +122,26 @@ public class UserInfoController {
             if (userInfo == null) {
                 HttpSession session = request.getSession();
                 UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
-                user.setCreaterId(staff.getId());
-                user.setCreateDate(new Date());
-                //密码用MD5加密
-                user.setUserPassword(Md5PwdEncoder.getMD5Str(user.getUserPassword()+"Diegoxhr"));
-                user.setStatus("1");//默认启用
-                userInfoService.insert(user);
-                if(file!=null && file.length>0){
-                    String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
-                    String fileSavePath=path + Constants.memberImgPath + user.getId() + "/";
-                    Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
-                    int re = Integer.valueOf((String)mapImg.get("code")).intValue();
-                    if(re==0){
-                        List<String> list = (List<String>)mapImg.get("list");
-                        if(list!=null && list.size()>0){
-                            user.setMemberImg(list.get(0));
-                            userInfoService.updateImg(user);
+                if(staff!=null){
+                    if(staff.getRoleId()!=null && staff.getRoleId().equals(Constants.ROLEIDO)){
+                        user.setCreaterId(staff.getId());
+                        user.setCreateDate(new Date());
+                        //密码用MD5加密
+                        user.setUserPassword(Md5PwdEncoder.getMD5Str(user.getUserPassword()+"Diegoxhr"));
+                        user.setStatus("1");//默认启用
+                        userInfoService.insert(user);
+                        if(file!=null && file.length>0){
+                            String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                            String fileSavePath=path + Constants.memberImgPath + user.getId() + "/";
+                            Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
+                            int re = Integer.valueOf((String)mapImg.get("code")).intValue();
+                            if(re==0){
+                                List<String> list = (List<String>)mapImg.get("list");
+                                if(list!=null && list.size()>0){
+                                    user.setMemberImg(list.get(0));
+                                    userInfoService.updateImg(user);
+                                }
+                            }
                         }
                     }
                 }
@@ -218,23 +225,29 @@ public class UserInfoController {
             }
 			HttpSession session = request.getSession();
             UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
-			user.setModifierId(staff.getId()+"");
-			user.setModifyDate(CalendarUtil.getCurrentDate());
-            UserInfo userInfo = userInfoService.getById(userId);
-			//密码用MD5加密
-			if (StringUtils.isNotEmpty(user.getUserPassword())) {
-				user.setUserPassword(Md5PwdEncoder.getMD5Str(user.getUserPassword()+"Diegoxhr"));
-			} else {
-				user.setUserPassword(userInfo.getUserPassword());
-			}
-			user.setModifierId(String.valueOf(staff.getId()));
-			user.setStatus(userInfo.getStatus());
-			userInfoService.update(user);
-			mav.getModel().put("userId", userId);
-			if(user.getCustomerFlag()!=null && user.getCustomerFlag().equals(Constants.ROLEIDO)){
-                mav.getModel().put("notice", 2);
-            }else{
-                mav.getModel().put("notice", 1);
+            if(staff!=null){
+                user.setModifierId(staff.getId()+"");
+                user.setModifyDate(CalendarUtil.getCurrentDate());
+                if(staff.getRoleId()==null || staff.getRoleId().equals(Constants.ROLEIDZ)){
+                    //客户不能修改角色
+                    user.setRoleId(null);
+                }
+                UserInfo userInfo = userInfoService.getById(userId);
+                //密码用MD5加密
+                if (StringUtils.isNotEmpty(user.getUserPassword())) {
+                    user.setUserPassword(Md5PwdEncoder.getMD5Str(user.getUserPassword()+"Diegoxhr"));
+                } else {
+                    user.setUserPassword(userInfo.getUserPassword());
+                }
+                user.setModifierId(String.valueOf(staff.getId()));
+                user.setStatus(userInfo.getStatus());
+                userInfoService.update(user);
+                mav.getModel().put("userId", userId);
+                if(user.getCustomerFlag()!=null && user.getCustomerFlag().equals(Constants.ROLEIDO)){
+                    mav.getModel().put("notice", 2);
+                }else{
+                    mav.getModel().put("notice", 1);
+                }
             }
 		} catch (Exception e) {
 			_logger.error("修改用户失败：" + ExceptionUtil.getMsg(e));

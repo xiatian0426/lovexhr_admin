@@ -99,7 +99,7 @@
 				PHONE = #{phone} ,
 				MODIFY_DATE = now() ,
 				MODIFIER_ID = #{modifierId} ,
-				ROLE_ID = #{roleId} ,
+                <if test="roleId != null and roleId != ''">ROLE_ID = #{roleId} ,</if>
 				MANAGEDEPART = #{manageDepart} ,
 				DEPARTCLASS = #{departClass} ,
 				USER_REALNAME = #{userRealname} 
