@@ -39,7 +39,7 @@
 		.main{width:1300px; margin:0 auto;padding-top:350px;}
 		.logo{margin-top:40px; margin-left:60px;}
 		@media screen and (max-width:1360px){
-			.main{padding-top:230px; width:880px;}
+			.main{padding-top:230px; width:680px;padding-right:120px;float: right;}
 			.main_l{margin-left:150px;width:140px; height:320px; margin-top:15px;}
 			.main_r{width:280px; height:360px; border-radius:10px;}
 			.logo{margin-top:35px; margin-left:50px; margin-bottom:10px;}
