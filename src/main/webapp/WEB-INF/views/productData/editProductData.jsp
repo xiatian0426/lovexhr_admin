@@ -250,8 +250,8 @@
                                    class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                         </td>
                         <td colspan="2" style="background:#A0E0F7; padding: 10px 20px; width: 150px;">
-                            <input type="submit" class="sub_btn" value=" "/>
-                            <input type="button" class="delete_btn" onclick="deleteProductDetailImgById('${bxProductImg.id }');" value=" " />
+                            <button type="submit" class="btn btn-success">保存</button>
+                            <button type="button" class="btn btn-success" onclick="deleteProductDetailImgById('${bxProductImg.id }');">删除</button>
                         </td>
                     </tr>
                 </form>
@@ -272,7 +272,7 @@
                                        class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                             </td>
                             <td colspan="2" style="background:#A0E0F7; padding: 10px 20px; width: 150px;">
-                                <input type="submit" class="sub_btn" value=" "/>
+                                <button type="submit" class="btn btn-success">保存</button>
                             </td>
                         </tr>
                     </form>

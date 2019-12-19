@@ -22,12 +22,12 @@
 		<script type="text/javascript">
             $(function(){
                 //函数来源page.js
-                page("honorListForm", ${page.pageInfo}, "pageHonorList");
+                page("recruitListForm", ${page.pageInfo}, "pageRecruitList");
             });
 
             function deleteById(id,memberId,imageUrl){
                 $.ajax({
-                    url:'/ajax/deleteHonorById',
+                    url:'/ajax/deleteRecruitById',
                     data:{
                         id:id,
                         memberId:memberId,
@@ -54,9 +54,9 @@
 	</head>
 <body style="width: 95%;  font-size: 13px;">
     <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
-        荣誉信息列表
+        招聘信息列表
     </div>
-    <form class="form-horizontal" id="honorListForm" action="/honor/getHonorList" method="POST">
+    <form class="form-horizontal" id="recruitListForm" action="/recruit/getRecruitList" method="POST">
         <div class="r_box" style="margin-top: 10px;">
             <div style="height: 15px; width: 100%;"><span></span></div>
             <span class="infoLable">所属人：</span>
@@ -73,7 +73,7 @@
             <br />
             <div><span></span></div>
         </div>
-        <div class="pageHonorList" style="height:52px;margin-top:-30px;"></div>
+        <div class="pageRecruitList" style="height:52px;margin-top:-30px;"></div>
     </form>
     <div class="r_box" style="border:0px dashed #00F" >
         <table width="100%" cellpadding="0" cellspacing="0" class="table-bordered">
@@ -100,7 +100,7 @@
                 </th>
             </tr>
             <c:forEach items="${page.result}" var="data" varStatus="count">
-                <form class="form-horizontal" id="honorDataListForm" action="/honor/updateById" method="POST" enctype="multipart/form-data">
+                <form class="form-horizontal" id="recruitDataListForm" action="/recruit/addRecruit" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="${data.id }">
                     <c:if test="${data.id!=null && data.id!=0}">
                         <input type="hidden" name="imageUrl" value="${data.imageUrl }">
@@ -116,11 +116,12 @@
                             <input type="file" name="file"/>
                         </td>
                         <td align="center">
-                            <input name="honorOrder" value="${data.honorOrder}" type="text" style="width: 90%;"
+                            <input name="recruitOrder" value="${data.recruitOrder}" type="text" style="width: 90%;"
                                    class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                         </td>
                         <c:if test="${userInfoList != null}">
                             <td align="center">
+                                <input type="hidden" name="memberId" value="${data.memberId }">
                                 ${userInfoDictMap[data.memberId].userRealname }
                             </td>
                         </c:if>
@@ -137,15 +138,15 @@
     <div class="r_box" >
         <br/>
         <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
-            添加荣誉信息
+            添加招聘信息
         </div>
-        <form class="form-horizontal" id="honorDataForm" action="/honor/addHonor" method="POST" enctype="multipart/form-data">
+        <form class="form-horizontal" id="recruitDataForm" action="/recruit/addRecruit" method="POST" enctype="multipart/form-data">
             <div class="clearB"></div>
             <div class="r_box" style="padding: 5px;">
                 <table width="60%" cellpadding="0" cellspacing="0" class="table-bordered" align="center">
                     <tr>
                         <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
-                            荣誉图片：
+                            招聘图片：
                         </td>
                         <td align="center" style="width: 40%;">
                             <input type="file" name="file" value="">
@@ -154,7 +155,7 @@
                             排序：
                         </td>
                         <td align="center" style="width: 40%;">
-                            <input id="honorOrder" name="honorOrder" value="" type="text" style="width: 90%"
+                            <input id="recruitOrder" name="recruitOrder" value="" type="text" style="width: 90%"
                                    class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                         </td>
                     </tr>

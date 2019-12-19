@@ -14,7 +14,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="${jsRoot}/jquery-1.11.1.min.js"></script>
 </head>
-	<frameset rows="11.8%,125%" frameborder="no" border="0" framespacing="0">
+	<frameset rows="14%,125%" frameborder="no" border="0" framespacing="0">
 		<frame src="/def/top" noresize="noresize"  name="topFrame" marginwidth="0" marginheight="0" scrolling="no">
 		<frameset rows="*" cols="11%,89%" id="frame">
 			<frame src="/def/left" name="leftFrame" noresize="noresize" id="iframe1" height="100%" width="25%" frameborder="0" scrolling="no">
