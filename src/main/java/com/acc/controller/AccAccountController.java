@@ -43,9 +43,7 @@ public class AccAccountController {
 	/**
 	 * 过滤器自动跳转到登录首页
 	 * @param request
-	 * @param response
-	 * @param model
-	 * @return 
+	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -65,7 +63,6 @@ public class AccAccountController {
 	 * 登录按钮
 	 * @param request
 	 * @param response
-	 * @param model
 	 * @return
 	 * @throws Exception
 	 */
@@ -97,8 +94,7 @@ public class AccAccountController {
 				return new ModelAndView("/account/login",model);
 			} else {
 				String password = userInfo.getUserPassword();
-				System.out.println(Md5PwdEncoder.getMD5Str(passwd));
-				if (!Md5PwdEncoder.getMD5Str(passwd).equals(password)){
+				if (!Md5PwdEncoder.getMD5Str(passwd+"Diegoxhr").equals(password)){
 					model.put("sign", -1);
 					model.put("loginMsg", "密码错误");
 					return new ModelAndView("/account/login",model);

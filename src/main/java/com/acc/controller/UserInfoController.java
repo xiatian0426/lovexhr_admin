@@ -122,7 +122,7 @@ public class UserInfoController {
                 user.setCreaterId(staff.getId());
                 user.setCreateDate(new Date());
                 //密码用MD5加密
-                user.setUserPassword(Md5PwdEncoder.getMD5Str(user.getUserPassword()));
+                user.setUserPassword(Md5PwdEncoder.getMD5Str(user.getUserPassword()+"Diegoxhr"));
                 user.setStatus("1");//默认启用
                 userInfoService.insert(user);
                 if(file!=null && file.length>0){
@@ -223,7 +223,7 @@ public class UserInfoController {
             UserInfo userInfo = userInfoService.getById(userId);
 			//密码用MD5加密
 			if (StringUtils.isNotEmpty(user.getUserPassword())) {
-				user.setUserPassword(Md5PwdEncoder.getMD5Str(user.getUserPassword()));
+				user.setUserPassword(Md5PwdEncoder.getMD5Str(user.getUserPassword()+"Diegoxhr"));
 			} else {
 				user.setUserPassword(userInfo.getUserPassword());
 			}
