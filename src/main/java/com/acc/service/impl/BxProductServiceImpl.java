@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service("bxProductService")
 @Transactional
-public class BxProductServiceImpl implements IBxProductService {
+public class BxProductServiceImpl extends BaseServiceImpl<BxProduct> implements IBxProductService {
 
 	private static Logger _logger = LoggerFactory.getLogger(BxProductServiceImpl.class);
     @Autowired
@@ -84,7 +84,7 @@ public class BxProductServiceImpl implements IBxProductService {
 
     @Override
     public void addProduct(BxProduct bxProduct) throws Exception {
-        bxProductMapper.insertProduct(bxProduct);
+        bxProductMapper.insert(bxProduct);
         //更新产品案例
         BxCase bxCase = new BxCase();
         bxCase.setName(bxProduct.getBxCaseName());

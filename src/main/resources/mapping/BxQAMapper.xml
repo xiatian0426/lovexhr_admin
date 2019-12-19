@@ -53,6 +53,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
         FROM BX_QA c
         WHERE 1=1
         <if test="memberId != null and memberId != 0">AND c.MEMBER_ID=#{memberId}</if>
+        <if test="ask != null and ask != ''">AND c.ask like CONCAT('%',#{ask},'%')</if>
         AND c.STATUS=0
         <if test="sortColumns != null and sortColumns != ''">
             ORDER BY ${sortColumns}

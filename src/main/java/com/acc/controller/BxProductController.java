@@ -6,6 +6,8 @@ import com.acc.service.IBxProductService;
 import com.acc.service.IUserInfoService;
 import com.acc.util.Constants;
 import com.acc.util.PictureChange;
+import com.acc.vo.Page;
+import com.acc.vo.ProductQuery;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -64,32 +66,44 @@ public class BxProductController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/getProductByMemId", method = RequestMethod.GET)
-    public ModelAndView getProductByMemId(ModelAndView mav, final HttpServletRequest request) throws IOException {
+    @RequestMapping(value = "/getProductByMemId", method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView getProductByMemId(ModelAndView mav, final HttpServletRequest request,@ModelAttribute ProductQuery query) throws IOException {
         Map<String, Object> model = mav.getModel();
         try{
             HttpSession session = request.getSession();
             UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
-            String memberId = String.valueOf(staff.getId());
-            if(StringUtils.isNotEmpty(memberId)){
-                List<BxProduct> list = bxProductService.getProductByPerm(memberId);
-                if(list != null && list.size()>0){
+            Page<BxProduct> page = null;
+            if(staff!=null){
+                query.setSortColumns("c.PRODUCT_ORDER");
+                if(staff.getRoleId()!=null && staff.getRoleId().equals(Constants.ROLEIDO)){
+                    List<UserInfo> userInfoList = userInfoService.getAll();
+                    model.put("userInfoList", userInfoList);
+                    page = bxProductService.selectPage(query);
+                }else{
+                    String memberId = String.valueOf(staff.getId());
+                    if(StringUtils.isNotEmpty(memberId) ){
+                        query.setMemberId(Integer.valueOf(memberId));
+                        page = bxProductService.selectPage(query);
+                    }
+                }
+                if(page != null && page.getResult()!=null && page.getResult().size()>0){
                     String path = request.getContextPath();
                     String basePath = request.getScheme() + "://"
                             + request.getServerName() + ":" + request.getServerPort()
                             + path + "/";
-                    for(BxProduct bxProduct:list){
+                    for(BxProduct bxProduct:page.getResult()){
                         bxProduct.setProductImg(basePath+ Constants.proImgPath+bxProduct.getId()+"/"+bxProduct.getProductImg());
                     }
                 }
-                model.put("list", list);
             }
+            model.put("page", page);
+            model.put("query", query);
+            mav=new ModelAndView("/productData/productDataList", model);
         } catch (Exception e) {
             _logger.error("getProductByMemId失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
             mav = new ModelAndView(Constants.SERVICES_ERROR, model);
         }
-        mav=new ModelAndView("/productData/productDataList", model);
         return mav;
     }
 
@@ -254,7 +268,7 @@ public class BxProductController {
         }
         model.put("status", status);
         model.put("result", result);
-        return getProductByMemId(mav,request);
+        return getProductByMemId(mav,request,new ProductQuery());
     }
 
    /**

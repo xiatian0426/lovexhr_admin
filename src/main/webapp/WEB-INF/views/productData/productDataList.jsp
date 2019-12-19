@@ -20,6 +20,11 @@
 		<!-- 引入分页 -->
 		<script src="${jsRoot}/page.js"></script>
 		<script type="text/javascript">
+            $(function(){
+                //函数来源page.js
+                page("productListForm", ${page.pageInfo}, "pageProductList");
+            });
+
 			function goEditMessageData(productId){
 				window.location="/product/getProDetail?productId="+productId;
 			}
@@ -50,13 +55,11 @@
 		</script>
 	</head>
 <body style="width: 95%;  font-size: 13px;">
-	<form class="form-horizontal" id="messageDataListForm" action="/product/getProductByMemId" method="POST">
+	<form class="form-horizontal" id="productListForm" action="/product/getProductByMemId" method="POST">
 		<div class="r_box" style="margin-top: 10px;">
 			<div style="height: 15px; width: 100%;"><span></span></div>
-			<span class="infoLable">标题：</span>
-				<%--<input id="title" name="title" type="text" value="${query.title }" class="self-form-control" style="width: 150px;"/>--%>
-			<span class="infoLable">所在省市：</span>&nbsp;
-
+			<span class="infoLable">商品名称：</span>
+				<input id="productName" name="productName" type="text" value="${query.productName }" class="self-form-control" style="width: 150px;"/>
 			<button type="submit" class="btn btn-default" style="background-color:#337ab7;">搜索</button>
 			<br />
 			<div><span></span></div>
@@ -83,7 +86,7 @@
 						操作
 					</th>
 				</tr>
-				<c:forEach items="${list}" var="data" varStatus="count">
+				<c:forEach items="${page.result}" var="data" varStatus="count">
 					<tr>
 						<td align="center" height="33" align="center">
 							${count.count}
@@ -117,7 +120,7 @@
 					</tr>
 				</c:forEach>
 				<tr>
-					<td colspan="10" height="30" bgcolor="#D9F3FD" align="left" class="pageMessageDataList">
+					<td colspan="10" height="30" bgcolor="#D9F3FD" align="left" class="pageProductList">
 					</td>
 				</tr>
 			</table>

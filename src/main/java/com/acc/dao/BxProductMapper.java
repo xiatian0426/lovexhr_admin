@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface BxProductMapper {
+public interface BxProductMapper extends BaseMapper<BxProduct>{
 
     List<BxProduct> getProductByPerm(@Param("memberId") String memberId) throws SelectException;
 
@@ -39,8 +39,6 @@ public interface BxProductMapper {
     void updateProductImg(BxProductImg bxProductImg) throws Exception;
 
     void insertProductVideo(BxProductVideo bxProductVideo) throws Exception;
-
-    void insertProduct(BxProduct bxProduct) throws Exception;
 
     List<BxProduct> getProDetail(@Param("productId") String productId) throws SelectException;
 

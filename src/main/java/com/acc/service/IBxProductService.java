@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface IBxProductService {
+public interface IBxProductService extends IBaseService<BxProduct>{
 
     /**
      * 根据微信号获取对应权限产品
