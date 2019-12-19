@@ -74,7 +74,7 @@ public class BxProductController {
             UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
             Page<BxProduct> page = null;
             if(staff!=null){
-                query.setSortColumns("c.PRODUCT_ORDER");
+                query.setSortColumns("c.CREATE_DATE desc");
                 if(staff.getRoleId()!=null && staff.getRoleId().equals(Constants.ROLEIDO)){
                     List<UserInfo> userInfoList = userInfoService.getAll();
                     model.put("userInfoList", userInfoList);
@@ -205,24 +205,26 @@ public class BxProductController {
                                   ) throws IOException {
         Map<String, Object> model = mav.getModel();
         String result;
-        int status = 0;
         boolean boo = true;
+        int status = 0;
         try {
             if (bxProduct != null) {
                 if(bxProduct.getType()!=null && !"".equals(bxProduct.getType())){
                     if(file != null){
+                        HttpSession session = request.getSession();
+                        UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
                         if(bxProduct.getType().equals("0")){//添加
-                            HttpSession session = request.getSession();
-                            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
                             if(bxProduct.getMemberId()==0){
                                 bxProduct.setMemberId(staff.getId());
                             }
                             bxProduct.setCreateId(staff.getId());
                             bxProductService.addProduct(bxProduct);
-                        }else{//修改
-                            BxProduct oldBxProduct = bxProductService.getProductById(bxProduct.getId());
-                            if(oldBxProduct==null){
+                        }else{
+                            if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
                                 boo = false;
+                                bxProduct.setProductImg(null);
+                                bxProduct.setModifierId(String.valueOf(staff.getId()));
+                                bxProductService.updateProduct(bxProduct);
                             }
                         }
                         if(boo){
@@ -234,8 +236,9 @@ public class BxProductController {
                             if(re == 0){
                                 if(imgNameList!=null && imgNameList.size()>0){
                                     bxProduct.setProductImg(imgNameList.get(0));
+                                    bxProduct.setModifierId(String.valueOf(staff.getId()));
                                     bxProductService.updateProduct(bxProduct);
-                                    result = "更新成功!";
+                                    result = "添加/更新成功!";
                                 }else{
                                     status = 1;
                                     result = "参数有误，请联系管理员!";
@@ -245,8 +248,7 @@ public class BxProductController {
                                 result = "添加/更新失败!";
                             }
                         }else{
-                            status = 1;
-                            result = "参数有误，请联系管理员!";
+                            result = "更新成功!";
                         }
                     }else{
                         status = 2;

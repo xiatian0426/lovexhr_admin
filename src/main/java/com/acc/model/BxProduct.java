@@ -78,6 +78,15 @@ public class BxProduct implements java.io.Serializable, Cloneable{
     //BxCase的属性 end
     private int status;
 
+    /**
+     * modifyDate       db_column: MODIFY_DATE
+     */
+    private String modifyDate;
+    /**
+     * modifierId       db_column: MODIFIER_ID
+     */
+    private String modifierId;
+
     private List<BxProductImg> bxProductImgList = new ArrayList<BxProductImg>();
 
     private List<String> imgUrlList = new ArrayList<String>();
@@ -272,6 +281,22 @@ public class BxProduct implements java.io.Serializable, Cloneable{
 
     public void setImgId(int imgId) {
         this.imgId = imgId;
+    }
+
+    public String getModifyDate() {
+        return modifyDate;
+    }
+
+    public void setModifyDate(String modifyDate) {
+        this.modifyDate = modifyDate;
+    }
+
+    public String getModifierId() {
+        return modifierId;
+    }
+
+    public void setModifierId(String modifierId) {
+        this.modifierId = modifierId;
     }
 }
 
