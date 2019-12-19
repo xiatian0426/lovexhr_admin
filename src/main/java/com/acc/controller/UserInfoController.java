@@ -223,7 +223,7 @@ public class UserInfoController {
                     }
                 }
             }
-			HttpSession session = request.getSession();
+            HttpSession session = request.getSession();
             UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
             if(staff!=null){
                 user.setModifierId(staff.getId()+"");
@@ -243,6 +243,8 @@ public class UserInfoController {
                 user.setStatus(userInfo.getStatus());
                 userInfoService.update(user);
                 mav.getModel().put("userId", userId);
+                String customerFlag = request.getParameter("customerFlag");
+                mav.getModel().put("customerFlag", customerFlag);
                 if(user.getCustomerFlag()!=null && user.getCustomerFlag().equals(Constants.ROLEIDO)){
                     mav.getModel().put("notice", 2);
                 }else{
