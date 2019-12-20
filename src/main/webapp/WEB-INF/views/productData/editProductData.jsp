@@ -249,7 +249,7 @@
                             <input name="imageOrder" value="${bxProductImg.imageOrder}" type="text" style="width: 172px;"
                                    class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                         </td>
-                        <td colspan="2" style="background:#A0E0F7; padding: 10px 20px; width: 150px;">
+                        <td style="background:#A0E0F7; padding: 10px 20px; width: 180px;">
                             <button type="submit" class="btn btn-success">保存</button>
                             <button type="button" class="btn btn-success" onclick="deleteProductDetailImgById('${bxProductImg.id }');">删除</button>
                         </td>
@@ -271,7 +271,7 @@
                                 <input name="imageOrder" value="0" type="text" style="width: 172px;"
                                        class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                             </td>
-                            <td colspan="2" style="background:#A0E0F7; padding: 10px 20px; width: 150px;">
+                            <td style="background:#A0E0F7; padding: 10px 20px; width: 180px;">
                                 <button type="submit" class="btn btn-success">保存</button>
                             </td>
                         </tr>
