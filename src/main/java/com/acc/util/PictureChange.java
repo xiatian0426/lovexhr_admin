@@ -187,7 +187,7 @@ public class PictureChange {
                     multipartFile.transferTo(imageFile);
                     //等比例压缩
                     if(scaleBoo)
-                        PictureChange.scaleImage(imgRealPath,fileSavePath);
+                        PictureChange.scaleImage(imgRealPath,imgRealPath);
                 } catch (Exception e) {
                     result = 1;//上传文件有问题
                     _logger.info("imageUpload失败：" + ExceptionUtil.getMsg(e));
