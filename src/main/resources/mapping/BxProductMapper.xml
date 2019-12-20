@@ -218,7 +218,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
     <update id="updateProductImg" >
         UPDATE BX_PRODUCT_IMG SET
         <if test="imageOrder != null and imageOrder != 0">IMAGE_ORDER=#{imageOrder},</if>
-        <if test="imageUrl != null and imageUrl != ''">IMAGE_URL = #{imageUrl}</if>
+        <if test="imageUrl != null and imageUrl != ''">IMAGE_URL = #{imageUrl},</if>
         MODIFY_DATE = now()
         WHERE id = #{id}
     </update>
