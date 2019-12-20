@@ -48,6 +48,7 @@ public class BxQAController {
 	    try{
             HttpSession session = request.getSession();
             UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
+            model.put("staff", staff);
             Page<BxQA> page = null;
             if(staff!=null){
                 query.setSortColumns("c.CREATE_DATE desc");

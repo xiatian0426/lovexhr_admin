@@ -57,22 +57,24 @@
         荣誉信息列表
     </div>
     <form class="form-horizontal" id="honorListForm" action="/honor/getHonorList" method="POST">
-        <div class="r_box" style="margin-top: 10px;">
-            <div style="height: 15px; width: 100%;"><span></span></div>
-            <span class="infoLable">所属人：</span>
-            <select class="select-nosearch" name="memberId" style="width: 200px;height: 28px;">
-                <option value="0" selected="selected">---请选择---</option>
-                <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
-                    <option value='${userInfo.id}'<c:if test="${userInfo.id==query.memberId }">selected="selected"</c:if>>
-                        ${userInfo.userName}
-                    </option>
-                </c:forEach>
-            </select>
-            <button type="submit" class="btn btn-default"
-                    style="background-color:#337ab7;">搜索</button>
-            <br />
-            <div><span></span></div>
-        </div>
+        <c:if test="${staff.roleId eq '1' }">
+            <div class="r_box" style="margin-top: 10px;">
+                <div style="height: 15px; width: 100%;"><span></span></div>
+                <span class="infoLable">所属人：</span>
+                <select class="select-nosearch" name="memberId" style="width: 200px;height: 28px;">
+                    <option value="0" selected="selected">---请选择---</option>
+                    <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
+                        <option value='${userInfo.id}'<c:if test="${userInfo.id==query.memberId }">selected="selected"</c:if>>
+                                ${userInfo.userName}
+                        </option>
+                    </c:forEach>
+                </select>
+                <button type="submit" class="btn btn-default"
+                        style="background-color:#337ab7;">搜索</button>
+                <br />
+                <div><span></span></div>
+            </div>
+        </c:if>
         <div class="pageHonorList" style="height:52px;margin-top:-30px;"></div>
     </form>
     <div class="r_box" style="border:0px dashed #00F" >

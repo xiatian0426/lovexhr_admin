@@ -177,7 +177,7 @@
                            class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                 </td>
             </tr>
-            <c:if test="${userInfoList != null}">
+            <c:if test="${staff.roleId eq '1' }">
                 <tr>
                     <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>
                         &nbsp;所属人：

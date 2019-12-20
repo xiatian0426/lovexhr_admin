@@ -53,6 +53,9 @@ public class BxProductController {
         try {
             List<UserInfo> userInfoList = userInfoService.getAll();
             model.put("userInfoList", userInfoList);
+            HttpSession session = request.getSession();
+            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
+            model.put("staff", staff);
             mav=new ModelAndView("/productData/addProductData", model);
         } catch (Exception e) {
             _logger.error("进入添加产品页失败：" + ExceptionUtil.getMsg(e));

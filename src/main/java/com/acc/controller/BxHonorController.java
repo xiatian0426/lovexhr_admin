@@ -53,6 +53,7 @@ public class BxHonorController {
 	    try{
             HttpSession session = request.getSession();
             UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
+            model.put("staff", staff);
             Page<BxHonor> page = null;
             if(staff!=null){
                 String path = request.getContextPath();

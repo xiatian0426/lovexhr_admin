@@ -58,15 +58,17 @@
             <div style="height: 15px; width: 100%;"><span></span></div>
             <span class="infoLable">问题：</span>
             <input name="ask" type="text" class="self-form-control" style="width: 100px;" value="${query.ask }"/>
-            <span class="infoLable">所属人：</span>
-            <select class="select-nosearch" name="memberId" style="width: 200px;height: 28px;">
-                <option value="0" selected="selected">---请选择---</option>
-                <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
-                    <option value='${userInfo.id}'<c:if test="${userInfo.id==query.memberId }">selected="selected"</c:if>>
-                            ${userInfo.userName}
-                    </option>
-                </c:forEach>
-            </select>
+            <c:if test="${staff.roleId eq '1' }">
+                <span class="infoLable">所属人：</span>
+                <select class="select-nosearch" name="memberId" style="width: 200px;height: 28px;">
+                    <option value="0" selected="selected">---请选择---</option>
+                    <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
+                        <option value='${userInfo.id}'<c:if test="${userInfo.id==query.memberId }">selected="selected"</c:if>>
+                                ${userInfo.userName}
+                        </option>
+                    </c:forEach>
+                </select>
+            </c:if>
             <button type="submit" class="btn btn-default"
                     style="background-color:#337ab7;">搜索</button>
             <br />
@@ -89,7 +91,7 @@
                 <th width="5%" align="center">
                     排序
                 </th>
-                <c:if test="${userInfoList != null}">
+                <c:if test="${staff.roleId eq '1' }">
                     <th width="10%" align="center">
                         所属人
                     </th>
@@ -178,7 +180,7 @@
                             <input id="answer" name="answer" value="" type="text" style="width: 90%"
                                    class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                         </td>
-                        <c:if test="${userInfoList != null}">
+                        <c:if test="${staff.roleId eq '1' }">
                             <td align="center" height="33" align="center">
                                 所属人：
                             </td>
