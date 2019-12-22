@@ -81,28 +81,30 @@ public class PictureChange {
             if (!file.exists()) {
                 return false;
             }
-            is = new FileInputStream(file);
-            Image src = ImageIO.read(is);
-            if (src.getWidth(null) <= 600) {
+            if(isImageFile(file)){
+                is = new FileInputStream(file);
+                Image src = ImageIO.read(is);
+                if (src.getWidth(null) <= 600) {
 //                File tofile = new File(imgDist);
 //                copyFile(file, tofile);
-                is.close();
-                return true;
+                    is.close();
+                    return true;
+                }
+                //获取源文件的宽高
+                int imageWidth = ((BufferedImage) src).getWidth();
+                int imageHeight = ((BufferedImage) src).getHeight();
+
+                double scale = (double) 600 / imageWidth;
+
+                //计算等比例压缩之后的狂傲
+                int newWidth = (int) (imageWidth * scale);
+                int newHeight = (int) (imageHeight * scale);
+
+                BufferedImage newImage = scaleImage((BufferedImage) src, scale, newWidth, newHeight);
+
+                File file_out = new File(imgDist);
+                ImageIO.write(newImage, suffix, file_out);
             }
-            //获取源文件的宽高
-            int imageWidth = ((BufferedImage) src).getWidth();
-            int imageHeight = ((BufferedImage) src).getHeight();
-
-            double scale = (double) 600 / imageWidth;
-
-            //计算等比例压缩之后的狂傲
-            int newWidth = (int) (imageWidth * scale);
-            int newHeight = (int) (imageHeight * scale);
-
-            BufferedImage newImage = scaleImage((BufferedImage) src, scale, newWidth, newHeight);
-
-            File file_out = new File(imgDist);
-            ImageIO.write(newImage, suffix, file_out);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
