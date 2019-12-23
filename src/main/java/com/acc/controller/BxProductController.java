@@ -135,7 +135,9 @@ public class BxProductController {
                     bxProductResult.setProductName(bxProductList.get(0).getProductName());
                     bxProductResult.setProductDesc(bxProductList.get(0).getProductDesc());
                     bxProductResult.setProductOrder(bxProductList.get(0).getProductOrder());
-                    bxProductResult.setProductVideo(basePath+ Constants.proVideoPath+bxProductList.get(0).getId()+"/"+bxProductList.get(0).getProductVideo());
+                    if(bxProductList.get(0).getProductVideo()!=null && !"".equals(bxProductList.get(0).getProductVideo())){
+                        bxProductResult.setProductVideo(basePath+ Constants.proVideoPath+bxProductList.get(0).getId()+"/"+bxProductList.get(0).getProductVideo());
+                    }
                     List<BxProductImg> bxProductImgList = new ArrayList<BxProductImg>();
                     BxProductImg bxProductImg;
                     for(BxProduct bxProduct:bxProductList){
@@ -388,4 +390,11 @@ public class BxProductController {
         return mav;
     }
 
+    @RequestMapping(value = "/openVideo", method = RequestMethod.GET)
+    public ModelAndView openVideo(ModelAndView mav,final HttpServletRequest request) throws IOException {
+        Map<String, Object> model = mav.getModel();
+        String videoUrl = request.getParameter("videoUrl");
+        model.put("videoUrl",videoUrl);
+        return new ModelAndView("/productData/openVideo", model);
+    }
 }
