@@ -211,14 +211,14 @@
                 <table width="60%" cellpadding="0" cellspacing="0" class="table-bordered" align="center">
                     <tr>
                         <td align="center" height="33" align="center" style="width: 10%;">
-                            问题：
+                            <font color="red">*</font>&nbsp;问题：
                         </td>
                         <td align="center" style="width: 40%;">
                             <input name="ask" value="" type="text" style="width: 90%;"
                                    class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                         </td>
                         <td align="center" height="33" align="center" style="width: 10%;">
-                            排序：
+                            <font color="red">*</font>&nbsp;排序：
                         </td>
                         <td align="center" style="width: 40%;">
                             <input id="qaOrderNew" name="qaOrder" value="" type="text" style="width: 90%"
@@ -227,7 +227,7 @@
                     </tr>
                     <tr>
                         <td align="center" height="33" align="center">
-                            答案：
+                            <font color="red">*</font>&nbsp;答案：
                         </td>
                         <td align="center">
                             <input id="answer" name="answer" value="" type="text" style="width: 90%"
@@ -236,7 +236,7 @@
                         <c:if test="${staff.roleId eq '1' }">
                             <td align="center" height="33" align="center">
                                 <input type="hidden" name="memberIdFlag" id="memberIdFlag" value="1">
-                                所属人：
+                                <font color="red">*</font>&nbsp;所属人：
                             </td>
                             <td align="center">
                                 <select class="select-nosearch" id="memberIdNew" name="memberId" style="width: 90%;height: 28px;">

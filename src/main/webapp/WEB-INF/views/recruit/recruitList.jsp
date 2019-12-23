@@ -54,7 +54,7 @@
                         <td >
                         </td>
                         <td >
-                            <input type="file" id="file" name="file"/>
+                            <font color="red">*</font>&nbsp;<input type="file" id="file" name="file"/>
                         </td>
                     </tr>
                     <tr>

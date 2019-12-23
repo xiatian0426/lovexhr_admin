@@ -196,13 +196,13 @@
                 <table width="60%" cellpadding="0" cellspacing="0" class="table-bordered" align="center">
                     <tr>
                         <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
-                            招聘图片：
+                            <font color="red">*</font>&nbsp;招聘图片：
                         </td>
                         <td align="center" style="width: 40%;">
                             <input type="file" id="fileNew" name="file" value="">
                         </td>
                         <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
-                            排序：
+                            <font color="red">*</font>&nbsp;排序：
                         </td>
                         <td align="center" style="width: 40%;">
                             <input id="recruitOrderNew" name="recruitOrder" value="" type="text" style="width: 90%"
@@ -213,7 +213,7 @@
                         <tr>
                             <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
                                 <input type="hidden" name="memberIdFlag" id="memberIdFlag" value="1">
-                                所属人：
+                                <font color="red">*</font>&nbsp;所属人：
                             </td>
                             <td align="center" style="width: 40%;">
                                 <select class="select-nosearch" id="memberIdNew" name="memberId" style="width: 90%;height: 28px;">
