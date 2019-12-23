@@ -165,24 +165,27 @@ public class UserInfoController {
 		Map<String, Object> model = mav.getModel();
 		try {
 			String userId = request.getParameter("userId");
-			if(userId==null || userId.equals("")){
-                HttpSession session = request.getSession();
-                UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
-                userId = String.valueOf(staff.getId());
+            HttpSession session = request.getSession();
+            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
+            model.put("staff", staff);
+            if(staff!=null){
+                if(userId==null || userId.equals("")){
+                    userId = String.valueOf(staff.getId());
+                }
+                UserInfo userInfo = userInfoService.getById(userId);
+                if(userInfo!=null){
+                    String path = request.getContextPath();
+                    String basePath = request.getScheme() + "://"
+                            + request.getServerName() + ":" + request.getServerPort()
+                            + path + "/";
+                    String fileSavePath=basePath + Constants.memberImgPath + userInfo.getId() + "/";
+                    userInfo.setMemberImg(fileSavePath+userInfo.getMemberImg());
+                }
+                model.put("userInfo", userInfo);
+                model.put("notice", request.getParameter("notice"));
+                String customerFlag = request.getParameter("customerFlag");
+                model.put("customerFlag", customerFlag);
             }
-            UserInfo userInfo = userInfoService.getById(userId);
-            if(userInfo!=null){
-                String path = request.getContextPath();
-                String basePath = request.getScheme() + "://"
-                        + request.getServerName() + ":" + request.getServerPort()
-                        + path + "/";
-                String fileSavePath=basePath + Constants.memberImgPath + userInfo.getId() + "/";
-                userInfo.setMemberImg(fileSavePath+userInfo.getMemberImg());
-            }
-			model.put("userInfo", userInfo);
-			model.put("notice", request.getParameter("notice"));
-            String customerFlag = request.getParameter("customerFlag");
-            model.put("customerFlag", customerFlag);
             mav.setViewName("/userinfo/editUser");
 		} catch (Exception e) {
 			_logger.error("转到添加用户页失败：" + ExceptionUtil.getMsg(e));

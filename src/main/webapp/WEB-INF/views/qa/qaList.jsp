@@ -19,10 +19,16 @@
 		<script src="${toolRoot}/select/select2-self.js"></script>
 		<!-- 引入分页 -->
 		<script src="${jsRoot}/page.js"></script>
+        <!-- 验证 -->
+        <link rel="stylesheet" href="${toolRoot }/validata/validationEngine.css" />
+        <script type="text/javascript" src="${toolRoot }/validata/jquery.validationEngine.js"></script>
+        <script type="text/javascript" src="${toolRoot }/validata/jquery.validationEngine-zh_CN.js" charset="utf-8"></script>
 		<script type="text/javascript">
             $(function(){
                 //函数来源page.js
                 page("qaListForm", ${page.pageInfo}, "pageQAList");
+                //开启表单验证
+                $("#qaDataForm").validationEngine();
             });
             function deleteById(id){
                 $.ajax({
@@ -46,6 +52,58 @@
                         alert("操作失败!");
                     }
                 });
+            }
+            function updateData(id){
+                var ask = $("#ask"+id).val();
+                if(ask==""){
+                    $("#ask"+id).validationEngine("showPrompt","问题不能是空!","error");
+                    $("#ask"+id).focus();
+                    return false;
+                }
+                var answer = $("#answer"+id).val();
+                if(answer==""){
+                    $("#answer"+id).validationEngine("showPrompt","答案不能是空!","error");
+                    $("#answer"+id).focus();
+                    return false;
+                }
+                var qaOrder = $("#qaOrder"+id).val();
+                var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+                if (qaOrder != "") {
+                    if (!re.test(qaOrder)) {
+                        $("#qaOrder"+id).validationEngine("showPrompt","排序只能为整数!","error");
+                        $("#qaOrder"+id).focus();
+                        return false;
+                    }
+                }else{
+                    $("#qaOrder"+id).validationEngine("showPrompt","排序不能为空!","error");
+                    $("#qaOrder"+id).focus();
+                    return false;
+                }
+            }
+            function saveData(){
+                var qaOrderNew = $("#qaOrderNew").val();
+                var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+                if (qaOrderNew != "") {
+                    if (!re.test(qaOrderNew)) {
+                        $("#qaOrderNew").validationEngine("showPrompt","排序只能为整数!","error");
+                        $("#qaOrderNew").focus();
+                        return false;
+                    }
+                }else{
+                    $("#qaOrderNew").validationEngine("showPrompt","排序不能为空!","error");
+                    $("#qaOrderNew").focus();
+                    return false;
+                }
+                var memberIdFlag = $("#memberIdFlag").val();
+                if(memberIdFlag != ""){
+                    //需要验证
+                    var memberIdNew = $("#memberIdNew").val();
+                    if(memberIdNew=='0'){
+                        $("#memberIdNew").validationEngine("showPrompt","请选择所属人!","error");
+                        $(this).focus();
+                        return false;
+                    }
+                }
             }
 		</script>
 	</head>
@@ -101,30 +159,30 @@
                 </th>
             </tr>
             <c:forEach items="${page.result}" var="data" varStatus="count">
-                <form class="form-horizontal" id="qaDataListForm" action="/QA/updateById" method="POST">
+                <form class="form-horizontal" id="qaDataListForm" action="/QA/updateById" method="POST" onsubmit="return updateData('${data.id}');">
                     <input type="hidden" name="id" value="${data.id }">
                     <tr>
                         <td align="center" height="33" align="center">
                                 ${count.count}
                         </td>
                         <td align="center">
-                            <input name="ask" value="${data.ask}" type="text" style="width: 90%;"
-                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                            <input name="ask" id="ask${data.id}" value="${data.ask}" type="text" style="width: 90%;"
+                                   />
                         </td>
                         <td align="center" title="${data.answer}">
                             <c:if test="${fn:length(data.answer)>40 }">
-                                <input name="answer" value="${fn:substring(data.answer,0,40) }..." type="text" style="width: 96%"
-                                       class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                                <input name="answer" id="answer${data.id}" value="${fn:substring(data.answer,0,40) }..." type="text" style="width: 96%"
+                                       />
                             </c:if>
                             <c:if test="${fn:length(data.answer)<=40 }">
-                                <input name="answer" value="${data.answer }" type="text" style="width: 96%"
-                                       class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                                <input name="answer" id="answer${data.id}" value="${data.answer }" type="text" style="width: 96%"
+                                       />
                             </c:if>
 
                         </td>
                         <td align="center">
-                            <input name="qaOrder" value="${data.qaOrder}" type="text" style="width: 90%"
-                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                            <input name="qaOrder" id="qaOrder${data.id}" value="${data.qaOrder}" type="text" style="width: 90%"
+                                   />
                         </td>
                         <c:if test="${userInfoList != null}">
                             <td align="center">
@@ -138,11 +196,6 @@
                     </tr>
                 </form>
             </c:forEach>
-            <%--<tr>
-                <td colspan="8" height="40" bgcolor="#D9F3FD" align="left" class="pageQAList">
-                    &lt;%&ndash; 共${page.recordCount}条|当前${page.currentPage}/${page.pageCount}页 &ndash;%&gt;
-                </td>
-            </tr>--%>
         </table>
     </div>
 
@@ -151,7 +204,7 @@
         <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
             添加QA信息
         </div>
-        <form class="form-horizontal" id="qaDataForm" action="/QA/addQA" method="POST">
+        <form class="form-horizontal" id="qaDataForm" action="/QA/addQA" method="POST" onsubmit="return saveData();">
             <div class="clearB"></div>
             <input type="hidden" name="productId" value="${bxProductResult.id }">
             <div class="r_box" style="padding: 5px;">
@@ -168,8 +221,8 @@
                             排序：
                         </td>
                         <td align="center" style="width: 40%;">
-                            <input id="qaOrder" name="qaOrder" value="" type="text" style="width: 90%"
-                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                            <input id="qaOrderNew" name="qaOrder" value="" type="text" style="width: 90%"
+                                   />
                         </td>
                     </tr>
                     <tr>
@@ -178,14 +231,15 @@
                         </td>
                         <td align="center">
                             <input id="answer" name="answer" value="" type="text" style="width: 90%"
-                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                                   class="validate[required,noSpecialCaracters,maxSize[500]] text-input self-form-control"/>
                         </td>
                         <c:if test="${staff.roleId eq '1' }">
                             <td align="center" height="33" align="center">
+                                <input type="hidden" name="memberIdFlag" id="memberIdFlag" value="1">
                                 所属人：
                             </td>
                             <td align="center">
-                                <select class="select-nosearch" name="memberId" style="width: 90%;height: 28px;">
+                                <select class="select-nosearch" id="memberIdNew" name="memberId" style="width: 90%;height: 28px;">
                                     <option value="0" selected="selected">---请选择---</option>
                                     <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
                                         <option value='${userInfo.id}'>

@@ -46,12 +46,31 @@
             }
 		})
 		function save(){
+            var years = $("#years").val();
+            var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+            if (years != "") {
+                if (!re.test(years)) {
+                    $("#years").validationEngine("showPrompt","从业年限只能为整数!","error");
+                    $("#years").focus();
+                    return false;
+                }
+            }else{
+                $("#years").validationEngine("showPrompt","从业年限不能为空!","error");
+                $("#years").focus();
+                return false;
+            }
 			var roleId = $("#roleId").val();
 			if(roleId==''){
 				$("#roleId").validationEngine("showPrompt","请选择所属角色","error");
 				$(this).focus();
 				return false;
 			}
+            var memberImg = $("#memberImg").val().length;
+            if(memberImg==""){
+                $("#memberImg").validationEngine("showPrompt","荣誉图片不能为空!","error");
+                $("#memberImg").focus();
+                return false;
+            }
 		}
 	</script>
 </head>
@@ -70,11 +89,11 @@
 				<tr>
 					<td style="background:#A0E0F7;padding: 10px 15px;">登录名称：</td>
 					<td>
-						<input id="userName" name="userName" readonly="readonly" value="${userInfo.userName}" type="text" style="width: 172px;" class="validate[required,noSpecialCaracters] text-input self-form-control"/>
+						<input id="userName" name="userName" readonly="readonly" value="${userInfo.userName}" type="text" style="width: 172px;" class="validate[required,noSpecialCaracters,maxSize[20]] text-input self-form-control"/>
 					</td>
 					<td style="background:#A0E0F7;padding: 10px 15px;">登录密码：</td>
 					<td>
-						<input id="userPassword" name="userPassword" type="password"  style="width: 172px;" class="validate[maxSize[12]] text-input self-form-control" />
+						<input id="userPassword" name="userPassword" type="password"  style="width: 172px;" class="validate[maxSize[20]] text-input self-form-control" />
 					</td>
 				</tr>
 				<tr>
@@ -93,7 +112,7 @@
                     <td style="background:#A0E0F7;padding: 10px 15px;">公司：</td>
                     <td>
                         <input id="company_name" name="company_name" value="${userInfo.company_name}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                               class="validate[required,noSpecialCaracters,,maxSize[50]] text-input self-form-control"/>
                     </td>
                     <td style="background:#A0E0F7;padding: 10px 15px;">职务：</td>
                     <td>
@@ -106,19 +125,19 @@
                     <td style="background:#A0E0F7;padding: 10px 15px;">从业年限：</td>
                     <td>
                         <input id="years" name="years" value="${userInfo.years}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                               class="text-input self-form-control"/>
                     </td>
                     <td style="background:#A0E0F7;padding: 10px 15px;">个性签名：</td>
                     <td>
                         <input id="signature" name="signature" value="${userInfo.signature}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                               class="validate[required,noSpecialCaracters,,maxSize[50]] text-input self-form-control"/>
                     </td>
                 </tr>
                 <tr>
                     <td style="background:#A0E0F7;padding: 10px 15px;">自我介绍：</td>
                     <td>
                         <input id="introduce" name="introduce" value="${userInfo.introduce}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                               class="validate[required,noSpecialCaracters,,maxSize[100]] text-input self-form-control"/>
                     </td>
                     <td style="background:#A0E0F7;padding: 10px 15px;">头像：</td>
                     <td>
@@ -130,15 +149,15 @@
                     <td style="background:#A0E0F7;padding: 10px 15px;">微信号：</td>
                     <td>
                         <input id="wechat" name="wechat" value="${userInfo.wechat}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                               class="validate[required,noSpecialCaracters,,maxSize[30]] text-input self-form-control"/>
                     </td>
                     <td style="background:#A0E0F7;padding: 10px 15px;">手机：</td>
                     <td>
                         <input id="phone" name="phone" value="${userInfo.phone}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,,maxSize[12]] text-input self-form-control"/>
+                               class="validate[required,noSpecialCaracters,,maxSize[11]] text-input self-form-control"/>
                     </td>
                 </tr>
-                <c:if test="${userInfo.roleId eq '1' }">
+                <c:if test="${staff.roleId eq '1' }">
                     <tr>
                         <td style="background:#A0E0F7;padding: 10px 15px;">角色：</td>
                         <td>

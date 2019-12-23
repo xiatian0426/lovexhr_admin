@@ -19,6 +19,10 @@
 		<script src="${toolRoot}/select/select2-self.js"></script>
 		<!-- 引入分页 -->
 		<script src="${jsRoot}/page.js"></script>
+        <!-- 验证 -->
+        <link rel="stylesheet" href="${toolRoot }/validata/validationEngine.css" />
+        <script type="text/javascript" src="${toolRoot }/validata/jquery.validationEngine.js"></script>
+        <script type="text/javascript" src="${toolRoot }/validata/jquery.validationEngine-zh_CN.js" charset="utf-8"></script>
 		<script type="text/javascript">
             $(function(){
                 //函数来源page.js
@@ -49,6 +53,53 @@
                         alert("操作失败!");
                     }
                 });
+            }
+
+            function updateData(id){
+                var honorOrder = $("#honorOrder"+id).val();
+                var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+                if (honorOrder != "") {
+                    if (!re.test(honorOrder)) {
+                        $("#honorOrder"+id).validationEngine("showPrompt","排序只能为整数!","error");
+                        $("#honorOrder"+id).focus();
+                        return false;
+                    }
+                }else{
+                    $("#honorOrder"+id).validationEngine("showPrompt","排序不能为空!","error");
+                    $("#honorOrder"+id).focus();
+                    return false;
+                }
+            }
+            function saveData(){
+                var fileNew = $("#fileNew").val().length;
+                if(fileNew==""){
+                    $("#fileNew").validationEngine("showPrompt","荣誉图片不能为空!","error");
+                    $("#fileNew").focus();
+                    return false;
+                }
+                var honorOrder = $("#honorOrderNew").val();
+                var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+                if (honorOrder != "") {
+                    if (!re.test(honorOrder)) {
+                        $("#honorOrderNew").validationEngine("showPrompt","排序只能为整数!","error");
+                        $("#honorOrderNew").focus();
+                        return false;
+                    }
+                }else{
+                    $("#honorOrderNew").validationEngine("showPrompt","排序不能为空!","error");
+                    $("#honorOrderNew").focus();
+                    return false;
+                }
+                var memberIdFlag = $("#memberIdFlag").val();
+                if(memberIdFlag != ""){
+                    //需要验证
+                    var memberIdNew = $("#memberIdNew").val();
+                    if(memberIdNew=='0'){
+                        $("#memberIdNew").validationEngine("showPrompt","请选择所属人!","error");
+                        $("#memberIdNew").focus();
+                        return false;
+                    }
+                }
             }
 		</script>
 	</head>
@@ -102,7 +153,7 @@
                 </th>
             </tr>
             <c:forEach items="${page.result}" var="data" varStatus="count">
-                <form class="form-horizontal" id="honorDataListForm" action="/honor/updateById" method="POST" enctype="multipart/form-data">
+                <form class="form-horizontal" id="honorDataListForm" action="/honor/updateById" method="POST" onsubmit="return updateData('${data.id}');" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="${data.id }">
                     <c:if test="${data.id!=null && data.id!=0}">
                         <input type="hidden" name="imageUrl" value="${data.imageUrl }">
@@ -118,8 +169,8 @@
                             <input type="file" name="file"/>
                         </td>
                         <td align="center">
-                            <input name="honorOrder" value="${data.honorOrder}" type="text" style="width: 90%;"
-                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                            <input id="honorOrder${data.id}" name="honorOrder" value="${data.honorOrder}" type="text" style="width: 90%;"
+                                   />
                         </td>
                         <c:if test="${userInfoList != null}">
                             <td align="center">
@@ -127,7 +178,7 @@
                             </td>
                         </c:if>
                         <td align="center">
-                            <button type="submit" class="btn btn-success">保存</button>
+                            <button type="submit" class="btn btn-success">更新</button>
                             <button type="button" class="btn btn-success" onclick="deleteById('${data.id}','${data.memberId}','${data.imageUrl}')" target="_blank">删除</button>
                         </td>
                     </tr>
@@ -141,7 +192,7 @@
         <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
             添加荣誉信息
         </div>
-        <form class="form-horizontal" id="honorDataForm" action="/honor/addHonor" method="POST" enctype="multipart/form-data">
+        <form class="form-horizontal" id="honorDataForm" action="/honor/addHonor" method="POST" onsubmit="return saveData();" enctype="multipart/form-data">
             <div class="clearB"></div>
             <div class="r_box" style="padding: 5px;">
                 <table width="60%" cellpadding="0" cellspacing="0" class="table-bordered" align="center">
@@ -150,23 +201,24 @@
                             荣誉图片：
                         </td>
                         <td align="center" style="width: 40%;">
-                            <input type="file" name="file" value="">
+                            <input type="file" id="fileNew" name="file" value="">
                         </td>
                         <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
                             排序：
                         </td>
                         <td align="center" style="width: 40%;">
-                            <input id="honorOrder" name="honorOrder" value="" type="text" style="width: 90%"
-                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                            <input id="honorOrderNew" name="honorOrder" value="" type="text" style="width: 90%"
+                                   />
                         </td>
                     </tr>
                     <c:if test="${userInfoList != null}">
                         <tr>
                             <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
+                                <input type="hidden" name="memberIdFlag" id="memberIdFlag" value="1">
                                 所属人：
                             </td>
                             <td align="center" style="width: 40%;">
-                                <select class="select-nosearch" name="memberId" style="width: 90%;height: 28px;">
+                                <select class="select-nosearch" id="memberIdNew" name="memberId" style="width: 90%;height: 28px;">
                                     <option value="0" selected="selected">---请选择---</option>
                                     <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
                                         <option value='${userInfo.id}'>

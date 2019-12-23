@@ -63,7 +63,7 @@
 				location.reload();
 			}
 		}
-		function save(){
+		function addData(){
 			var date = $("#date").val();
 			if(date==''){
 				$("#date").validationEngine("showPrompt","日期不能是空","error");
@@ -87,7 +87,7 @@
 	</script>
 </head>
 <body style=" font-size: 13px;">
-<form action="/product/addOrUpdateProductById" name="messageDataForm" method="post" target="_self" id="editMessageDataFrom" enctype="multipart/form-data">
+<form action="/product/addOrUpdateProductById" name="messageDataForm" method="post" target="_self" id="editMessageDataFrom" onsubmit="return addData('${data.id}');" enctype="multipart/form-data" >
     <input type="hidden" name="type" value="0">
     <div class="clearB"></div>
     <div class="r_box" style="padding: 5px;">
@@ -197,7 +197,7 @@
         </table>
         <div class="sub_div">
             <input type="submit" class="sub_btn" value=" "/>
-            <input type="button" class="back_btn" onclick="javascript:history.go(-1);" value=" " />
+            <input type="button" class="reset_btn" onclick="perReset();" value=" " />
         </div>
     </div>
 </form>

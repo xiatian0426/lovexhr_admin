@@ -165,7 +165,7 @@ public class BxHonorController {
      * @return
      */
     @RequestMapping(value = "/addHonor", method = RequestMethod.POST)
-    public ModelAndView addHonor(ModelAndView mav, final HttpServletRequest request, @ModelAttribute BxHonor bxHonor, @RequestParam(value="file") MultipartFile[] file) throws IOException {
+    public ModelAndView addHonor(ModelAndView mav, final HttpServletRequest request, @ModelAttribute BxHonor bxHonor, @RequestParam(value="file",required=true) MultipartFile[] file) throws IOException {
         Map<String, Object> model = new HashMap<String, Object>();
         String result;
         int status = 0;
