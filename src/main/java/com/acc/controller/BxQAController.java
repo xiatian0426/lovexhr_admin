@@ -68,6 +68,7 @@ public class BxQAController {
             }
             model.put("page", page);
             model.put("query", query);
+            model.put("result", request.getParameter("result"));
             mav=new ModelAndView("/qa/qaList", model);
         } catch (Exception e) {
             _logger.error("getMemberById失败：" + ExceptionUtil.getMsg(e));
@@ -85,7 +86,7 @@ public class BxQAController {
      */
     @RequestMapping(value = "/updateById", method = RequestMethod.POST)
     public ModelAndView updateById(ModelAndView mav,final HttpServletRequest request, @ModelAttribute BxQA bxQA) throws IOException {
-        Map<String,Object> result = new HashMap<String, Object>();
+        Map<String,Object> result = mav.getModel();
         try{
             if(bxQA != null){
                 HttpSession session = request.getSession();
@@ -93,15 +94,16 @@ public class BxQAController {
                 bxQA.setModifierId(String.valueOf(staff.getId()));
                 bxQAService.updateById(bxQA);
                 result.put("code",0);
-                result.put("message","更新成功!");
+                result.put("result","更新成功!");
             }
         } catch (Exception e) {
             result.put("code",-1);
-            result.put("message","更新失败!");
+            result.put("result","更新失败!");
             _logger.error("updateById失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
-        return getQAList(mav,request,new QAQuery());
+        mav.setViewName("redirect:/QA/getQAList");
+        return mav;
     }
 
     /**
@@ -111,7 +113,7 @@ public class BxQAController {
      */
     @RequestMapping(value = "/addQA", method = RequestMethod.POST)
     public ModelAndView addQA(ModelAndView mav,final HttpServletRequest request, @ModelAttribute BxQA bxQA) throws IOException {
-        Map<String,Object> result = new HashMap<String, Object>();
+        Map<String,Object> result = mav.getModel();
         try{
             if(bxQA != null){
                 HttpSession session = request.getSession();
@@ -122,14 +124,15 @@ public class BxQAController {
                 bxQA.setCreaterId(staff.getId());
                 bxQAService.insert(bxQA);
                 result.put("code",0);
-                result.put("message","保存成功!");
+                result.put("result","保存成功!");
             }
         } catch (Exception e) {
             result.put("code",-1);
-            result.put("message","保存失败!");
+            result.put("result","保存失败!");
             _logger.error("addQA失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
-        return getQAList(mav,request,new QAQuery());
+        mav.setViewName("redirect:/QA/getQAList");
+        return mav;
     }
 }

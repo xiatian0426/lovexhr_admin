@@ -24,6 +24,12 @@
         <script type="text/javascript" src="${toolRoot }/validata/jquery.validationEngine.js"></script>
         <script type="text/javascript" src="${toolRoot }/validata/jquery.validationEngine-zh_CN.js" charset="utf-8"></script>
 		<script type="text/javascript">
+            $(function(){
+                var result = $("#result").val();
+                if(result != ""){
+                    alert(result);
+                }
+            });
             function saveData(){
                 var file = $("#file").val().length;
                 if(file==""){
@@ -35,6 +41,7 @@
 		</script>
 	</head>
     <body style=" font-size: 13px;">
+        <input id="result" value="${result}" type="hidden"/>
         <div class="clearB"></div>
         <div class="r_box" style="padding: 5px;">
             <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">

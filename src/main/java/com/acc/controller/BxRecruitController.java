@@ -50,7 +50,7 @@ public class BxRecruitController {
 	 */
 	@RequestMapping(value = "/getRecruitList", method = {RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView getRecruitList(ModelAndView mav, final HttpServletRequest request, final HttpServletResponse response,@ModelAttribute RecruitQuery query) throws IOException {
-        Map<String,Object> model = new HashMap<String, Object>();
+        Map<String,Object> model = mav.getModel();
 	    try{
             HttpSession session = request.getSession();
             UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
@@ -78,6 +78,7 @@ public class BxRecruitController {
                     bxRecruit.setImageUrl(basePath+ Constants.recruitImgPath+bxRecruit.getMemberId()+"/"+bxRecruit.getImageUrl());
                 }
             }
+            model.put("result", request.getParameter("result"));
             if(staff.getRoleId()!=null && staff.getRoleId().equals(Constants.ROLEIDO)){
                 model.put("page", page);
                 model.put("query", query);
@@ -102,9 +103,8 @@ public class BxRecruitController {
      */
     @RequestMapping(value = "/addRecruit", method = RequestMethod.POST)
     public ModelAndView addRecruit(ModelAndView mav,final HttpServletRequest request, @ModelAttribute BxRecruit bxRecruit,@RequestParam(value="file") MultipartFile[] file) throws IOException {
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = mav.getModel();
         String result="";
-        int status = 0;
         try{
             HttpSession session = request.getSession();
             UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
@@ -150,17 +150,14 @@ public class BxRecruitController {
                     result = "没有文件";
                 }
             }else{
-                status = 1;
                 result = "参数有误，请联系管理员!";
             }
-            model.put("status", status);
             model.put("result", result);
             mav.setViewName("redirect:/recruit/getRecruitList");
         } catch (Exception e) {
-            status = -1;
-            result = "添加失败，请联系管理员!";
             _logger.error("addRecruit失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
+            mav = new ModelAndView(Constants.SERVICES_ERROR, model);
         }
         return mav;
     }

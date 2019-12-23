@@ -29,6 +29,10 @@
                 page("qaListForm", ${page.pageInfo}, "pageQAList");
                 //开启表单验证
                 $("#qaDataForm").validationEngine();
+                var result = $("#result").val();
+                if(result != ""){
+                    alert(result);
+                }
             });
             function deleteById(id){
                 $.ajax({
@@ -108,6 +112,7 @@
 		</script>
 	</head>
 <div style="width: 95%;  font-size: 13px;">
+    <input id="result" value="${result}" type="hidden"/>
     <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
         QA信息列表
     </div>
@@ -190,7 +195,7 @@
                             </td>
                         </c:if>
                         <td align="center">
-                            <button type="submit" class="btn btn-success">保存</button>
+                            <button type="submit" class="btn btn-success">更新</button>
                             <button type="button" class="btn btn-success" onclick="deleteById('${data.id}','1')" target="_blank">删除</button>
                         </td>
                     </tr>

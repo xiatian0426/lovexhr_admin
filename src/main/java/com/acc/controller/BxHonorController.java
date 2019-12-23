@@ -82,6 +82,7 @@ public class BxHonorController {
             }
             model.put("page", page);
             model.put("query", query);
+            model.put("result", request.getParameter("result"));
             mav=new ModelAndView("/honor/honorList", model);
         } catch (Exception e) {
             _logger.error("bxHonorService失败：" + ExceptionUtil.getMsg(e));
@@ -99,9 +100,8 @@ public class BxHonorController {
      */
     @RequestMapping(value = "/updateById", method = RequestMethod.POST)
     public ModelAndView updateById(ModelAndView mav, final HttpServletRequest request, @ModelAttribute BxHonor bxHonor, @RequestParam(value="file",required=false)MultipartFile[] file) throws IOException {
-        Map<String,Object> model = new HashMap<String, Object>();
+        Map<String,Object> model = mav.getModel();
         String result;
-        int status = 0;
         try {
             if (bxHonor != null) {
                 if(file!=null && file.length>0){
@@ -112,6 +112,7 @@ public class BxHonorController {
                         if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
                             bxHonor.setImageUrl(null);
                             bxHonorService.updateById(bxHonor);
+                            result = "更新成功!";
                         }else{
                             BxHonor oldBxHonor = bxHonorService.getHonorById(bxHonor.getId());
                             bxHonor.setMemberId(oldBxHonor.getMemberId());
@@ -131,32 +132,30 @@ public class BxHonorController {
                                     //操作新的文件
                                     bxHonorService.updateById(bxHonor);
                                 }
-                                result = "添加/更新成功!";
+                                result = "更新成功!";
                             }else if(re==-1){
-                                status = 3;
                                 result = "没有文件!";
                             }else{
-                                status = 2;
                                 result = "上传文件有问题!";
                             }
                         }
+                    }else{
+                        result = "未登录";
                     }
                 }else{
-                    status = 3;
                     result = "没有文件";
                 }
             } else {
-                status = 1;
                 result = "参数有误，请联系管理员!";
             }
         } catch (Exception e) {
-            status = -1;
             result = "添加/更新失败，请联系管理员!";
             _logger.error("updateMemberById失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
-        model.put("status", status);
-        return getHonorList(mav,request,new HonorQuery());
+        model.put("result", result);
+        mav.setViewName("redirect:/honor/getHonorList");
+        return mav;
     }
 
     /**
@@ -166,9 +165,8 @@ public class BxHonorController {
      */
     @RequestMapping(value = "/addHonor", method = RequestMethod.POST)
     public ModelAndView addHonor(ModelAndView mav, final HttpServletRequest request, @ModelAttribute BxHonor bxHonor, @RequestParam(value="file",required=true) MultipartFile[] file) throws IOException {
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = mav.getModel();
         String result;
-        int status = 0;
         try{
             if (bxHonor != null) {
                 if(file!=null && file.length>0){
@@ -200,17 +198,15 @@ public class BxHonorController {
                     result = "没有文件";
                 }
             }else{
-                status = 1;
                 result = "参数有误，请联系管理员!";
             }
         } catch (Exception e) {
-            status = -1;
             result = "添加失败，请联系管理员!";
-            _logger.error("addRecruit失败：" + ExceptionUtil.getMsg(e));
+            _logger.error("addHonor失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
-        model.put("status", status);
         model.put("result", result);
-        return getHonorList(mav, request,new HonorQuery());
+        mav.setViewName("redirect:/honor/getHonorList");
+        return mav;
     }
 }

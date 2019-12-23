@@ -27,6 +27,10 @@
             $(function(){
                 //函数来源page.js
                 page("honorListForm", ${page.pageInfo}, "pageHonorList");
+                var result = $("#result").val();
+                if(result != ""){
+                    alert(result);
+                }
             });
 
             function deleteById(id,memberId,imageUrl){
@@ -104,6 +108,7 @@
 		</script>
 	</head>
 <body style="width: 95%;  font-size: 13px;">
+<input id="result" value="${result}" type="hidden"/>
     <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
         荣誉信息列表
     </div>
