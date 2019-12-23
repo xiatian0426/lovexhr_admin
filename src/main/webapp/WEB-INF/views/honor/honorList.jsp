@@ -170,7 +170,7 @@
                         </td>
                         <td align="center">
                             <input id="honorOrder${data.id}" name="honorOrder" value="${data.honorOrder}" type="text" style="width: 90%;"
-                                   />
+                                   class="text-input self-form-control"/>
                         </td>
                         <c:if test="${userInfoList != null}">
                             <td align="center">
@@ -204,18 +204,18 @@
                             <input type="file" id="fileNew" name="file" value="">
                         </td>
                         <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
-                            <font color="red">*</font>&nbsp;排序：
+                            &nbsp;&nbsp;&nbsp;&nbsp;<font color="red">*</font>&nbsp;排序：
                         </td>
                         <td align="center" style="width: 40%;">
                             <input id="honorOrderNew" name="honorOrder" value="" type="text" style="width: 90%"
-                                   />
+                                   class="text-input self-form-control"/>
                         </td>
                     </tr>
                     <c:if test="${userInfoList != null}">
                         <tr>
                             <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
                                 <input type="hidden" name="memberIdFlag" id="memberIdFlag" value="1">
-                                <font color="red">*</font>&nbsp;所属人：
+                                &nbsp;&nbsp;&nbsp;<font color="red">*</font>&nbsp;所属人：
                             </td>
                             <td align="center" style="width: 40%;">
                                 <select class="select-nosearch" id="memberIdNew" name="memberId" style="width: 90%;height: 28px;">

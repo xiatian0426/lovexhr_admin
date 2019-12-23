@@ -167,22 +167,22 @@
                         </td>
                         <td align="center">
                             <input name="ask" id="ask${data.id}" value="${data.ask}" type="text" style="width: 90%;"
-                                   />
+                                   class="text-input self-form-control"/>
                         </td>
                         <td align="center" title="${data.answer}">
                             <c:if test="${fn:length(data.answer)>40 }">
                                 <input name="answer" id="answer${data.id}" value="${fn:substring(data.answer,0,40) }..." type="text" style="width: 96%"
-                                       />
+                                       class="text-input self-form-control"/>
                             </c:if>
                             <c:if test="${fn:length(data.answer)<=40 }">
                                 <input name="answer" id="answer${data.id}" value="${data.answer }" type="text" style="width: 96%"
-                                       />
+                                       class="text-input self-form-control"/>
                             </c:if>
 
                         </td>
                         <td align="center">
                             <input name="qaOrder" id="qaOrder${data.id}" value="${data.qaOrder}" type="text" style="width: 90%"
-                                   />
+                                   class="text-input self-form-control"/>
                         </td>
                         <c:if test="${userInfoList != null}">
                             <td align="center">
@@ -210,23 +210,23 @@
             <div class="r_box" style="padding: 5px;">
                 <table width="60%" cellpadding="0" cellspacing="0" class="table-bordered" align="center">
                     <tr>
-                        <td align="center" height="33" align="center" style="width: 10%;">
+                        <td align="center" height="33" align="center"  style="width: 15%;background:#A0E0F7;">
                             <font color="red">*</font>&nbsp;问题：
                         </td>
                         <td align="center" style="width: 40%;">
                             <input name="ask" value="" type="text" style="width: 90%;"
                                    class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
                         </td>
-                        <td align="center" height="33" align="center" style="width: 10%;">
+                        <td align="center" height="33" align="center"  style="width: 15%;background:#A0E0F7;">
                             <font color="red">*</font>&nbsp;排序：
                         </td>
                         <td align="center" style="width: 40%;">
                             <input id="qaOrderNew" name="qaOrder" value="" type="text" style="width: 90%"
-                                   />
+                                   class="text-input self-form-control"/>
                         </td>
                     </tr>
                     <tr>
-                        <td align="center" height="33" align="center">
+                        <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
                             <font color="red">*</font>&nbsp;答案：
                         </td>
                         <td align="center">
@@ -234,7 +234,7 @@
                                    class="validate[required,noSpecialCaracters,maxSize[500]] text-input self-form-control"/>
                         </td>
                         <c:if test="${staff.roleId eq '1' }">
-                            <td align="center" height="33" align="center">
+                            <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
                                 <input type="hidden" name="memberIdFlag" id="memberIdFlag" value="1">
                                 <font color="red">*</font>&nbsp;所属人：
                             </td>

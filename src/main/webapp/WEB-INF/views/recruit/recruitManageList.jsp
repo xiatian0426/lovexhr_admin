@@ -167,7 +167,7 @@
                         </td>
                         <td align="center">
                             <input id="recruitOrder${data.id}" name="recruitOrder" value="${data.recruitOrder}" type="text" style="width: 90%;"
-                                   />
+                                   class="text-input self-form-control"/>
                         </td>
                         <c:if test="${userInfoList != null}">
                             <td align="center">
@@ -206,7 +206,7 @@
                         </td>
                         <td align="center" style="width: 40%;">
                             <input id="recruitOrderNew" name="recruitOrder" value="" type="text" style="width: 90%"
-                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                                   class="text-input self-form-control"/>
                         </td>
                     </tr>
                     <c:if test="${userInfoList != null}">
