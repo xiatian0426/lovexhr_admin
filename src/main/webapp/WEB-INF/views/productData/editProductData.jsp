@@ -53,6 +53,10 @@
 			$("#editMessageDataFrom").validationEngine();
             $("#editMessageVideoDataFrom").validationEngine();
             $("#editMessageImgDataFrom").validationEngine();
+            var result = $("#result").val();
+            if(result != ""){
+                alert(result);
+            }
 		});
 		function editProduct(){
             var re = new RegExp("^[0-9]*[1-9][0-9]*$");
@@ -177,6 +181,7 @@
 	</script>
 </head>
 <body style=" font-size: 13px;">
+<input id="result" value="${result}" type="hidden"/>
 	<form action="/product/addOrUpdateProductById" name="editMessageDataFrom" method="post" target="_self" id="editMessageDataFrom" onsubmit="return editProduct();" enctype="multipart/form-data">
 
         <input type="hidden" name="type" value="1">

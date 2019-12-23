@@ -23,6 +23,10 @@
             $(function(){
                 //函数来源page.js
                 page("productListForm", ${page.pageInfo}, "pageProductList");
+                var result = $("#result").val();
+                if(result != ""){
+                    alert(result);
+                }
             });
 
 			function goEditMessageData(productId){
@@ -55,6 +59,7 @@
 		</script>
 	</head>
 <body style="width: 95%;  font-size: 13px;">
+<input id="result" value="${result}" type="hidden"/>
 	<form class="form-horizontal" id="productListForm" action="/product/getProductByMemId" method="POST">
 		<div class="r_box" style="margin-top: 10px;">
 			<div style="height: 15px; width: 100%;"><span></span></div>

@@ -51,12 +51,10 @@
 		$(function(){
 			//开启表单验证
 			$("#messageDataForm").validationEngine();
-			var notice = $("#notice").val();
-			if(notice == 1){
-				alert("添加成功");
-			}else if(notice == -1){
-				alert("添加失败");
-			}
+            var result = $("#result").val();
+            if(result != ""){
+                alert(result);
+            }
 		});
 		function perReset(){
 			if(confirm('确定重置吗?')){
@@ -134,6 +132,7 @@
 	</script>
 </head>
 <body style=" font-size: 13px;">
+<input id="result" value="${result}" type="hidden"/>
 <form action="/product/addOrUpdateProductById" name="messageDataForm" method="post" target="_self" id="messageDataForm" onsubmit="return addData();" enctype="multipart/form-data" >
     <input type="hidden" name="type" value="0">
     <div class="clearB"></div>

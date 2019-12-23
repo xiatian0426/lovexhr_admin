@@ -56,6 +56,7 @@ public class BxProductController {
             HttpSession session = request.getSession();
             UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
             model.put("staff", staff);
+            model.put("result", request.getParameter("result"));
             mav=new ModelAndView("/productData/addProductData", model);
         } catch (Exception e) {
             _logger.error("进入添加产品页失败：" + ExceptionUtil.getMsg(e));
@@ -101,6 +102,7 @@ public class BxProductController {
             }
             model.put("page", page);
             model.put("query", query);
+            model.put("result", request.getParameter("result"));
             mav=new ModelAndView("/productData/productDataList", model);
         } catch (Exception e) {
             _logger.error("getProductByMemId失败：" + ExceptionUtil.getMsg(e));
@@ -157,6 +159,7 @@ public class BxProductController {
                     model.put("bxProductResult",bxProductResult);
                 }
             }
+            model.put("result", request.getParameter("result"));
             mav=new ModelAndView("/productData/editProductData", model);
         } catch (Exception e) {
             _logger.error("getProDetail失败：" + ExceptionUtil.getMsg(e));
@@ -209,7 +212,6 @@ public class BxProductController {
         Map<String, Object> model = mav.getModel();
         String result;
         boolean boo = true;
-        int status = 0;
         try {
             if (bxProduct != null) {
                 if(bxProduct.getType()!=null && !"".equals(bxProduct.getType())){
@@ -243,37 +245,36 @@ public class BxProductController {
                                     bxProductService.updateProduct(bxProduct);
                                     result = "添加/更新成功!";
                                 }else{
-                                    status = 1;
                                     result = "参数有误，请联系管理员!";
                                 }
                             }else{
-                                status = 3;
                                 result = "添加/更新失败!";
                             }
                         }else{
                             result = "更新成功!";
                         }
                     }else{
-                        status = 2;
                         result = "文件不能为空!";
                     }
                 }else{
-                    status = 1;
                     result = "参数有误，请联系管理员!";
                 }
             } else {
-                status = 1;
                 result = "参数有误，请联系管理员!";
             }
         } catch (Exception e) {
-            status = -1;
             result = "添加/更新失败，请联系管理员!";
             _logger.error("updateProductById失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
-        model.put("status", status);
         model.put("result", result);
-        return getProductByMemId(mav,request,new ProductQuery());
+        if (bxProduct != null && bxProduct.getType()!=null && !"".equals(bxProduct.getType())&&bxProduct.getType().equals("0")) {
+            mav.setViewName("redirect:/product/goAddProductByMemId");
+        }else{
+            model.put("productId", bxProduct.getId());
+            mav.setViewName("redirect:/product/getProDetail");
+        }
+        return mav;
     }
 
    /**
@@ -287,9 +288,7 @@ public class BxProductController {
     public ModelAndView addProductVideo(ModelAndView mav,final HttpServletRequest request, final HttpServletResponse response, @ModelAttribute BxProductVideo bxProductVideo,
                                        @RequestParam(value="file",required=false)MultipartFile[] file) throws IOException {
         Map<String, Object> model = mav.getModel();
-        Map<String, Object> map = new HashMap<String, Object>();
         String result;
-        int status = 0;
         try {
             BxProduct bxProduct = bxProductService.getProductById(bxProductVideo.getProductId());
             if(bxProduct!=null){
@@ -310,26 +309,23 @@ public class BxProductController {
                             result = "添加失败!";
                         }
                     }else{
-                        status = 2;
                         result = "视频文件不能为空!";
                     }
                 }else{
-                    status = 1;
                     result = "参数有误，请联系管理员!";
                 }
             }else{
-                status = 1;
                 result = "参数有误，请联系管理员!";
             }
         } catch (Exception e) {
-            status = -1;
             result = "添加失败，请联系管理员!";
             _logger.error("addProductVideo失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
-        model.put("status", status);
         model.put("result", result);
-        return getProDetail(mav,request);
+        model.put("productId", bxProductVideo.getProductId());
+        mav.setViewName("redirect:/product/getProDetail");
+        return mav;
     }
     /**
      * 后台管理--修改商品图片信息
@@ -343,7 +339,6 @@ public class BxProductController {
                                              @RequestParam(value="file",required=false)MultipartFile[] file) throws IOException {
         Map<String, Object> model = mav.getModel();
         String result;
-        int status = 0;
         try {
             if(file != null && file.length>0){
                 if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
@@ -380,206 +375,17 @@ public class BxProductController {
                     }
                 }
             }else{
-                status = 2;
                 result = "文件不能为空!";
             }
         } catch (Exception e) {
-            status = -1;
             result = "添加失败，请联系管理员!";
             _logger.error("aeditProductDetailImg失败：" + ExceptionUtil.getMsg(e));
             e.printStackTrace();
         }
-        model.put("status", status);
         model.put("result", result);
-        return getProDetail(mav,request);
+        model.put("productId", bxProductImg.getProductId());
+        mav.setViewName("redirect:/product/getProDetail");
+        return mav;
     }
-    /**
-     * 根据产品id获取产品详情
-     * @param request
-     * @param response
-     * @return
-     *//*
-    @RequestMapping(value = "/getProductDetail", method = RequestMethod.GET)
-    public void getProductDetail(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
-        PrintWriter out = response.getWriter();
-        String result = "";
-        try{
-            String productId = request.getParameter("productId");
-            if(StringUtils.isNotEmpty(productId)){
-                List<BxProduct> list = bxProductService.getDetailByProductId(productId);
-                if(list != null && list.size()>0){
-                    String path = request.getContextPath();
-                    String basePath = request.getScheme() + "://"
-                            + request.getServerName() + ":" + request.getServerPort()
-                            + path + "/";
-                    BxProduct resultBxProduct = new BxProduct();
-                    resultBxProduct.setId(list.get(0).getId());
-                    resultBxProduct.setProductName(list.get(0).getProductName());
-                    resultBxProduct.setProductVideo(basePath+ Constants.proVideoPath+list.get(0).getId()+"/"+list.get(0).getProductVideo());
-                    List<String> imgUrlList = new ArrayList<String>();
-                    for(BxProduct bxProduct:list){
-                        imgUrlList.add(basePath+ Constants.proDetailImgPath+bxProduct.getId()+"/"+bxProduct.getImageUrl());
-                    }
-                    resultBxProduct.setImgUrlList(imgUrlList);
-                    result = JSON.toJSONString(resultBxProduct);
-                }
-            }
-        } catch (Exception e) {
-            _logger.error("getDetailByProductId失败：" + ExceptionUtil.getMsg(e));
-            e.printStackTrace();
-        }
-        out.print(result);
-        out.flush();
-        out.close();
-    }*/
-    /**
-     * 获取案例产品详情
-     * @param request
-     * @param response
-     * @return
-     */
-    /*@RequestMapping(value = "/getCaseDetail", method = RequestMethod.GET)
-    public void getCaseDetail(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
-        PrintWriter out = response.getWriter();
-        String result = "";
-        try{
-            String productId = request.getParameter("productId");
-            if(StringUtils.isNotEmpty(productId)){
-                BxCase bxCase = bxProductService.getCaseDetail(productId);
-                result = JSON.toJSONString(bxCase);
-            }
-        } catch (Exception e) {
-            _logger.error("getCaseDetail失败：" + ExceptionUtil.getMsg(e));
-            e.printStackTrace();
-        }
-        out.print(result);
-        out.flush();
-        out.close();
-    }*/
-
-    /**
-     * 后台管理--删除商品视频信息
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    /*@RequestMapping(value = "/deleteProductDetailVideoById", method = RequestMethod.POST)
-    public void deleteProductDetailVideoById(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
-        PrintWriter out = response.getWriter();
-        Map<String,Object> result = new HashMap<String, Object>();
-        try {
-            String id = request.getParameter("id");
-            if(StringUtils.isNotEmpty(id)){
-                //删除视频
-                BxProductVideo bxProductVideo = bxProductService.getProductDetailVideoById(id);
-                String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
-                String fileSavePath=path + Constants.proVideoPath + bxProductVideo.getProductId() + "/";
-                new File(fileSavePath+bxProductVideo.getVideoUrl()).delete();
-                //删除数据
-                bxProductService.deleteProductDetailVideoById(id);
-                result.put("code",0);
-                result.put("message","删除成功!");
-            }
-        } catch (Exception e) {
-            result.put("code",-1);
-            result.put("message","删除失败!");
-            _logger.error("deleteRecruit失败：" + ExceptionUtil.getMsg(e));
-            e.printStackTrace();
-        }
-        out.print(JSON.toJSONString(result));
-        out.flush();
-        out.close();
-    }*/
-    /**
-     * 后台管理--添加商品图片信息
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    /*@RequestMapping(value = "/addProductDetailImg", method = RequestMethod.POST)
-    public ModelAndView addProductDetailImg(ModelAndView mav,final HttpServletRequest request, final HttpServletResponse response, @ModelAttribute BxProductImg bxProductImg,
-                                    @RequestParam(value="file",required=false)MultipartFile[] file) throws IOException {
-        Map<String, Object> model = mav.getModel();
-        String result;
-        int status = 0;
-        try {
-            BxProduct bxProduct = bxProductService.getProductById(bxProductImg.getProductId());
-            if(bxProduct!=null){
-                if (bxProductImg != null) {
-                    if(file != null){
-                        String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
-                        String fileSavePath=path + Constants.proDetailImgPath + bxProductImg.getProductId() + "/";
-                        if(bxProductImg.getIsFirst()!=null){
-                            if("0".equals(bxProductImg.getIsFirst())){
-//                                bxProductService.deleteProductDetailImgByProId(""+bxProductImg.getProductId());
-                            }
-                            Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
-                            int re = Integer.valueOf((String)mapImg.get("code")).intValue();
-                            if(re == 0){
-                                List<String> imgNameList = (List<String>)mapImg.get("list");
-                                if(imgNameList!=null && imgNameList.size()>0){
-                                    bxProductImg.setImageUrl(imgNameList.get(0));
-                                    bxProductService.insertProductImg(bxProductImg);
-                                }
-                                if("0".equals(bxProductImg.getIsLast())){
-                                    //如果是最后一次上传图片  获取产品整个图片  进行匹配删除
-                                    List<BxProductImg> bxProductImgList = bxProductService.getProductDetailImgByProId(bxProductImg.getProductId()+"");
-                                    File fileTemp = new File(fileSavePath);
-                                    boolean falg = fileTemp.exists();
-                                    if (falg) {
-                                        String[] png = fileTemp.list();
-                                        boolean boo;
-                                        for (int i = 0; i < png.length; i++) {
-                                            boo = true;
-                                            for(BxProductImg bxProductImgg:bxProductImgList){
-                                                if(bxProductImgg.getImageUrl().equals(png[i])){
-                                                    boo = false;
-                                                    break;
-                                                }
-                                            }
-                                            if(boo){
-                                                new File(fileSavePath + png[i]).delete();
-                                            }
-                                        }
-                                    }
-                                }
-                                result = "添加成功";
-                            }else{
-                                result = "添加失败!";
-                            }
-                        }else{
-                            status = 1;
-                            result = "参数有误，请联系管理员!";
-                        }
-                    }else{
-                        status = 2;
-                        result = "文件不能为空!";
-                    }
-                }else{
-                    status = 1;
-                    result = "参数有误，请联系管理员!";
-                }
-            }else{
-                status = 1;
-                result = "参数有误，请联系管理员!";
-            }
-        } catch (Exception e) {
-            status = -1;
-            result = "添加失败，请联系管理员!";
-            _logger.error("addProductImg失败：" + ExceptionUtil.getMsg(e));
-            e.printStackTrace();
-        }
-        model.put("status", status);
-        model.put("result", result);
-        return getProDetail(mav,request);
-    }*/
 
 }
