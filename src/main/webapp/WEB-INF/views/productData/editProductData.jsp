@@ -51,29 +51,106 @@
 		$(function(){
 			//开启表单验证
 			$("#editMessageDataFrom").validationEngine();
+            $("#editMessageVideoDataFrom").validationEngine();
+            $("#editMessageImgDataFrom").validationEngine();
 		});
-		function edit(){
-			var date = $("#date").val();
-			if(date==''){
-				$("#date").validationEngine("showPrompt","日期不能是空","error");
-				return false;
-			}
-			var province = $("#province").val();
-			if(province=='' || province=='0'){
-				$("#province").validationEngine("showPrompt","省市不能是空","error");
-				return false;
-			}
-			var messagetype = $("#messagetype").val();
-			if(messagetype=='' || messagetype=='0'){
-				$("#messagetype").validationEngine("showPrompt","信息类型不能是空","error");
-				return false;
-			}
-			if(editor.html()==''){
-				alert("内容不能为空!");
-				return false;
-			}
-		}
+		function editProduct(){
+            var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+            var productOrder = $("#productOrder").val();
+            if (productOrder != "") {
+                if (!re.test(productOrder)) {
+                    $("#productOrder").validationEngine("showPrompt","排序只能为整数!","error");
+                    $("#productOrder").focus();
+                    return false;
+                }
+            }else{
+                $("#productOrder").validationEngine("showPrompt","排序不能为空!","error");
+                $("#productOrder").focus();
+                return false;
+            }
+            var bxCaseAge = $("#bxCaseAge").val();
+            if (bxCaseAge != "") {
+                if (!re.test(bxCaseAge)) {
+                    $("#bxCaseAge").validationEngine("showPrompt","年龄只能为整数!","error");
+                    $("#bxCaseAge").focus();
+                    return false;
+                }
+            }else{
+                $("#bxCaseAge").validationEngine("showPrompt","年龄不能为空!","error");
+                $("#bxCaseAge").focus();
+                return false;
+            }
+            var bxCaseCost = $("#bxCaseCost").val();
+            if (bxCaseCost != "") {
+                if (isNaN(bxCaseCost)) {
+                    $("#bxCaseCost").validationEngine("showPrompt","保费格式不正确!","error");
+                    $("#bxCaseCost").focus();
+                    return false;
+                }
+            }else{
+                $("#bxCaseCost").validationEngine("showPrompt","保费不能为空!","error");
+                $("#bxCaseCost").focus();
+                return false;
+            }
+            var bxCaseTimeLimit = $("#bxCaseTimeLimit").val();
+            if (bxCaseTimeLimit != "") {
+                if (!re.test(bxCaseTimeLimit)) {
+                    $("#bxCaseTimeLimit").validationEngine("showPrompt","保障期限只能为整数!","error");
+                    $("#bxCaseTimeLimit").focus();
+                    return false;
+                }
+            }else{
+                $("#bxCaseTimeLimit").validationEngine("showPrompt","保障期限不能为空!","error");
+                $("#bxCaseTimeLimit").focus();
+                return false;
+            }
 
+        }
+
+        function editProductVideo(){
+            var productVideo = $("#productVideo").val().length;
+            if(productVideo==""){
+                $("#productVideo").validationEngine("showPrompt","荣誉图片不能为空!","error");
+                $("#productVideo").focus();
+                return false;
+            }
+        }
+        function editProductImage(id){
+            var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+            var imageOrder = $("#productOrder"+id).val();
+            if (imageOrder != "") {
+                if (!re.test(imageOrder)) {
+                    $("#imageOrder"+id).validationEngine("showPrompt","排序只能为整数!","error");
+                    $("#imageOrder"+id).focus();
+                    return false;
+                }
+            }else{
+                $("#imageOrder"+id).validationEngine("showPrompt","排序不能为空!","error");
+                $("#imageOrder"+id).focus();
+                return false;
+            }
+        }
+        function addProductImage(){
+            var fileNew = $("#fileNew").val().length;
+            if(fileNew==""){
+                $("#fileNew").validationEngine("showPrompt","产品详情图片不能为空!","error");
+                $("#fileNew").focus();
+                return false;
+            }
+            var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+            var imageOrderNew = $("#imageOrderNew").val();
+            if (imageOrderNew != "") {
+                if (!re.test(imageOrderNew)) {
+                    $("#imageOrderNew").validationEngine("showPrompt","排序只能为整数!","error");
+                    $("#imageOrderNew").focus();
+                    return false;
+                }
+            }else{
+                $("#imageOrderNew").validationEngine("showPrompt","排序不能为空!","error");
+                $("#imageOrderNew").focus();
+                return false;
+            }
+        }
         function deleteProductDetailImgById(id){
             $.ajax({
                 url:'/ajax/deleteProductDetailImgById',
@@ -100,7 +177,7 @@
 	</script>
 </head>
 <body style=" font-size: 13px;">
-	<form action="/product/addOrUpdateProductById" name="messageDataForm" method="post" target="_self" id="editMessageDataFrom" enctype="multipart/form-data">
+	<form action="/product/addOrUpdateProductById" name="editMessageDataFrom" method="post" target="_self" id="editMessageDataFrom" onsubmit="return editProduct();" enctype="multipart/form-data">
 
         <input type="hidden" name="type" value="1">
         <input type="hidden" name="id" value="${bxProductResult.id }">
@@ -124,7 +201,7 @@
 					<td style="background:#A0E0F7; padding: 10px 35px; width: 150px;"><font color="red">*</font>&nbsp;产品排序：</td>
 					<td >
                         <input id="productOrder" name="productOrder" value="${bxProductResult.productOrder}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                               class="text-input self-form-control"/>
 					</td>
 				</tr>
 				<tr>
@@ -132,11 +209,10 @@
 					<td >
                         <input id="productDesc" name="productDesc" value="${bxProductResult.productDesc}" type="text" style="width: 172px;"
                                class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                        <%--<textarea id="editor_id" name="productDesc" style="height: 350px;">${bxProductResult.productDesc }</textarea>--%>
 					</td>
-					<td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>&nbsp;产品图片：</td>
+					<td style="background:#A0E0F7; padding: 10px 35px;">&nbsp;产品图片：</td>
 					<td >
-                        <input type="file" name="file"/>
+                        <input id="file" type="file" name="file"/>
                         <img src="${bxProductResult.productImg}" width="50" height="50"/>
 					</td>
 				</tr>
@@ -148,51 +224,47 @@
                     <td >
                         <input id="bxCaseProductName" name="bxCaseProductName" value="${bxProductResult.bxCase.productName}" type="text" style="width: 172px;"
                                class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                        <%--<textarea id="editor_id" name="productDesc" style="height: 350px;">${bxProductResult.productDesc }</textarea>--%>
                     </td>
                     <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>&nbsp;姓名：</td>
                     <td >
                         <input id="bxCaseName" name="bxCaseName" value="${bxProductResult.bxCase.name}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                               class="validate[required,noSpecialCaracters,maxSize[10]] text-input self-form-control"/>
                     </td>
                 </tr>
                 <tr>
                     <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>&nbsp;年龄：</td>
                     <td >
                         <input id="bxCaseAge" name="bxCaseAge" value="${bxProductResult.bxCase.age}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                        <%--<textarea id="editor_id" name="productDesc" style="height: 350px;">${bxProductResult.productDesc }</textarea>--%>
+                               class="text-input self-form-control"/>
                     </td>
                     <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>&nbsp;保费：</td>
                     <td >
                         <input id="bxCaseCost" name="bxCaseCost" value="${bxProductResult.bxCase.cost}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                               class="text-input self-form-control"/>
                     </td>
                 </tr>
                 <tr>
                     <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>&nbsp;保障期限：</td>
                     <td >
                         <input id="bxCaseTimeLimit" name="bxCaseTimeLimit" value="${bxProductResult.bxCase.timeLimit}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                        <%--<textarea id="editor_id" name="productDesc" style="height: 350px;">${bxProductResult.productDesc }</textarea>--%>
+                               class="text-input self-form-control"/>
                     </td>
                     <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>&nbsp;投保内容：</td>
                     <td >
                         <input id="bxCaseTbContext" name="bxCaseTbContext" value="${bxProductResult.bxCase.tbContext}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                               class="validate[required,noSpecialCaracters,maxSize[500]] text-input self-form-control"/>
                     </td>
                 </tr>
                 <tr>
                     <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>&nbsp;理赔内容：</td>
                     <td >
                         <input id="bxCaseLpContext" name="bxCaseLpContext" value="${bxProductResult.bxCase.lpContext}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                        <%--<textarea id="editor_id" name="productDesc" style="height: 350px;">${bxProductResult.productDesc }</textarea>--%>
+                               class="validate[required,noSpecialCaracters,maxSize[500]] text-input self-form-control"/>
                     </td>
                     <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>&nbsp;出险内容：</td>
                     <td >
                         <input id="bxCaseCxContext" name="bxCaseCxContext" value="${bxProductResult.bxCase.cxContext}" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                               class="validate[required,noSpecialCaracters,maxSize[500]] text-input self-form-control"/>
                     </td>
                 </tr>
 			</table>
@@ -203,7 +275,7 @@
 		</div>
 	</form>
 
-    <form action="/product/addProductVideo" name="messageVideoDataForm" method="post" target="_self" id="editMessageVideoDataFrom" enctype="multipart/form-data">
+    <form action="/product/addProductVideo" name="editMessageVideoDataFrom" method="post" target="_self" id="editMessageVideoDataFrom" onsubmit="return editProductVideo();" enctype="multipart/form-data">
         <div class="clearB"></div>
         <input type="hidden" name="productId" value="${bxProductResult.id }">
         <div class="r_box" style="padding: 5px;">
@@ -232,22 +304,22 @@
         <table  style=" font-size: 13px; " align="center" border="1">
             <c:if test="${not empty bxProductResult.bxProductImgList}">
             <c:forEach items="${bxProductResult.bxProductImgList}" var="bxProductImg" varStatus="count">
-                <form action="/product/editProductDetailImg" name="messageImgDataForm" method="post" target="_self" id="editMessageImgDataFrom" enctype="multipart/form-data">
+                <form action="/product/editProductDetailImg" name="editMessageImgDataFrom" method="post" target="_self" id="editMessageImgDataFrom"  onsubmit="return editProductImage('${bxProductImg.id }');" enctype="multipart/form-data">
                         <input type="hidden" name="productId" value="${bxProductResult.id }">
                         <c:if test="${bxProductImg.id != null && bxProductImg.id != 0}">
                             <input type="hidden" name="id" value="${bxProductImg.id }">
                             <input type="hidden" name="imageUrl" value="${bxProductImg.imageUrl }">
                         </c:if>
                     <tr>
-                        <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;"><font color="red">*</font>&nbsp;产品详情信息：</td>
+                        <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">&nbsp;产品详情信息：</td>
                         <td >
                             <input type="file" name="file" value="">
                             <img src="${bxProductImg.imageUrl}" width="50" height="50"/>
                         </td>
                         <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">排序：</td>
                         <td >
-                            <input name="imageOrder" value="${bxProductImg.imageOrder}" type="text" style="width: 172px;"
-                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                            <input id="imageOrder${bxProductImg.id }" name="imageOrder" value="${bxProductImg.imageOrder}" type="text" style="width: 172px;"
+                                   class="text-input self-form-control"/>
                         </td>
                         <td style="background:#A0E0F7; padding: 10px 20px; width: 180px;">
                             <button type="submit" class="btn btn-success">保存</button>
@@ -259,17 +331,17 @@
             </c:if>
             <c:if test="${not empty imgNulllist}">
                 <c:forEach items="${imgNulllist}" var="bxProductImg" varStatus="count">
-                    <form action="/product/editProductDetailImg" name="messageImgDataForm" method="post" target="_self" id="editMessageImgDataFrom" enctype="multipart/form-data">
+                    <form action="/product/editProductDetailImg" name="messageImgDataForm" method="post" target="_self" id="editMessageImgDataFrom" onsubmit="return addProductImage();"enctype="multipart/form-data">
                         <input type="hidden" name="productId" value="${bxProductResult.id }">
                         <tr>
                             <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;"><font color="red">*</font>&nbsp;产品详情信息：</td>
                             <td >
-                                <input type="file" name="file" value="">
+                                <input type="file" id="fileNew" name="file" value="">
                             </td>
                             <td style="background:#A0E0F7; padding: 10px 20px; width: 150px;">排序：</td>
                             <td >
-                                <input name="imageOrder" value="0" type="text" style="width: 172px;"
-                                       class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                                <input name="imageOrder" id="imageOrderNew" value="0" type="text" style="width: 172px;"
+                                       class="text-input self-form-control"/>
                             </td>
                             <td style="background:#A0E0F7; padding: 10px 20px; width: 180px;">
                                 <button type="submit" class="btn btn-success">保存</button>

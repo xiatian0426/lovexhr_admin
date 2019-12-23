@@ -50,7 +50,7 @@
 		});
 		$(function(){
 			//开启表单验证
-			$("#addMessageDataFrom").validationEngine();
+			$("#messageDataForm").validationEngine();
 			var notice = $("#notice").val();
 			if(notice == 1){
 				alert("添加成功");
@@ -64,30 +64,77 @@
 			}
 		}
 		function addData(){
-			var date = $("#date").val();
-			if(date==''){
-				$("#date").validationEngine("showPrompt","日期不能是空","error");
-				return false;
-			}
-			var province = $("#province").val();
-			if(province=='' || province=='0'){
-				$("#province").validationEngine("showPrompt","省市不能是空","error");
-				return false;
-			}
-			var messagetype = $("#messagetype").val();
-			if(messagetype=='' || messagetype=='0'){
-				$("#messagetype").validationEngine("showPrompt","信息类型不能是空","error");
-				return false;
-			}
-			if(editor.html()==''){
-				alert("内容不能为空!");
-				return false;
-			}
+            var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+            var productOrder = $("#productOrder").val();
+            if (productOrder != "") {
+                if (!re.test(productOrder)) {
+                    $("#productOrder").validationEngine("showPrompt","排序只能为整数!","error");
+                    $("#productOrder").focus();
+                    return false;
+                }
+            }else{
+                $("#productOrder").validationEngine("showPrompt","排序不能为空!","error");
+                $("#productOrder").focus();
+                return false;
+            }
+            var file = $("#file").val().length;
+            if(file==""){
+                $("#file").validationEngine("showPrompt","产品图片不能为空!","error");
+                $("#file").focus();
+                return false;
+            }
+            var bxCaseAge = $("#bxCaseAge").val();
+            if (bxCaseAge != "") {
+                if (!re.test(bxCaseAge)) {
+                    $("#bxCaseAge").validationEngine("showPrompt","年龄只能为整数!","error");
+                    $("#bxCaseAge").focus();
+                    return false;
+                }
+            }else{
+                $("#bxCaseAge").validationEngine("showPrompt","年龄不能为空!","error");
+                $("#bxCaseAge").focus();
+                return false;
+            }
+            var bxCaseCost = $("#bxCaseCost").val();
+            if (bxCaseCost != "") {
+                if (isNaN(bxCaseCost)) {
+                    $("#bxCaseCost").validationEngine("showPrompt","保费格式不正确!","error");
+                    $("#bxCaseCost").focus();
+                    return false;
+                }
+            }else{
+                $("#bxCaseCost").validationEngine("showPrompt","保费不能为空!","error");
+                $("#bxCaseCost").focus();
+                return false;
+            }
+            var bxCaseTimeLimit = $("#bxCaseTimeLimit").val();
+            if (bxCaseTimeLimit != "") {
+                if (!re.test(bxCaseTimeLimit)) {
+                    $("#bxCaseTimeLimit").validationEngine("showPrompt","保障期限只能为整数!","error");
+                    $("#bxCaseTimeLimit").focus();
+                    return false;
+                }
+            }else{
+                $("#bxCaseTimeLimit").validationEngine("showPrompt","保障期限不能为空!","error");
+                $("#bxCaseTimeLimit").focus();
+                return false;
+            }
+
+            var memberIdFlag = $("#memberIdFlag").val();
+            if(memberIdFlag != ""){
+                //需要验证
+                var memberId = $("#memberId").val();
+                if(memberId=='0'){
+                    $("#memberId").validationEngine("showPrompt","请选择所属人!","error");
+                    $("#memberId").focus();
+                    return false;
+                }
+            }
 		}
 	</script>
 </head>
 <body style=" font-size: 13px;">
-<form action="/product/addOrUpdateProductById" name="messageDataForm" method="post" target="_self" id="editMessageDataFrom" onsubmit="return addData('${data.id}');" enctype="multipart/form-data" >
+<form action="/product/addOrUpdateProductById" name="messageDataForm" method="post" target="_self" id="messageDataForm" onsubmit="return addData();" enctype="multipart/form-data" >
     <input type="hidden" name="type" value="0">
     <div class="clearB"></div>
     <div class="r_box" style="padding: 5px;">
@@ -107,7 +154,7 @@
                 <td style="background:#A0E0F7; padding: 10px 35px; width: 150px;"><font color="red">*</font>&nbsp;产品排序：</td>
                 <td >
                     <input id="productOrder" name="productOrder" value="" type="text" style="width: 172px;"
-                           class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                           class="text-input self-form-control"/>
                 </td>
             </tr>
             <tr>
@@ -115,11 +162,10 @@
                 <td >
                     <input id="productDesc" name="productDesc" value="" type="text" style="width: 172px;"
                            class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                    <%--<textarea id="editor_id" name="productDesc" style="height: 350px;">${bxProductResult.productDesc }</textarea>--%>
                 </td>
                 <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>&nbsp;产品图片：</td>
                 <td >
-                    <input type="file" name="file"/>
+                    <input id="file" type="file" name="file"/>
                 </td>
             </tr>
             <tr>
@@ -130,60 +176,57 @@
                 <td >
                     <input id="bxCaseProductName" name="bxCaseProductName" value="" type="text" style="width: 172px;"
                            class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                    <%--<textarea id="editor_id" name="productDesc" style="height: 350px;">${bxProductResult.productDesc }</textarea>--%>
                 </td>
                 <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>&nbsp;姓名：</td>
                 <td >
                     <input id="bxCaseName" name="bxCaseName" value="" type="text" style="width: 172px;"
-                           class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                           class="validate[required,noSpecialCaracters,maxSize[10]] text-input self-form-control"/>
                 </td>
             </tr>
             <tr>
                 <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>&nbsp;年龄：</td>
                 <td >
                     <input id="bxCaseAge" name="bxCaseAge" value="" type="text" style="width: 172px;"
-                           class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                    <%--<textarea id="editor_id" name="productDesc" style="height: 350px;">${bxProductResult.productDesc }</textarea>--%>
+                           class="text-input self-form-control"/>
                 </td>
                 <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>&nbsp;保费：</td>
                 <td >
                     <input id="bxCaseCost" name="bxCaseCost" value="" type="text" style="width: 172px;"
-                           class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                           class="text-input self-form-control"/>
                 </td>
             </tr>
             <tr>
                 <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>&nbsp;保障期限：</td>
                 <td >
                     <input id="bxCaseTimeLimit" name="bxCaseTimeLimit" value="" type="text" style="width: 172px;"
-                           class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                    <%--<textarea id="editor_id" name="productDesc" style="height: 350px;">${bxProductResult.productDesc }</textarea>--%>
+                           class="text-input self-form-control"/>
                 </td>
                 <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>&nbsp;投保内容：</td>
                 <td >
                     <input id="bxCaseTbContext" name="bxCaseTbContext" value="" type="text" style="width: 172px;"
-                           class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                           class="validate[required,noSpecialCaracters,maxSize[500]] text-input self-form-control"/>
                 </td>
             </tr>
             <tr>
                 <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>&nbsp;理赔内容：</td>
                 <td >
                     <input id="bxCaseLpContext" name="bxCaseLpContext" value="" type="text" style="width: 172px;"
-                           class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
-                    <%--<textarea id="editor_id" name="productDesc" style="height: 350px;">${bxProductResult.productDesc }</textarea>--%>
+                           class="validate[required,noSpecialCaracters,maxSize[500]] text-input self-form-control"/>
                 </td>
                 <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>&nbsp;出险内容：</td>
                 <td >
                     <input id="bxCaseCxContext" name="bxCaseCxContext" value="" type="text" style="width: 172px;"
-                           class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                           class="validate[required,noSpecialCaracters,maxSize[500]] text-input self-form-control"/>
                 </td>
             </tr>
             <c:if test="${staff.roleId eq '1' }">
                 <tr>
                     <td style="background:#A0E0F7; padding: 10px 35px;"><font color="red">*</font>
+                        <input type="hidden" name="memberIdFlag" id="memberIdFlag" value="1">
                         &nbsp;所属人：
                     </td>
                     <td>
-                        <select class="select-nosearch" name="memberId" style="width: 90%;height: 28px;">
+                        <select class="select-nosearch" id="memberId" name="memberId" style="width: 90%;height: 28px;">
                             <option value="0" selected="selected">---请选择---</option>
                             <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
                                 <option value='${userInfo.id}'>
