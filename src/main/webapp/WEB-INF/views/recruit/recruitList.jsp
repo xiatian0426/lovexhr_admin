@@ -19,7 +19,19 @@
 		<script src="${toolRoot}/select/select2-self.js"></script>
 		<!-- 引入分页 -->
 		<script src="${jsRoot}/page.js"></script>
+        <!-- 验证 -->
+        <link rel="stylesheet" href="${toolRoot }/validata/validationEngine.css" />
+        <script type="text/javascript" src="${toolRoot }/validata/jquery.validationEngine.js"></script>
+        <script type="text/javascript" src="${toolRoot }/validata/jquery.validationEngine-zh_CN.js" charset="utf-8"></script>
 		<script type="text/javascript">
+            function saveData(){
+                var file = $("#file").val().length;
+                if(file==""){
+                    $("file").validationEngine("showPrompt","招聘图片不能为空!","error");
+                    $("#file").focus();
+                    return false;
+                }
+            }
 		</script>
 	</head>
     <body style=" font-size: 13px;">
@@ -33,7 +45,7 @@
             </div>
             <br/>&nbsp;
             <table  style=" font-size: 13px; " align="center" border="1" width="30%">
-                <form class="form-horizontal" id="recruitDataListForm" action="/recruit/addRecruit" method="POST" enctype="multipart/form-data">
+                <form class="form-horizontal" id="recruitDataListForm" action="/recruit/addRecruit" method="POST" onsubmit="return saveData();" enctype="multipart/form-data">
                     <c:if test="${bxRecruit.id!=null && bxRecruit.id!=0 }">
                         <input type="hidden" name="id" value="${bxRecruit.id }">
                         <input type="hidden" name="imageUrl" value="${bxRecruit.imageUrl }">
@@ -42,7 +54,7 @@
                         <td >
                         </td>
                         <td >
-                            <input type="file" name="file"/>
+                            <input type="file" id="file" name="file"/>
                         </td>
                     </tr>
                     <tr>
