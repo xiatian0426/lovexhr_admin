@@ -48,7 +48,7 @@
                     success:function(data) {
                         if(data.info=='1'){
                             alert("操作成功!");
-                            location.reload();
+                            $("#honorListForm").submit();
                         }else{
                             alert("操作失败!");
                         }

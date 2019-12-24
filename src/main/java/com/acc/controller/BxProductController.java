@@ -121,6 +121,7 @@ public class BxProductController {
     public ModelAndView getProDetail(ModelAndView mav,final HttpServletRequest request) throws IOException {
         Map<String, Object> model = mav.getModel();
         try{
+            String basePath="";
             String productId = request.getParameter("productId");
             if(StringUtils.isNotEmpty(productId)){
                 List<BxProduct> bxProductList = bxProductService.getProDetail(productId);
@@ -128,7 +129,7 @@ public class BxProductController {
                     BxProduct bxProductResult= new BxProduct();
                     bxProductResult.setId(bxProductList.get(0).getId());
                     String path = request.getContextPath();
-                    String basePath = request.getScheme() + "://"
+                    basePath = request.getScheme() + "://"
                             + request.getServerName() + ":" + request.getServerPort()
                             + path + "/";
                     bxProductResult.setProductImg(basePath+ Constants.proImgPath+bxProductList.get(0).getId()+"/"+bxProductList.get(0).getProductImg());
@@ -162,6 +163,7 @@ public class BxProductController {
                 }
             }
             model.put("result", request.getParameter("result"));
+            model.put("basePath",basePath);
             mav=new ModelAndView("/productData/editProductData", model);
         } catch (Exception e) {
             _logger.error("getProDetail失败：" + ExceptionUtil.getMsg(e));

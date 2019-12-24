@@ -48,7 +48,7 @@
                     success:function(data) {
                         if(data.info=='1'){
                             alert("操作成功!");
-                            location.reload();
+                            $("#recruitListForm").submit();
                         }else{
                             alert("操作失败!");
                         }

@@ -46,7 +46,7 @@
 					success:function(data) {
 						if(data.info=='1'){
 							alert("操作成功!");
-							location.reload();
+                            $("#productListForm").submit();
 						}else{
 							alert("操作失败!");
 						}

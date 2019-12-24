@@ -155,7 +155,8 @@
                 return false;
             }
         }
-        function deleteProductDetailImgById(id){
+        function deleteProductDetailImgById(id,productId){
+		    var  basePath = $("#basePath").val();
             $.ajax({
                 url:'/ajax/deleteProductDetailImgById',
                 data:{
@@ -168,7 +169,7 @@
                 success:function(data) {
                     if(data.info=='1'){
                         alert("操作成功!");
-                        location.reload();
+                        window.location.href = basePath+"product/getProDetail?productId="+productId;
                     }else{
                         alert("操作失败!");
                     }
@@ -190,6 +191,7 @@
 </head>
 <body style=" font-size: 13px;">
 <input id="result" value="${result}" type="hidden"/>
+<input id="basePath" value="${basePath}" type="hidden"/>
 	<form action="/product/addOrUpdateProductById" name="editMessageDataFrom" method="post" target="_self" id="editMessageDataFrom" onsubmit="return editProduct();" enctype="multipart/form-data">
 
         <input type="hidden" name="type" value="1">
@@ -343,7 +345,7 @@
                         </td>
                         <td style="background:#A0E0F7; padding: 10px 20px; width: 180px;">
                             <button type="submit" class="btn btn-success">保存</button>
-                            <button type="button" class="btn btn-success" onclick="deleteProductDetailImgById('${bxProductImg.id }');">删除</button>
+                            <button type="button" class="btn btn-success" onclick="deleteProductDetailImgById('${bxProductImg.id }','${bxProductResult.id }');">删除</button>
                         </td>
                     </tr>
                 </form>
