@@ -53,6 +53,12 @@
 	</style>
 </head>
 <script type="text/javascript">
+    $(function(){
+        var result = $("#result").val();
+        if(result != ""){
+            alert(result);
+        }
+    });
 	$(document).ready(function(){
 		var sign = $("#sign").val();
 		var user = document.getElementById("user");
@@ -82,6 +88,7 @@
 </script>
 
 <body>
+<input id="result" value="${loginMsg}" type="hidden"/>
 	<%-- 登录表单  开始--%>
 	<div class="main_par">
 		<div class="main clearfix">
