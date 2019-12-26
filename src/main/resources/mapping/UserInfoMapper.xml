@@ -173,7 +173,7 @@
 	</select>
 
     <select id="getAll" resultMap="userInfo">
-        SELECT <include refid="columns" /> FROM BX_MEMBER
+        SELECT <include refid="columns" /> FROM BX_MEMBER where STATUS=1
     </select>
 
 	<update id="updateUserStatus">

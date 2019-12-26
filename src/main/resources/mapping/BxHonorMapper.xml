@@ -39,8 +39,9 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 
     <select id="pageCount" resultType="long">
         SELECT count(*)
-        FROM BX_HONOR c
-        WHERE 1=1
+        FROM BX_HONOR c,BX_MEMBER m
+        WHERE c.MEMBER_ID=m.id
+        AND m.STATUS=1
         <if test="memberId != null and memberId != 0">AND c.MEMBER_ID=#{memberId}</if>
     </select>
 
@@ -48,8 +49,9 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
         三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现 -->
     <select id="findPage" resultMap="bxHonor">
         SELECT c.ID,c.IMAGE_URL,c.MEMBER_ID,c.STATUS,DATE_FORMAT(c.CREATE_DATE,'%Y-%m-%d %H:%i:%s') CREATE_DATE,c.CREATER_ID,c.HONOR_ORDER
-        FROM BX_HONOR c
-        WHERE 1=1
+        FROM BX_HONOR c,BX_MEMBER m
+        WHERE c.MEMBER_ID=m.id
+        AND m.STATUS=1
         <if test="memberId != null and memberId != 0">AND c.MEMBER_ID=#{memberId}</if>
         <if test="sortColumns != null and sortColumns != ''">
             ORDER BY ${sortColumns}

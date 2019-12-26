@@ -25,9 +25,8 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	<select id="getCaseDetail" resultMap="bxCase">
          SELECT c.RELA_PRODUCT_ID,c.NAME,c.AGE,c.STATUS,c.MEMBER_ID,c.PRODUCT_NAME,c.ID,c.COST,
          c.TIME_LIMIT,c.TB_CONTEXT,c.LP_CONTEXT,c.CX_CONTEXT
-         FROM BX_CASE c,BX_MEMBER m
-         WHERE c.MEMBER_ID=m.id
-				 AND c.STATUS = 0
+         FROM BX_CASE c
+         WHERE 1=1
          AND c.RELA_PRODUCT_ID=#{productId}
     </select>
 
