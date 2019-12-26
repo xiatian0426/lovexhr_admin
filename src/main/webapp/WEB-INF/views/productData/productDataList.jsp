@@ -65,6 +65,17 @@
 			<div style="height: 15px; width: 100%;"><span></span></div>
 			<span class="infoLable">商品名称：</span>
 				<input id="productName" name="productName" type="text" value="${query.productName }" class="self-form-control" style="width: 150px;"/>
+            <c:if test="${staff.roleId eq '1' }">
+                <span class="infoLable">所属人：</span>
+                <select class="select-nosearch" name="memberId" style="width: 200px;height: 28px;">
+                    <option value="0" selected="selected">---请选择---</option>
+                    <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
+                        <option value='${userInfo.id}'<c:if test="${userInfo.id==query.memberId }">selected="selected"</c:if>>
+                                ${userInfo.userName}
+                        </option>
+                    </c:forEach>
+                </select>
+            </c:if>
 			<button type="submit" class="btn btn-default" style="background-color:#337ab7;">搜索</button>
 			<br />
 			<div><span></span></div>
@@ -87,6 +98,11 @@
 					<th width="13%" align="center">
 						商品图片
 					</th>
+                    <c:if test="${staff.roleId eq '1' }">
+                        <th width="10%" align="center">
+                            所属人
+                        </th>
+                    </c:if>
 					<th width="8%" align="center">
 						操作
 					</th>
@@ -113,6 +129,11 @@
                         <td align="center">
                             <img src="${data.productImg}" width="70px" height="70px"/>
                         </td>
+                        <c:if test="${userInfoList != null}">
+                            <td align="center">
+                                    ${userInfoDictMap[data.memberId].userRealname }
+                            </td>
+                        </c:if>
                         <td align="center">
                             <c:if test="${data.status==0}">
                                 <button type="button" class="btn btn-success" onclick="goEditMessageData('${data.id}')" target="_blank">编辑</button>

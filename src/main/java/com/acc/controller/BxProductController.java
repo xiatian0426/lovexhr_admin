@@ -76,10 +76,13 @@ public class BxProductController {
         try{
             HttpSession session = request.getSession();
             UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
+            model.put("staff", staff);
             Page<BxProduct> page = null;
             if(staff!=null){
                 query.setSortColumns("c.CREATE_DATE desc");
                 if(staff.getRoleId()!=null && staff.getRoleId().equals(Constants.ROLEIDO)){
+                    Map<Integer, UserInfo> userInfoDictMap = userInfoService.getAllMap();
+                    model.put("userInfoDictMap", userInfoDictMap);
                     List<UserInfo> userInfoList = userInfoService.getAll();
                     model.put("userInfoList", userInfoList);
                     page = bxProductService.selectPage(query);
