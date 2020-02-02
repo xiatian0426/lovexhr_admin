@@ -131,18 +131,41 @@
                     </td>
                 </tr>
                 <tr>
-                    <td style="background:#A0E0F7;padding: 10px 15px;">公司：</td>
-                    <td>
-                        <input id="company_name" name="company_name" value="" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[50]] text-input self-form-control"/>
-                    </td>
                     <td style="background:#A0E0F7;padding: 10px 15px;">职务：</td>
                     <td>
                         <input id="post_name" name="post_name" value="" type="text" style="width: 172px;"
                                class="validate[required,noSpecialCaracters,maxSize[12]] text-input self-form-control"/>
                     </td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">手机：</td>
+                    <td>
+                        <input id="phone" name="phone" value="" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[11]] text-input self-form-control"/>
+                    </td>
                 </tr>
-
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">公司名称：</td>
+                    <td>
+                        <input id="company_name" name="company_name" value="" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,maxSize[50]] text-input self-form-control"/>
+                    </td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">公司地址：</td>
+                    <td>
+                        <input id="company_addr" name="company_addr" value="" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,maxSize[100]] text-input self-form-control"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">经度：</td>
+                    <td>
+                        <input id="longitude" name="longitude" value="" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,maxSize[10]] text-input self-form-control"/>
+                    </td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">纬度：</td>
+                    <td>
+                        <input id="latitude" name="latitude" value="" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,maxSize[10]] text-input self-form-control"/>
+                    </td>
+                </tr>
                 <tr>
                     <td style="background:#A0E0F7;padding: 10px 15px;">从业年限：</td>
                     <td>
@@ -156,47 +179,45 @@
                     </td>
                 </tr>
                 <tr>
-                    <td style="background:#A0E0F7;padding: 10px 15px;">自我介绍：</td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">微信号：</td>
                     <td>
-                        <input id="introduce" name="introduce" value="" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,maxSize[100]] text-input self-form-control"/>
+                        <input id="wechat" name="wechat" value="" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[30]] text-input self-form-control"/>
                     </td>
                     <td style="background:#A0E0F7;padding: 10px 15px;">头像：</td>
                     <td>
                         <input type="file" id="memberImg" name="file">
                     </td>
                 </tr>
+
                 <tr>
-                    <td style="background:#A0E0F7;padding: 10px 15px;">微信号：</td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">页面风格：</td>
                     <td>
-                        <input id="wechat" name="wechat" value="" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,,maxSize[30]] text-input self-form-control"/>
+                        <input name="page_style" value="0" type="radio" checked/> 风格1&nbsp;&nbsp;
+                        <input name="page_style" value="1" type="radio"/> 风格2
                     </td>
-                    <td style="background:#A0E0F7;padding: 10px 15px;">手机：</td>
+                    <c:if test="${staff.roleId eq '1' }">
+                    <td style="background:#A0E0F7;padding: 10px 15px;">角色：</td>
                     <td>
-                        <input id="phone" name="phone" value="" type="text" style="width: 172px;"
-                               class="validate[required,noSpecialCaracters,,maxSize[11]] text-input self-form-control"/>
+                        <select class="select-nosearch" name='roleId' id="roleId" style="width: 172px;">
+                            <option value='0'>
+                                客户
+                            </option>
+                            <option value='1'>
+                                管理员
+                            </option>
+                        </select>
+                    </td>
+                    </c:if>
+                </tr>
+
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">自我介绍：</td>
+                    <td colspan="3">
+                        <input id="introduce" name="introduce" value="" type="text" style="width: 435px;"
+                               class="validate[required,noSpecialCaracters,maxSize[100]] text-input self-form-control"/>
                     </td>
                 </tr>
-                <c:if test="${staff.roleId eq '1' }">
-                    <tr>
-                        <td style="background:#A0E0F7;padding: 10px 15px;">角色：</td>
-                        <td>
-                            <select class="select-nosearch" name='roleId' id="roleId" style="width: 172px;">
-                                <option value='0'>
-                                    客户
-                                </option>
-                                <option value='1'>
-                                    管理员
-                                </option>
-                            </select>
-                        </td>
-                        <td style="background:#A0E0F7;padding: 10px 15px;"></td>
-                        <td>
-
-                        </td>
-                    </tr>
-                </c:if>
             </table>
 			<div class="sub_div">
 				<input type="submit" class="sub_btn" value=" "/>

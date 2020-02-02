@@ -97,6 +97,14 @@ public class UserInfo implements java.io.Serializable, Cloneable{
 
     private String customerFlag;
 
+    private String company_addr;
+
+    private String longitude;
+
+    private String latitude;
+
+    private Integer page_style;
+
     private List<BxHonor> bxHonorList = new ArrayList<BxHonor>();
 
     public int getId() {
@@ -325,6 +333,38 @@ public class UserInfo implements java.io.Serializable, Cloneable{
 
     public void setCustomerFlag(String customerFlag) {
         this.customerFlag = customerFlag;
+    }
+
+    public String getCompany_addr() {
+        return company_addr;
+    }
+
+    public void setCompany_addr(String company_addr) {
+        this.company_addr = company_addr;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public Integer getPage_style() {
+        return page_style;
+    }
+
+    public void setPage_style(Integer page_style) {
+        this.page_style = page_style;
     }
 }
 
