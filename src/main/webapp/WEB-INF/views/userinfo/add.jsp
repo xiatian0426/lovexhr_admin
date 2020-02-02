@@ -61,6 +61,36 @@
                     return false;
                 }
             });
+            $("#longitude").blur(function(){
+                var longitude = $("#longitude").val();
+                var re1 = new RegExp("^\\d+[\\.]?\\d{0,2}$");
+                if (longitude != "") {
+                    if (!re1.test(longitude)) {
+                        $("#longitude").validationEngine("showPrompt","经度格式不正确!","error");
+                        $("#longitude").focus();
+                        return false;
+                    }
+                }else{
+                    $("#longitude").validationEngine("showPrompt","经度不能为空!","error");
+                    $("#longitude").focus();
+                    return false;
+                }
+            });
+            $("#latitude").blur(function(){
+                var latitude = $("#latitude").val();
+                var re1 = new RegExp("^\\d+[\\.]?\\d{0,2}$");
+                if (latitude != "") {
+                    if (!re1.test(latitude)) {
+                        $("#latitude").validationEngine("showPrompt","纬度格式不正确!","error");
+                        $("#latitude").focus();
+                        return false;
+                    }
+                }else{
+                    $("#latitude").validationEngine("showPrompt","纬度不能为空!","error");
+                    $("#latitude").focus();
+                    return false;
+                }
+            });
         })
 		function save(){
             //用户名
@@ -95,6 +125,31 @@
             if(memberImg==""){
                 $("#memberImg").validationEngine("showPrompt","荣誉图片不能为空!","error");
                 $("#memberImg").focus();
+                return false;
+            }
+            var longitude = $("#longitude").val();
+            var re1 = new RegExp("^\\d+[\\.]?\\d{0,2}$");
+            if (longitude != "") {
+                if (!re1.test(longitude)) {
+                    $("#longitude").validationEngine("showPrompt","经度格式不正确!","error");
+                    $("#longitude").focus();
+                    return false;
+                }
+            }else{
+                $("#longitude").validationEngine("showPrompt","经度不能为空!","error");
+                $("#longitude").focus();
+                return false;
+            }
+            var latitude = $("#latitude").val();
+            if (latitude != "") {
+                if (!re1.test(latitude)) {
+                    $("#latitude").validationEngine("showPrompt","纬度格式不正确!","error");
+                    $("#latitude").focus();
+                    return false;
+                }
+            }else{
+                $("#latitude").validationEngine("showPrompt","纬度不能为空!","error");
+                $("#latitude").focus();
                 return false;
             }
 		}
