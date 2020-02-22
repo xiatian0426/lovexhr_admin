@@ -66,7 +66,7 @@
 				return false;
 			}
             var longitude = $("#longitude").val();
-            var re1 = new RegExp("^\\d+[\\.]?\\d{0,2}$");
+            var re1 = new RegExp("^\\d+[\\.]?\\d{0,8}$");
             if (longitude != "") {
                 if (!re1.test(longitude)) {
                     $("#longitude").validationEngine("showPrompt","经度格式不正确!","error");
@@ -211,7 +211,7 @@
                     <td style="background:#A0E0F7;padding: 10px 15px;">自我介绍：</td>
                     <td colspan="3">
                         <input id="introduce" name="introduce" value="${userInfo.introduce}" type="text" style="width: 435px;"
-                               class="validate[required,noSpecialCaracters,,maxSize[100]] text-input self-form-control"/>
+                               class="validate[required,noSpecialCaracters,,maxSize[500]] text-input self-form-control"/>
                     </td>
                 </tr>
 			</table>
