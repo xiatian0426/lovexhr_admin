@@ -64,8 +64,6 @@ public class UserInfoWebController {
                             + path + "/";
                     String fileSavePath=basePath + Constants.memberImgPath + userInfo.getId() + "/";
                     userInfo.setMemberImg(fileSavePath+userInfo.getMemberImg());
-                }else{
-                    userInfo = userInfoService.getById("1001");
                 }
                 map.put("userInfo", userInfo);
             }
