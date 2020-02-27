@@ -343,11 +343,11 @@ public class BxProductWebController {
             if(bxProduct!=null){
                 if (bxProductVideo != null) {
                     if(file != null){
-                        //敏感信息验证
-                        BxToken bxToken = bxTokenService.getToken();
-                        if(bxToken!=null && bxToken.getAccessToken()!=null && !bxToken.getAccessToken().equals("")){
-                            int checkVideoResult = WechatUtil.checkMedia(bxToken.getAccessToken(),file[0]);
-                            if(checkVideoResult== 0){
+//                        //敏感信息验证
+//                        BxToken bxToken = bxTokenService.getToken();
+//                        if(bxToken!=null && bxToken.getAccessToken()!=null && !bxToken.getAccessToken().equals("")){
+//                            int checkVideoResult = WechatUtil.checkMedia(bxToken.getAccessToken(),file[0]);
+//                            if(checkVideoResult== 0){
                                 String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
                                 String fileSavePath=path + Constants.proVideoPath + bxProductVideo.getProductId() + "/";
                                 Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,true,false);
@@ -367,14 +367,14 @@ public class BxProductWebController {
                                 status = -1;
                                 message = "信息校验错误，请联系管理员!";
                             }
-                        }else{
-                            status = -1;
-                            message = "信息校验错误，请联系管理员!";
-                        }
-                    }else{
-                        status = -1;
-                        message = "视频文件不能为空!";
-                    }
+//                        }else{
+//                            status = -1;
+//                            message = "信息校验错误，请联系管理员!";
+//                        }
+//                    }else{
+//                        status = -1;
+//                        message = "视频文件不能为空!";
+//                    }
                 }else{
                     status = -1;
                     message = "参数有误，请联系管理员!";
