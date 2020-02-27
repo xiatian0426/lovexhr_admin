@@ -3,11 +3,14 @@ package com.acc.controller;
 import com.acc.exception.ExceptionUtil;
 import com.acc.exception.SelectException;
 import com.acc.frames.web.Md5PwdEncoder;
+import com.acc.model.BxToken;
 import com.acc.model.UserInfo;
+import com.acc.service.IBxTokenService;
 import com.acc.service.IUserInfoService;
 import com.acc.util.CalendarUtil;
 import com.acc.util.Constants;
 import com.acc.util.PictureChange;
+import com.acc.util.weChat.WechatUtil;
 import com.acc.vo.Page;
 import com.acc.vo.UserInfoQuery;
 import com.alibaba.fastjson.JSON;
@@ -39,6 +42,9 @@ public class UserInfoWebController {
 
 	@Autowired
 	private IUserInfoService userInfoService;
+
+    @Autowired
+    private IBxTokenService bxTokenService;
 
 	/**
 	 * 跳转修改用户信息
@@ -96,38 +102,56 @@ public class UserInfoWebController {
         int status = 0;
 	    String userId = request.getParameter("id");
 		try {
-            if(file!=null && file.length>0){
-                if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
-                    user.setMemberImg(null);
-                }else{
-                    String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
-                    String fileSavePath=path + Constants.memberImgPath + user.getId() + "/";
-                    String imgUrl = null;
-                    if(user.getMemberImg()!=null && !"".equals(user.getMemberImg())){
-                        imgUrl = user.getMemberImg().split("/")[user.getMemberImg().split("/").length-1];
-                    }
-                    new File(fileSavePath+imgUrl).delete();
-                    //生成新图片
-                    Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
-                    int re = Integer.valueOf((String)mapImg.get("code")).intValue();
-                    if(re==0){
-                        List<String> list = (List<String>)mapImg.get("list");
-                        if(list!=null && list.size()>0){
-                            user.setMemberImg(list.get(0));
+            //敏感信息验证
+            BxToken bxToken = bxTokenService.getToken();
+            if(bxToken!=null && bxToken.getAccessToken()!=null && !bxToken.getAccessToken().equals("")){
+                String content = user.getName()+user.getUserRealname()+user.getPost_name()
+                        +user.getPhone()+user.getCompany_addr()+user.getCompany_name()
+                        +user.getLatitude()+user.getLongitude()+user.getYears()+user.getSignature()
+                        +user.getWechat()+user.getPage_style()+user.getIntroduce();
+                int checkMsgResult = WechatUtil.checkMsg(bxToken.getAccessToken(),content);
+                int checkImgResult = WechatUtil.checkImg(bxToken.getAccessToken(),file[0]);
+                if(checkMsgResult== 0 && checkImgResult == 0){
+                    if(file!=null && file.length>0){
+                        if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
+                            user.setMemberImg(null);
+                        }else{
+                            String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                            String fileSavePath=path + Constants.memberImgPath + user.getId() + "/";
+                            String imgUrl = null;
+                            if(user.getMemberImg()!=null && !"".equals(user.getMemberImg())){
+                                imgUrl = user.getMemberImg().split("/")[user.getMemberImg().split("/").length-1];
+                            }
+                            new File(fileSavePath+imgUrl).delete();
+                            //生成新图片
+                            Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
+                            int re = Integer.valueOf((String)mapImg.get("code")).intValue();
+                            if(re==0){
+                                List<String> list = (List<String>)mapImg.get("list");
+                                if(list!=null && list.size()>0){
+                                    user.setMemberImg(list.get(0));
+                                }
+                            }
                         }
                     }
+                    user.setModifyDate(CalendarUtil.getCurrentDate());
+                    UserInfo userInfo = userInfoService.getById(userId);
+                    //密码用MD5加密
+                    if (StringUtils.isNotEmpty(user.getUserPassword())) {
+                        user.setUserPassword(Md5PwdEncoder.getMD5Str(user.getUserPassword()+"Diegoxhr"));
+                    } else {
+                        user.setUserPassword(userInfo.getUserPassword());
+                    }
+                    user.setStatus(userInfo.getStatus());
+                    userInfoService.update(user);
+                }else{
+                    status = -1;
+                    message = "信息校验错误，请联系管理员!";
                 }
+            }else{
+                status = -1;
+                message = "信息校验错误，请联系管理员!";
             }
-            user.setModifyDate(CalendarUtil.getCurrentDate());
-            UserInfo userInfo = userInfoService.getById(userId);
-            //密码用MD5加密
-            if (StringUtils.isNotEmpty(user.getUserPassword())) {
-                user.setUserPassword(Md5PwdEncoder.getMD5Str(user.getUserPassword()+"Diegoxhr"));
-            } else {
-                user.setUserPassword(userInfo.getUserPassword());
-            }
-            user.setStatus(userInfo.getStatus());
-            userInfoService.update(user);
 		} catch (Exception e) {
             status = -1;
             message = "操作失败，请联系管理员!";

@@ -2,9 +2,12 @@ package com.acc.controller;
 
 import com.acc.exception.ExceptionUtil;
 import com.acc.model.BxRecruit;
+import com.acc.model.BxToken;
 import com.acc.service.IBxRecruitService;
+import com.acc.service.IBxTokenService;
 import com.acc.util.Constants;
 import com.acc.util.PictureChange;
+import com.acc.util.weChat.WechatUtil;
 import com.acc.vo.Page;
 import com.acc.vo.RecruitQuery;
 import com.alibaba.fastjson.JSON;
@@ -35,6 +38,9 @@ public class BxRecruitWebController {
 
 	@Autowired
 	private IBxRecruitService bxRecruitService;
+
+    @Autowired
+    private IBxTokenService bxTokenService;
 
 	/**
 	 * 招聘信息
@@ -88,39 +94,52 @@ public class BxRecruitWebController {
         try{
             if (bxRecruit != null) {
                 if(file!=null && file.length>0){
-                    if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
-                        bxRecruit.setImageUrl(null);
-                        bxRecruitService.updateById(bxRecruit);
-                    }else{
-                        //删除图片
-                        String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
-                        String fileSavePath=path + Constants.recruitImgPath + bxRecruit.getMemberId() + "/";
-                        String imgUrl = null;
-                        if(bxRecruit.getImageUrl()!=null && !"".equals(bxRecruit.getImageUrl())){
-                            imgUrl = bxRecruit.getImageUrl().split("/")[bxRecruit.getImageUrl().split("/").length-1];
-                        }
-                        new File(fileSavePath+imgUrl).delete();
-                        //保存新的图片
-                        Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
-                        int re = Integer.valueOf((String)mapImg.get("code")).intValue();
-                        if(re==0){
-                            List<String> list = (List<String>)mapImg.get("list");
-                            if(list!=null && list.size()>0){
-                                bxRecruit.setImageUrl(list.get(0));
-                                if(bxRecruit.getId()!=0){
-                                    bxRecruitService.updateById(bxRecruit);
+                    //敏感信息验证
+                    BxToken bxToken = bxTokenService.getToken();
+                    if(bxToken!=null && bxToken.getAccessToken()!=null && !bxToken.getAccessToken().equals("")){
+                        int checkImgResult = WechatUtil.checkImg(bxToken.getAccessToken(),file[0]);
+                        if(checkImgResult == 0){
+                            if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
+                                bxRecruit.setImageUrl(null);
+                                bxRecruitService.updateById(bxRecruit);
+                            }else{
+                                //删除图片
+                                String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                                String fileSavePath=path + Constants.recruitImgPath + bxRecruit.getMemberId() + "/";
+                                String imgUrl = null;
+                                if(bxRecruit.getImageUrl()!=null && !"".equals(bxRecruit.getImageUrl())){
+                                    imgUrl = bxRecruit.getImageUrl().split("/")[bxRecruit.getImageUrl().split("/").length-1];
+                                }
+                                new File(fileSavePath+imgUrl).delete();
+                                //保存新的图片
+                                Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
+                                int re = Integer.valueOf((String)mapImg.get("code")).intValue();
+                                if(re==0){
+                                    List<String> list = (List<String>)mapImg.get("list");
+                                    if(list!=null && list.size()>0){
+                                        bxRecruit.setImageUrl(list.get(0));
+                                        if(bxRecruit.getId()!=0){
+                                            bxRecruitService.updateById(bxRecruit);
+                                        }else{
+                                            bxRecruitService.insert(bxRecruit);
+                                        }
+                                    }
+                                    message = "添加成功!";
+                                }else if(re==-1){
+                                    status = -1;
+                                    message = "没有文件";
                                 }else{
-                                    bxRecruitService.insert(bxRecruit);
+                                    status = -1;
+                                    message = "上传文件有问题";
                                 }
                             }
-                            message = "添加成功!";
-                        }else if(re==-1){
-                            status = -1;
-                            message = "没有文件";
                         }else{
                             status = -1;
-                            message = "上传文件有问题";
+                            message = "信息校验错误，请联系管理员!";
                         }
+                    }else{
+                        status = -1;
+                        message = "信息校验错误，请联系管理员!";
                     }
                 }else{
                     status = -1;

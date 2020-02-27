@@ -52,6 +52,9 @@
 		<acc:oa opId="1">
 			<li><a href="/user/index" target="main"><img src="../../../res/images/main/user.png" height="25px;" width="25px;">&nbsp;后台用户管理</a></li>
 		</acc:oa>
+        <%--<acc:oa opId="0,1">--%>
+            <%--<li><a href="/product/getProductVideoList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;产品视频</a></li>--%>
+        <%--</acc:oa>--%>
 		<%--<acc:oa opId="1">--%>
 			<%--<li><a href="/manage/roleList" target="main"><img src="../../../res/images/main/form.png" height="25px;" width="25px;">&nbsp;用户角色查询</a></li>--%>
 		<%--</acc:oa>--%>

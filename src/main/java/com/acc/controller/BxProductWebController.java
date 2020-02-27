@@ -3,8 +3,10 @@ package com.acc.controller;
 import com.acc.exception.ExceptionUtil;
 import com.acc.model.*;
 import com.acc.service.IBxProductService;
+import com.acc.service.IBxTokenService;
 import com.acc.util.Constants;
 import com.acc.util.PictureChange;
+import com.acc.util.weChat.WechatUtil;
 import com.acc.vo.Page;
 import com.acc.vo.ProductQuery;
 import com.alibaba.fastjson.JSON;
@@ -36,6 +38,9 @@ public class BxProductWebController {
 	
 	@Autowired
 	private IBxProductService bxProductService;
+
+    @Autowired
+    private IBxTokenService bxTokenService;
 
     /**
      * 根据会员id获取对应权限产品
@@ -96,36 +101,53 @@ public class BxProductWebController {
             if (bxProduct != null) {
                 if(bxProduct.getType()!=null && !"".equals(bxProduct.getType())){
                     if(file != null){
-                        if(bxProduct.getType().equals("0")){//添加
-                            bxProductService.addProduct(bxProduct);
-                        }else{
-                            if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
-                                boo = false;
-                                bxProduct.setProductImg(null);
-                                bxProductService.updateProduct(bxProduct);
-                            }
-                        }
-                        if(boo){
-                            String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
-                            String fileSavePath=path + Constants.proImgPath + bxProduct.getId() + "/";
-                            Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,true,true);
-                            int re = Integer.valueOf((String)mapImg.get("code")).intValue();
-                            List<String> imgNameList = (List<String>)mapImg.get("list");
-                            if(re == 0){
-                                if(imgNameList!=null && imgNameList.size()>0){
-                                    bxProduct.setProductImg(imgNameList.get(0));
-                                    bxProductService.updateProduct(bxProduct);
-                                    message = "添加/更新成功!";
+                        //敏感信息验证
+                        BxToken bxToken = bxTokenService.getToken();
+                        if(bxToken!=null && bxToken.getAccessToken()!=null && !bxToken.getAccessToken().equals("")){
+                            String content = bxProduct.getProductName()+bxProduct.getProductDesc()+bxProduct.getBxCaseProductName()
+                                    +bxProduct.getBxCaseName()+bxProduct.getBxCaseTimeLimit()+bxProduct.getBxCaseTbContext()
+                                    +bxProduct.getBxCaseLpContext()+bxProduct.getBxCaseCxContext();
+                            int checkMsgResult = WechatUtil.checkMsg(bxToken.getAccessToken(),content);
+                            int checkImgResult = WechatUtil.checkImg(bxToken.getAccessToken(),file[0]);
+                            if(checkMsgResult== 0 && checkImgResult == 0){
+                                if(bxProduct.getType().equals("0")){//添加
+                                    bxProductService.addProduct(bxProduct);
                                 }else{
-                                    status = -1;
-                                    message = "参数有误，请联系管理员!";
+                                    if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
+                                        boo = false;
+                                        bxProduct.setProductImg(null);
+                                        bxProductService.updateProduct(bxProduct);
+                                    }
+                                }
+                                if(boo){
+                                    String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                                    String fileSavePath=path + Constants.proImgPath + bxProduct.getId() + "/";
+                                    Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,true,true);
+                                    int re = Integer.valueOf((String)mapImg.get("code")).intValue();
+                                    List<String> imgNameList = (List<String>)mapImg.get("list");
+                                    if(re == 0){
+                                        if(imgNameList!=null && imgNameList.size()>0){
+                                            bxProduct.setProductImg(imgNameList.get(0));
+                                            bxProductService.updateProduct(bxProduct);
+                                            message = "添加/更新成功!";
+                                        }else{
+                                            status = -1;
+                                            message = "参数有误，请联系管理员!";
+                                        }
+                                    }else{
+                                        status = -1;
+                                        message = "添加/更新失败!";
+                                    }
+                                }else{
+                                    message = "更新成功!";
                                 }
                             }else{
                                 status = -1;
-                                message = "添加/更新失败!";
+                                message = "信息校验有误，请联系管理员!";
                             }
                         }else{
-                            message = "更新成功!";
+                            status = -1;
+                            message = "信息校验错误，请联系管理员!";
                         }
                     }else{
                         status = -1;
@@ -321,20 +343,33 @@ public class BxProductWebController {
             if(bxProduct!=null){
                 if (bxProductVideo != null) {
                     if(file != null){
-                        String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
-                        String fileSavePath=path + Constants.proVideoPath + bxProductVideo.getProductId() + "/";
-                        Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,true,false);
-                        int re = Integer.valueOf((String)mapImg.get("code")).intValue();
-                        if(re == 0){
-                            List<String> videoNameList = (List<String>)mapImg.get("list");
-                            if(videoNameList!=null && videoNameList.size()>0){
-                                bxProductVideo.setVideoUrl(videoNameList.get(0));
-                                bxProductService.insertProductVideo(bxProductVideo);
+                        //敏感信息验证
+                        BxToken bxToken = bxTokenService.getToken();
+                        if(bxToken!=null && bxToken.getAccessToken()!=null && !bxToken.getAccessToken().equals("")){
+                            int checkVideoResult = WechatUtil.checkMedia(bxToken.getAccessToken(),file[0]);
+                            if(checkVideoResult== 0){
+                                String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                                String fileSavePath=path + Constants.proVideoPath + bxProductVideo.getProductId() + "/";
+                                Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,true,false);
+                                int re = Integer.valueOf((String)mapImg.get("code")).intValue();
+                                if(re == 0){
+                                    List<String> videoNameList = (List<String>)mapImg.get("list");
+                                    if(videoNameList!=null && videoNameList.size()>0){
+                                        bxProductVideo.setVideoUrl(videoNameList.get(0));
+                                        bxProductService.insertProductVideo(bxProductVideo);
+                                    }
+                                    message = "添加成功";
+                                }else{
+                                    status = -1;
+                                    message = "添加失败!";
+                                }
+                            }else{
+                                status = -1;
+                                message = "信息校验错误，请联系管理员!";
                             }
-                            message = "添加成功";
                         }else{
                             status = -1;
-                            message = "添加失败!";
+                            message = "信息校验错误，请联系管理员!";
                         }
                     }else{
                         status = -1;
@@ -378,39 +413,51 @@ public class BxProductWebController {
         int status = 0;
         try {
             if(file != null && file.length>0){
-                if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
-                    bxProductImg.setImageUrl(null);
-                    bxProductService.updateProductImg(bxProductImg);
-                    message = "添加成功";
-                }else{
-                    String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
-                    String fileSavePath=path + Constants.proDetailImgPath + bxProductImg.getProductId() + "/";
-                    Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
-                    int re = Integer.valueOf((String)mapImg.get("code")).intValue();
-                    if(re == 0){
-                        //删除老图片
-                        String imgUrl = null;
-                        if(bxProductImg.getImageUrl()!=null && !"".equals(bxProductImg.getImageUrl())){
-                            imgUrl = bxProductImg.getImageUrl().split("/")[bxProductImg.getImageUrl().split("/").length-1];
-                        }
-                        File oldFile = new File(fileSavePath+imgUrl);
-                        oldFile.delete();
-                        List<String> imgNameList = (List<String>)mapImg.get("list");
-                        if(imgNameList!=null && imgNameList.size()>0){
-                            bxProductImg.setImageUrl(imgNameList.get(0));
-                            if(bxProductImg.getId()!=0){
-                                //更新
-                                bxProductService.updateProductImg(bxProductImg);
+                BxToken bxToken = bxTokenService.getToken();
+                if(bxToken!=null && bxToken.getAccessToken()!=null && !bxToken.getAccessToken().equals("")){
+                    int checkImgResult = WechatUtil.checkImg(bxToken.getAccessToken(),file[0]);
+                    if(checkImgResult == 0){
+                        if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
+                            bxProductImg.setImageUrl(null);
+                            bxProductService.updateProductImg(bxProductImg);
+                            message = "添加成功";
+                        }else{
+                            String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                            String fileSavePath=path + Constants.proDetailImgPath + bxProductImg.getProductId() + "/";
+                            Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
+                            int re = Integer.valueOf((String)mapImg.get("code")).intValue();
+                            if(re == 0){
+                                //删除老图片
+                                String imgUrl = null;
+                                if(bxProductImg.getImageUrl()!=null && !"".equals(bxProductImg.getImageUrl())){
+                                    imgUrl = bxProductImg.getImageUrl().split("/")[bxProductImg.getImageUrl().split("/").length-1];
+                                }
+                                File oldFile = new File(fileSavePath+imgUrl);
+                                oldFile.delete();
+                                List<String> imgNameList = (List<String>)mapImg.get("list");
+                                if(imgNameList!=null && imgNameList.size()>0){
+                                    bxProductImg.setImageUrl(imgNameList.get(0));
+                                    if(bxProductImg.getId()!=0){
+                                        //更新
+                                        bxProductService.updateProductImg(bxProductImg);
+                                    }else{
+                                        //添加
+                                        bxProductService.insertProductImg(bxProductImg);
+                                    }
+                                }
+                                message = "添加成功";
                             }else{
-                                //添加
-                                bxProductService.insertProductImg(bxProductImg);
+                                status = -1;
+                                message = "添加失败!";
                             }
                         }
-                        message = "添加成功";
                     }else{
                         status = -1;
-                        message = "添加失败!";
+                        message = "信息校验有误，请联系管理员!";
                     }
+                }else{
+                    status = -1;
+                    message = "信息校验有误，请联系管理员!";
                 }
             }else{
                 status = -1;

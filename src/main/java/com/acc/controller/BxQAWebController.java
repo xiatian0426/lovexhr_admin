@@ -2,9 +2,10 @@ package com.acc.controller;
 
 import com.acc.exception.ExceptionUtil;
 import com.acc.model.BxQA;
-import com.acc.model.UserInfo;
+import com.acc.model.BxToken;
 import com.acc.service.IBxQAService;
-import com.acc.util.Constants;
+import com.acc.service.IBxTokenService;
+import com.acc.util.weChat.WechatUtil;
 import com.acc.vo.Page;
 import com.acc.vo.QAQuery;
 import com.alibaba.fastjson.JSON;
@@ -33,6 +34,9 @@ public class BxQAWebController {
 	
 	@Autowired
 	private IBxQAService bxQAService;
+
+    @Autowired
+    private IBxTokenService bxTokenService;
 
 	/**
 	 * QA信息
@@ -80,11 +84,22 @@ public class BxQAWebController {
         int status = 0;
         try{
             if(bxQA != null){
-                HttpSession session = request.getSession();
-                UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
-                bxQA.setModifierId(String.valueOf(staff.getId()));
-                bxQAService.updateById(bxQA);
-                message = "更新成功!";
+                //敏感信息验证
+                BxToken bxToken = bxTokenService.getToken();
+                if(bxToken!=null && bxToken.getAccessToken()!=null && !bxToken.getAccessToken().equals("")){
+                    String content = bxQA.getAsk()+bxQA.getAnswer()+bxQA.getQaOrder();
+                    int checkMsgResult = WechatUtil.checkMsg(bxToken.getAccessToken(),content);
+                    if(checkMsgResult== 0){
+                        bxQAService.updateById(bxQA);
+                        message = "更新成功!";
+                    }else{
+                        status = -1;
+                        message = "信息校验错误，请联系管理员!";
+                    }
+                }else{
+                    status = -1;
+                    message = "信息校验错误，请联系管理员!";
+                }
             }else{
                 status = -1;
                 message = "操作失败，请联系管理员!";
@@ -117,8 +132,22 @@ public class BxQAWebController {
         int status = 0;
         try{
             if(bxQA != null){
-                bxQAService.insert(bxQA);
-                message = "更新成功!";
+                //敏感信息验证
+                BxToken bxToken = bxTokenService.getToken();
+                if(bxToken!=null && bxToken.getAccessToken()!=null && !bxToken.getAccessToken().equals("")){
+                    String content = bxQA.getAsk()+bxQA.getAnswer()+bxQA.getQaOrder();
+                    int checkMsgResult = WechatUtil.checkMsg(bxToken.getAccessToken(),content);
+                    if(checkMsgResult== 0){
+                        bxQAService.insert(bxQA);
+                        message = "更新成功!";
+                    }else{
+                        status = -1;
+                        message = "信息校验错误，请联系管理员!";
+                    }
+                }else{
+                    status = -1;
+                    message = "信息校验错误，请联系管理员!";
+                }
             }else{
                 status = -1;
                 message = "操作失败，请联系管理员!";

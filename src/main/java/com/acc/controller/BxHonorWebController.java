@@ -2,9 +2,12 @@ package com.acc.controller;
 
 import com.acc.exception.ExceptionUtil;
 import com.acc.model.BxHonor;
+import com.acc.model.BxToken;
 import com.acc.service.IBxHonorService;
+import com.acc.service.IBxTokenService;
 import com.acc.util.Constants;
 import com.acc.util.PictureChange;
+import com.acc.util.weChat.WechatUtil;
 import com.acc.vo.HonorQuery;
 import com.acc.vo.Page;
 import com.alibaba.fastjson.JSON;
@@ -35,6 +38,9 @@ public class BxHonorWebController {
 
 	@Autowired
 	private IBxHonorService bxHonorService;
+
+    @Autowired
+    private IBxTokenService bxTokenService;
 
 	/**
 	 * 荣誉信息
@@ -95,37 +101,50 @@ public class BxHonorWebController {
         try {
             if (bxHonor != null) {
                 if(file!=null && file.length>0){
-                    if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
-                        bxHonor.setImageUrl(null);
-                        bxHonorService.updateById(bxHonor);
-                        message = "更新成功!";
-                    }else{
-                        BxHonor oldBxHonor = bxHonorService.getHonorById(bxHonor.getId());
-                        bxHonor.setMemberId(oldBxHonor.getMemberId());
-                        String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
-                        String fileSavePath=path + Constants.honorImgPath + bxHonor.getMemberId() + "/";
-                        Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
-                        int re = Integer.valueOf((String)mapImg.get("code")).intValue();
-                        if(re==0){
-                            String imgUrl = null;
-                            if(bxHonor.getImageUrl()!=null && !"".equals(bxHonor.getImageUrl())){
-                                imgUrl = bxHonor.getImageUrl().split("/")[bxHonor.getImageUrl().split("/").length-1];
-                            }
-                            new File(fileSavePath+imgUrl).delete();
-                            List<String> list = (List<String>)mapImg.get("list");
-                            if(list!=null && list.size()>0){
-                                bxHonor.setImageUrl(list.get(0));
-                                //操作新的文件
+                    //敏感信息验证
+                    BxToken bxToken = bxTokenService.getToken();
+                    if(bxToken!=null && bxToken.getAccessToken()!=null && !bxToken.getAccessToken().equals("")){
+                        int checkImgResult = WechatUtil.checkImg(bxToken.getAccessToken(),file[0]);
+                        if(checkImgResult == 0){
+                            if(file[0].getOriginalFilename()==null || "".equals(file[0].getOriginalFilename())){
+                                bxHonor.setImageUrl(null);
                                 bxHonorService.updateById(bxHonor);
+                                message = "更新成功!";
+                            }else{
+                                BxHonor oldBxHonor = bxHonorService.getHonorById(bxHonor.getId());
+                                bxHonor.setMemberId(oldBxHonor.getMemberId());
+                                String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                                String fileSavePath=path + Constants.honorImgPath + bxHonor.getMemberId() + "/";
+                                Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
+                                int re = Integer.valueOf((String)mapImg.get("code")).intValue();
+                                if(re==0){
+                                    String imgUrl = null;
+                                    if(bxHonor.getImageUrl()!=null && !"".equals(bxHonor.getImageUrl())){
+                                        imgUrl = bxHonor.getImageUrl().split("/")[bxHonor.getImageUrl().split("/").length-1];
+                                    }
+                                    new File(fileSavePath+imgUrl).delete();
+                                    List<String> list = (List<String>)mapImg.get("list");
+                                    if(list!=null && list.size()>0){
+                                        bxHonor.setImageUrl(list.get(0));
+                                        //操作新的文件
+                                        bxHonorService.updateById(bxHonor);
+                                    }
+                                    message = "更新成功!";
+                                }else if(re==-1){
+                                    status = -1;
+                                    message = "没有文件!";
+                                }else{
+                                    status = -1;
+                                    message = "上传文件有问题!";
+                                }
                             }
-                            message = "更新成功!";
-                        }else if(re==-1){
-                            status = -1;
-                            message = "没有文件!";
                         }else{
                             status = -1;
-                            message = "上传文件有问题!";
+                            message = "信息校验错误，请联系管理员!";
                         }
+                    }else{
+                        status = -1;
+                        message = "信息校验错误，请联系管理员!";
                     }
                 }else{
                     status = -1;
@@ -164,25 +183,38 @@ public class BxHonorWebController {
         try{
             if (bxHonor != null) {
                 if(file!=null && file.length>0){
-                    String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
-                    String fileSavePath=path + Constants.honorImgPath + bxHonor.getMemberId() + "/";
-                    Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
-                    int re = Integer.valueOf((String)mapImg.get("code")).intValue();
-                    if(re==0){
-                        if(re==0){
-                            List<String> list = (List<String>)mapImg.get("list");
-                            if(list!=null && list.size()>0){
-                                bxHonor.setImageUrl(list.get(0));
-                                bxHonorService.insert(bxHonor);
+                    //敏感信息验证
+                    BxToken bxToken = bxTokenService.getToken();
+                    if(bxToken!=null && bxToken.getAccessToken()!=null && !bxToken.getAccessToken().equals("")){
+                        int checkImgResult = WechatUtil.checkImg(bxToken.getAccessToken(),file[0]);
+                        if(checkImgResult == 0){
+                            String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                            String fileSavePath=path + Constants.honorImgPath + bxHonor.getMemberId() + "/";
+                            Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,false,true);
+                            int re = Integer.valueOf((String)mapImg.get("code")).intValue();
+                            if(re==0){
+                                if(re==0){
+                                    List<String> list = (List<String>)mapImg.get("list");
+                                    if(list!=null && list.size()>0){
+                                        bxHonor.setImageUrl(list.get(0));
+                                        bxHonorService.insert(bxHonor);
+                                    }
+                                }
+                                message = "添加成功!";
+                            }else if(re==-1){
+                                status = -1;
+                                message = "没有文件";
+                            }else{
+                                status = -1;
+                                message = "上传文件有问题";
                             }
+                        }else{
+                            status = -1;
+                            message = "信息校验错误，请联系管理员!";
                         }
-                        message = "添加成功!";
-                    }else if(re==-1){
-                        status = -1;
-                        message = "没有文件";
                     }else{
                         status = -1;
-                        message = "上传文件有问题";
+                        message = "信息校验错误，请联系管理员!";
                     }
                 }else{
                     status = -1;

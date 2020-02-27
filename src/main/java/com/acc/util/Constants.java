@@ -18,6 +18,7 @@ public class Constants {
     public final static String proDetailImgPath  = "res/images/proDetailImg/";
     public final static String recruitImgPath  = "res/images/recruitImg/";
     public final static String proVideoPath  = "res/video/proVideo/";
+    public final static String proVideoVideoPath  = "res/video/productVideo/";
 
     public final static String ROLEIDZ = "0";//客户
     public final static String ROLEIDO = "1";//管理员
