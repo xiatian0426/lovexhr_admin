@@ -1,6 +1,7 @@
 package com.acc.controller;
 
 import com.acc.exception.ExceptionUtil;
+import com.acc.model.BxProductImg;
 import com.acc.service.IBxHonorService;
 import com.acc.service.IBxProductService;
 import com.acc.service.IBxQAService;
@@ -78,9 +79,13 @@ public class AjaxController {
                                                   final HttpServletResponse response) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
-            String productId = request.getParameter("id");
-            if(StringUtils.isNotEmpty(productId)){
-                bxProductService.deleteProductDetailImgById(productId);
+            String id = request.getParameter("id");
+            if(StringUtils.isNotEmpty(id)){
+                BxProductImg bxProductImg = bxProductService.getProductDetailImgById(id);
+                String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                String fileSavePath=path + Constants.proDetailImgPath + bxProductImg.getProductId() + "/";
+                new File(fileSavePath+bxProductImg.getImageUrl()).delete();
+                bxProductService.deleteProductDetailImgById(id);
                 model.put("info","1");
                 model.put("message","删除成功!");
             }
