@@ -139,6 +139,7 @@ public class BxProductController {
                     bxProductResult.setProductName(bxProductList.get(0).getProductName());
                     bxProductResult.setProductDesc(bxProductList.get(0).getProductDesc());
                     bxProductResult.setProductOrder(bxProductList.get(0).getProductOrder());
+                    bxProductResult.setVideoId(bxProductList.get(0).getVideoId());
                     if(bxProductList.get(0).getProductVideo()!=null && !"".equals(bxProductList.get(0).getProductVideo())){
                         bxProductResult.setProductVideo(basePath+ Constants.proVideoPath+bxProductList.get(0).getId()+"/"+bxProductList.get(0).getProductVideo());
                     }
@@ -301,14 +302,19 @@ public class BxProductController {
             if(bxProduct!=null){
                 if (bxProductVideo != null) {
                     if(file != null){
+                        BxProductVideo oldbxProductVideo = bxProductService.getProductDetailVideoById(String.valueOf(bxProductVideo.getId()));
                         String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
-                        String fileSavePath=path + Constants.proVideoPath + bxProductVideo.getProductId() + "/";
+                        String fileSavePath=path + Constants.proVideoPath + oldbxProductVideo.getProductId() + "/";
+                        //删除old
+                        new File(fileSavePath+oldbxProductVideo.getVideoUrl()).delete();
+                        //添加new
                         Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,true,false);
                         int re = Integer.valueOf((String)mapImg.get("code")).intValue();
                         if(re == 0){
                             List<String> videoNameList = (List<String>)mapImg.get("list");
                             if(videoNameList!=null && videoNameList.size()>0){
                                 bxProductVideo.setVideoUrl(videoNameList.get(0));
+                                bxProductService.deleteProductDetailVideoById(String.valueOf(bxProductVideo.getId()));
                                 bxProductService.insertProductVideo(bxProductVideo);
                             }
                             result = "添加成功";

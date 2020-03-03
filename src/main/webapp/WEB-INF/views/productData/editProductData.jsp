@@ -293,6 +293,7 @@
     <form action="/product/addProductVideo" name="editMessageVideoDataFrom" method="post" target="_self" id="editMessageVideoDataFrom" onsubmit="return editProductVideo();" enctype="multipart/form-data">
         <div class="clearB"></div>
         <input type="hidden" name="productId" value="${bxProductResult.id }">
+        <input type="hidden" name="id" value="${bxProductResult.videoId }">
         <div class="r_box" style="padding: 5px;">
             <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
                 产品详情--视频信息修改
