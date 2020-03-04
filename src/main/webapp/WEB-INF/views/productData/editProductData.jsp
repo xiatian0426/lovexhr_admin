@@ -185,7 +185,7 @@
             var iHeight=500; //弹出窗口的高度;
             var iTop = (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
             var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
-            var opener= window.open(openUrl,"","height="+iHeight+", width="+iWidth+", top="+iTop+", left="+iLeft+",toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
+            var opener= window.open(openUrl,"","height="+iHeight+", width="+iWidth+", top="+iTop+",left="+iLeft+",toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
         }
 	</script>
 </head>
@@ -305,8 +305,7 @@
                         <input type="file" id="productVideo" name="file" value=""></td>
                     <c:if test="${bxProductResult.productVideo!=null && bxProductResult.productVideo!=''}">
                         <td>
-                            <font color="red">已上传过视频</font>
-                            <%--<font color="green"><a style="cursor:pointer" onclick="openVideo('${bxProductResult.productVideo}')">点击查看</a></font>--%>
+                            <font color="green"><a style="cursor:pointer" onclick="openVideo('${bxProductResult.productVideo}')">点击查看</a></font>
                         </td>
                     </c:if>
 

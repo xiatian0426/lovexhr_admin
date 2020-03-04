@@ -12,11 +12,9 @@
 
 		</script>
 	</head>
-<body style="width: 98%;  font-size: 13px;">
 <body>
-${videoUrl}
-<div style="margin-top:100px;">
-    <div class="video" style="width: 100%;height: 100%;"></div>
+<div>
+    <div class="video" style="padding: 5px;left: 30px;top: 20px;width: 90%;height:430px;"></div>
 </div>
 <script type="text/javascript">
     var videoObject = {
@@ -25,7 +23,7 @@ ${videoUrl}
         loaded:'loadedHandler',//监听播放器加载成功
         autoplay:true,//自动播放
         //video:'http://localhost:8080/res/video/proVideo/10/1577091429607.mp4'//视频地址
-        video:'http://vjs.zencdn.net/v/oceans.webm'
+        video:'${videoUrl}'
     };
     var player=new ckplayer(videoObject);
 </script>
