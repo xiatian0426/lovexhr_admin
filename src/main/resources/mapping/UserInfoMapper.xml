@@ -203,4 +203,12 @@
 		SELECT <include refid="columns" /> FROM BX_MEMBER 
 		<include refid="pageWhere" />
 	</select>
+
+    <update id="updateMemberWxaCodeById" >
+        <![CDATA[
+        UPDATE BX_MEMBER SET
+            WXACODE = #{wxaCode}
+          WHERE ID = #{id}
+    ]]>
+    </update>
 </mapper>

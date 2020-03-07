@@ -1,6 +1,7 @@
 package com.acc.service.impl;
 
 import com.acc.dao.BxTokenMapper;
+import com.acc.dao.UserInfoMapper;
 import com.acc.exception.SelectException;
 import com.acc.model.BxToken;
 import com.acc.service.IBxTokenService;
@@ -18,16 +19,24 @@ public class BxTokenServiceImpl implements IBxTokenService {
 	@Autowired
 	private BxTokenMapper bxTokenMapper;
 
+    @Autowired
+    private UserInfoMapper userInfoMapper;
+
     @Override
-    public BxToken getToken() throws SelectException {
-        return bxTokenMapper.getToken();
+    public BxToken getToken(Integer type) throws SelectException {
+        return bxTokenMapper.getToken(type);
     }
 
     @Override
     public void updateToken(BxToken bxToken) throws Exception {
-        bxTokenMapper.delete();
+        bxTokenMapper.delete(bxToken.getType());
         bxTokenMapper.insert(bxToken);
 
+    }
+
+    @Override
+    public void updateMemberWxaCodeById(String id,String wxaCode) throws Exception{
+        userInfoMapper.updateMemberWxaCodeById(id,wxaCode);
     }
 
 }

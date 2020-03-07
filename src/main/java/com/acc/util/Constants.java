@@ -14,6 +14,7 @@ public class Constants {
 
     public final static String honorImgPath  = "res/images/honorImg/";
     public final static String memberImgPath  = "res/images/memberImg/";
+    public final static String memberImgWxaCodePath  = "res/images/memberImg/wxaCode/";
     public final static String proImgPath  = "res/images/proImg/";
     public final static String proDetailImgPath  = "res/images/proDetailImg/";
     public final static String recruitImgPath  = "res/images/recruitImg/";

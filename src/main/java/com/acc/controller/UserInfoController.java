@@ -1,18 +1,25 @@
 package com.acc.controller;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.acc.model.BxToken;
 import com.acc.model.UserInfo;
+import com.acc.service.IBxTokenService;
 import com.acc.util.PictureChange;
 import com.acc.vo.UserInfoQuery;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.protocol.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +53,9 @@ public class UserInfoController {
 
 	@Autowired
 	private IUserInfoService userInfoService;
+
+    @Autowired
+    private IBxTokenService bxTokenService;
 
 	/**
 	 * @return
@@ -141,6 +151,35 @@ public class UserInfoController {
                                     user.setMemberImg(list.get(0));
                                     userInfoService.updateImg(user);
                                 }
+
+                                String scene = String.valueOf(user.getId());
+                                String page="page/msg_waist/msg_waist";
+                                BxToken bxToken = bxTokenService.getToken(0);
+                                if(bxToken!=null && bxToken.getAccessToken()!=null && !bxToken.getAccessToken().equals("")){
+                                    String token = bxToken.getAccessToken();
+                                    Map<String, Object> params = new HashMap<String, Object>();
+                                    params.put("scene", scene);  //参数
+                                    //            params.put("page", "page/msg_waist/msg_waist"); //位置
+                                    params.put("width", 430);
+                                    CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+                                    HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token="+token);  // 接口
+                                    httpPost.addHeader(HTTP.CONTENT_TYPE, "application/json");
+                                    String body = JSON.toJSONString(params);           //必须是json模式的 post
+                                    StringEntity entity;
+                                    entity = new StringEntity(body);
+                                    entity.setContentType("image/png");
+                                    httpPost.setEntity(entity);
+                                    HttpResponse response1;
+                                    response1 = httpClient.execute(httpPost);
+                                    InputStream inputStream = response1.getEntity().getContent();
+                                    String name = scene+".png";
+                                    String filePath = Constants.memberImgWxaCodePath;
+                                    int result = saveToImgByInputStream(inputStream, path + filePath,name);  //保存图片
+                                    if(result==1){//保存成功
+                                        //保存数据
+                                        bxTokenService.updateMemberWxaCodeById(scene,name);
+                                    }
+                                }
                             }
                         }
                     }
@@ -153,6 +192,41 @@ public class UserInfoController {
 		}
 		return mav;
 	}
+
+    /**
+     * 将二进制转换成文件保存
+     * @param instreams 二进制流
+     * @param imgPath 图片的保存路径
+     * @param imgName 图片的名称
+     * @return
+     *      1：保存正常
+     *      0：保存失败
+     */
+    public static int saveToImgByInputStream(InputStream instreams,String imgPath,String imgName){
+        int stateInt = 1;
+        if(instreams != null){
+            try {
+                File file=new File(imgPath,imgName);//可以是任何图片格式.jpg,.png等
+                // 判断文件父目录是否存在
+                if (!file.getParentFile().exists()) {
+                    file.getParentFile().mkdir();
+                }
+                FileOutputStream fos=new FileOutputStream(file);
+                byte[] b = new byte[1024];
+                int nRead = 0;
+                while ((nRead = instreams.read(b)) != -1) {
+                    fos.write(b, 0, nRead);
+                }
+                fos.flush();
+                fos.close();
+            } catch (Exception e) {
+                stateInt = 0;
+                e.printStackTrace();
+            } finally {
+            }
+        }
+        return stateInt;
+    }
 
 	/**
 	 * 跳转修改用户信息

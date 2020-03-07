@@ -72,7 +72,7 @@ public class BxWeChatController {
         PrintWriter out = response.getWriter();
         Map<String,Object> result = new HashMap<String, Object>();
         try{
-            BxToken bxToken = bxTokenService.getToken();
+            BxToken bxToken = bxTokenService.getToken(1);
             if(bxToken!=null && bxToken.getAccessToken()!=null && !bxToken.getAccessToken().equals("")){
                 result.put("access_token",bxToken.getAccessToken());
             }
