@@ -23,17 +23,17 @@ public class TokenJob {
 	 */
 	@Scheduled(cron = "0 0 0/1 * * ?")
 	public void execute () {
-	    try{
-            System.out.println("===> 开始更新token");
-            String access_token = WechatUtil.getDDToken();
-            BxToken bxToken = new BxToken();
-            bxToken.setAccessToken(access_token);
-            bxTokenService.updateToken(bxToken);
-            System.out.println("===> 结束更新token");
-        }catch (Exception e){
-            System.out.println("===> 更新token出错");
-            e.printStackTrace();
-        }
+//	    try{
+//            System.out.println("===> 开始更新token");
+//            String access_token = WechatUtil.getDDToken();
+//            BxToken bxToken = new BxToken();
+//            bxToken.setAccessToken(access_token);
+//            bxTokenService.updateToken(bxToken);
+//            System.out.println("===> 结束更新token");
+//        }catch (Exception e){
+//            System.out.println("===> 更新token出错");
+//            e.printStackTrace();
+//        }
 
 	}
 }
