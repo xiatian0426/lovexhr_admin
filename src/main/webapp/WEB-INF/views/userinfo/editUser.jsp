@@ -91,6 +91,28 @@
                 return false;
             }
 		}
+		function downloadImg(imgUrl){
+            $.ajax({
+                url:'/ajax/downloadImg',
+                data:{
+                    imgUrl:imgUrl
+                },
+                dataType:'json',
+                type:'post',
+                cache:false,
+                async:false,
+                success:function(data) {
+                    if(data.info=='0'){
+                        alert("操作成功!");
+                    }else{
+                        alert("操作失败!");
+                    }
+                },
+                error : function(){
+                    alert("操作失败!");
+                }
+            });
+        }
 	</script>
 </head>
 <body style=" font-size: 13px;">
@@ -206,6 +228,13 @@
                         </select>
                     </td>
                     </c:if>
+                    <c:if test="${staff.roleId eq '0' }">
+                        <td style="background:#A0E0F7;padding: 10px 15px;">小程序码：</td>
+                        <td>
+                            <img src="${userInfo.wxaCode}" width="50" height="50"/>&nbsp;&nbsp;
+                            <a href="${userInfo.wxaCode}">查看原图</a>
+                        </td>
+                    </c:if>
                 </tr>
                 <tr>
                     <td style="background:#A0E0F7;padding: 10px 15px;">自我介绍：</td>
@@ -214,6 +243,13 @@
                                class="validate[required,noSpecialCaracters,,maxSize[500]] text-input self-form-control"/>
                     </td>
                 </tr>
+                <c:if test="${staff.roleId eq '1' }">
+                    <td style="background:#A0E0F7;padding: 10px 15px;">小程序码：</td>
+                    <td colspan="3">
+                        <img src="${userInfo.wxaCode}" width="50" height="50"/>&nbsp;&nbsp;
+                        <a href="${userInfo.wxaCode}">查看原图</a>
+                    </td>
+                </c:if>
 			</table>
 			<div class="sub_div">
 				<input type="submit" class="sub_btn" value=" "/>

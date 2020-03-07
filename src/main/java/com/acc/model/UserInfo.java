@@ -107,6 +107,19 @@ public class UserInfo implements java.io.Serializable, Cloneable{
 
     private List<BxHonor> bxHonorList = new ArrayList<BxHonor>();
 
+    /**
+     * 小程序码
+     */
+    private String wxaCode;
+
+    public String getWxaCode() {
+        return wxaCode;
+    }
+
+    public void setWxaCode(String wxaCode) {
+        this.wxaCode = wxaCode;
+    }
+
     public int getId() {
         return id;
     }

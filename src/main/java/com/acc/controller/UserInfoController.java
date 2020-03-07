@@ -254,6 +254,10 @@ public class UserInfoController {
                             + path + "/";
                     String fileSavePath=basePath + Constants.memberImgPath + userInfo.getId() + "/";
                     userInfo.setMemberImg(fileSavePath+userInfo.getMemberImg());
+                    if(userInfo.getWxaCode()!=null && !userInfo.getWxaCode().equals("")){
+                        fileSavePath=basePath + Constants.memberImgWxaCodePath;
+                        userInfo.setWxaCode(fileSavePath+userInfo.getWxaCode());
+                    }
                 }
                 model.put("userInfo", userInfo);
                 model.put("notice", request.getParameter("notice"));

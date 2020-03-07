@@ -7,6 +7,7 @@ import com.acc.service.IBxProductService;
 import com.acc.service.IBxQAService;
 import com.acc.service.IBxRecruitService;
 import com.acc.util.Constants;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +32,7 @@ import java.util.Map;
 @Controller
 @RequestMapping(value="/ajax")
 public class AjaxController {
-	private static Logger _logger = LoggerFactory.getLogger(AjaxController.class);
+    private static Logger _logger = LoggerFactory.getLogger(AjaxController.class);
 
     @Autowired
     private IBxProductService bxProductService;
@@ -41,13 +47,13 @@ public class AjaxController {
     private IBxRecruitService bxRecruitService;
 
 
-	/**
-	 * 删除产品信息
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
+    /**
+     * 删除产品信息
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
     @ResponseBody
     @RequestMapping(value = "/deleteByProdictId", method = RequestMethod.POST)
     public Map<String, Object> deleteByProdictId (final HttpServletRequest request,
@@ -76,7 +82,7 @@ public class AjaxController {
     @ResponseBody
     @RequestMapping(value = "/deleteProductDetailImgById", method = RequestMethod.POST)
     public Map<String, Object> deleteProductDetailImgById (final HttpServletRequest request,
-                                                  final HttpServletResponse response) {
+                                                           final HttpServletResponse response) {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
             String id = request.getParameter("id");
@@ -105,7 +111,7 @@ public class AjaxController {
     @ResponseBody
     @RequestMapping(value = "/deleteQAById", method = RequestMethod.POST)
     public Map<String, Object> deleteQAById (final HttpServletRequest request,
-                                                  final HttpServletResponse response) {
+                                             final HttpServletResponse response) {
         Map<String, Object> model = new HashMap<String, Object>();
         try{
             String qaId = request.getParameter("id");
@@ -130,7 +136,7 @@ public class AjaxController {
     @ResponseBody
     @RequestMapping(value = "/deleteHonorById", method = RequestMethod.POST)
     public Map<String, Object> deleteHonorById (final HttpServletRequest request,
-                                             final HttpServletResponse response) {
+                                                final HttpServletResponse response) {
         Map<String, Object> model = new HashMap<String, Object>();
         try{
             String id = request.getParameter("id");
@@ -164,7 +170,7 @@ public class AjaxController {
     @ResponseBody
     @RequestMapping(value = "/deleteRecruitById", method = RequestMethod.POST)
     public Map<String, Object> deleteRecruitById (final HttpServletRequest request,
-                                                final HttpServletResponse response) {
+                                                  final HttpServletResponse response) {
         Map<String, Object> model = new HashMap<String, Object>();
         try{
             String id = request.getParameter("id");
@@ -185,6 +191,49 @@ public class AjaxController {
         } catch (Exception e) {
             _logger.error("删除招聘信息失败：" + ExceptionUtil.getMsg(e));
             model.put("info", "删除失败");
+        }
+        return model;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/downloadImg", method = RequestMethod.POST)
+    public Map<String, Object> downloadImg(final HttpServletRequest request,
+                                           final HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        try {
+            //处理中文乱码
+            request.setCharacterEncoding("UTF-8");
+            String fileName = request.getParameter("imgUrl");
+            fileName = new String(fileName.getBytes("iso8859-1"),"UTF-8");
+            //处理浏览器兼容
+            response.setContentType("application/msexcel;charset=utf-8");//定义输出类型
+            Enumeration enumeration = request.getHeaders("User-Agent");
+            String browserName = (String) enumeration.nextElement();
+            boolean isMSIE = browserName.contains("MSIE");
+            if (isMSIE) {
+                response.addHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName, "UTF8"));
+            } else {
+                response.addHeader("Content-Disposition", "attachment;fileName=" + new String(fileName.getBytes("gb2312"), "ISO8859-1"));
+            }
+            //url地址如果存在空格，会导致报错！  解决方法为：用+或者%20代替url参数中的空格。
+            fileName = fileName.replace(" ", "%20");
+            //图片下载
+            URL url = new URL(fileName);
+            URLConnection conn = url.openConnection();
+            outputStream = response.getOutputStream();
+            inputStream = conn.getInputStream();
+            IOUtils.copy(inputStream, outputStream);
+            model.put("info","0");
+            model.put("message","下载成功!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            model.put("info","1");
+            model.put("message","下载失败!");
+        }finally {
+            IOUtils.closeQuietly(inputStream);
+            IOUtils.closeQuietly(outputStream);
         }
         return model;
     }
