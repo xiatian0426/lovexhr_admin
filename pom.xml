@@ -312,6 +312,7 @@
 			</activation>
 			<properties>
                 <!--<pf.project.root>D:\\own\\lovexhr_admin\\src\\main\\webapp\\</pf.project.root>-->
+                <pf.webpro.root>/usr/local/tomcat/webapps/ROOT/</pf.webpro.root>
                 <pf.project.root>/usr/local/tomcat4/webapps/ROOT/</pf.project.root>
 				<pf.web.root>http://${acc.root.local}:${acc.web.port}</pf.web.root>
 				<pf.css.root>http://${acc.root.local}:${acc.web.port}/res/css</pf.css.root>

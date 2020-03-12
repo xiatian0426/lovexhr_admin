@@ -19,6 +19,7 @@
 		<property name="toolRoot" value="${pf.tool.root}" />
 		<property name="webRoot" value="${pf.web.root}" />
         <property name="proRoot" value="${pf.project.root}" />
+        <property name="webproRoot" value="${pf.webpro.root}" />
 	</bean>
 	<!-- 登录过滤器 -->
 	<mvc:interceptors> 

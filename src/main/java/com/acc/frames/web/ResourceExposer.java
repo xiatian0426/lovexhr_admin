@@ -24,6 +24,8 @@ public class ResourceExposer implements ServletContextAware {
 
 	private String proRoot;
 
+    private String webproRoot;
+
 	/*
 	 * 初始化方法
 	 */
@@ -34,6 +36,7 @@ public class ResourceExposer implements ServletContextAware {
 		getServletContext().setAttribute("toolRoot", toolRoot);
 		getServletContext().setAttribute("webRoot", webRoot);
         getServletContext().setAttribute("proRoot", proRoot);
+        getServletContext().setAttribute("webproRoot", webproRoot);
 		
 		System.out.println("===>资源路径初始化."+ getServletContext().getAttribute("jsRoot"));
 	}
@@ -101,5 +104,13 @@ public class ResourceExposer implements ServletContextAware {
 
     public void setProRoot(String proRoot) {
         this.proRoot = proRoot;
+    }
+
+    public String getWebproRoot() {
+        return webproRoot;
+    }
+
+    public void setWebproRoot(String webproRoot) {
+        this.webproRoot = webproRoot;
     }
 }
