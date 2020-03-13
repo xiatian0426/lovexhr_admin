@@ -175,7 +175,7 @@ public class UserInfoController {
                                     String name = scene+".png";
                                     String filePath = Constants.memberImgWxaCodePath;
                                     path = (String)request.getSession().getServletContext().getAttribute("webproRoot");
-                                    int result = saveToImgByInputStream(inputStream, path + filePath,name);  //保存图片
+                                    int result = saveToImgByInputStream(inputStream, Constants.BASEPATH + filePath,name);  //保存图片
                                     if(result==1){//保存成功
                                         //保存数据
                                         bxTokenService.updateMemberWxaCodeById(scene,name);
@@ -256,7 +256,7 @@ public class UserInfoController {
                     String fileSavePath=basePath + Constants.memberImgPath + userInfo.getId() + "/";
                     userInfo.setMemberImg(fileSavePath+userInfo.getMemberImg());
                     if(userInfo.getWxaCode()!=null && !userInfo.getWxaCode().equals("")){
-                        fileSavePath=basePath + Constants.memberImgWxaCodePath;
+                        fileSavePath=Constants.BASEPATH + Constants.memberImgWxaCodePath;
                         userInfo.setWxaCode(fileSavePath+userInfo.getWxaCode());
                     }
                 }

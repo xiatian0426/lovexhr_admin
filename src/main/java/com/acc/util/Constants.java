@@ -23,4 +23,6 @@ public class Constants {
 
     public final static String ROLEIDZ = "0";//客户
     public final static String ROLEIDO = "1";//管理员
+
+    public final static String BASEPATH  = "https://www.lovexhr.com/";
 }
