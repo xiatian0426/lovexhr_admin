@@ -113,6 +113,30 @@
                 }
             });
         }
+
+        function saveWxaCode(id){
+            $.ajax({
+                url:'/ajax/saveWxaCode',
+                data:{
+                    id:id
+                },
+                dataType:'json',
+                type:'post',
+                cache:false,
+                async:false,
+                success:function(data) {
+                    if(data.info=='1'){
+                        alert("操作成功!");
+                        location.reload();
+                    }else{
+                        alert("操作失败!");
+                    }
+                },
+                error : function(){
+                    alert("操作失败!");
+                }
+            });
+        }
 	</script>
 </head>
 <body style=" font-size: 13px;">
@@ -254,6 +278,9 @@
                         <td colspan="3">
                             <img src="${userInfo.wxaCode}" width="50" height="50"/>&nbsp;&nbsp;
                             <a href="${userInfo.wxaCode}">查看原图</a>
+                            <c:if test="${userInfo.wxaCode==null || userInfo.wxaCode==''}">
+                                <button type="button" class="btn btn-success" onclick="saveWxaCode('${userInfo.id}')" target="_blank">生成二维码</button>
+                            </c:if>
                         </td>
                 </c:if>
                 </tr>

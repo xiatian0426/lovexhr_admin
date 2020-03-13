@@ -175,7 +175,7 @@ public class UserInfoController {
                                     String name = scene+".png";
                                     String filePath = Constants.memberImgWxaCodePath;
                                     path = (String)request.getSession().getServletContext().getAttribute("webproRoot");
-                                    int result = saveToImgByInputStream(inputStream, path + filePath,name);  //保存图片
+                                    int result = PictureChange.saveToImgByInputStream(inputStream, path + filePath,name);  //保存图片
                                     if(result==1){//保存成功
                                         //保存数据
                                         bxTokenService.updateMemberWxaCodeById(scene,name);
@@ -194,40 +194,6 @@ public class UserInfoController {
 		return mav;
 	}
 
-    /**
-     * 将二进制转换成文件保存
-     * @param instreams 二进制流
-     * @param imgPath 图片的保存路径
-     * @param imgName 图片的名称
-     * @return
-     *      1：保存正常
-     *      0：保存失败
-     */
-    public static int saveToImgByInputStream(InputStream instreams,String imgPath,String imgName){
-        int stateInt = 1;
-        if(instreams != null){
-            try {
-                File file=new File(imgPath,imgName);//可以是任何图片格式.jpg,.png等
-                // 判断文件父目录是否存在
-                if (!file.getParentFile().exists()) {
-                    file.getParentFile().mkdir();
-                }
-                FileOutputStream fos=new FileOutputStream(file);
-                byte[] b = new byte[1024];
-                int nRead = 0;
-                while ((nRead = instreams.read(b)) != -1) {
-                    fos.write(b, 0, nRead);
-                }
-                fos.flush();
-                fos.close();
-            } catch (Exception e) {
-                stateInt = 0;
-                e.printStackTrace();
-            } finally {
-            }
-        }
-        return stateInt;
-    }
 
 	/**
 	 * 跳转修改用户信息

@@ -2,13 +2,19 @@ package com.acc.controller;
 
 import com.acc.exception.ExceptionUtil;
 import com.acc.model.BxProductImg;
-import com.acc.service.IBxHonorService;
-import com.acc.service.IBxProductService;
-import com.acc.service.IBxQAService;
-import com.acc.service.IBxRecruitService;
+import com.acc.model.BxToken;
+import com.acc.service.*;
 import com.acc.util.Constants;
+import com.acc.util.PictureChange;
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.protocol.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +51,9 @@ public class AjaxController {
 
     @Autowired
     private IBxRecruitService bxRecruitService;
+
+    @Autowired
+    private IBxTokenService bxTokenService;
 
 
     /**
@@ -234,6 +243,58 @@ public class AjaxController {
         }finally {
             IOUtils.closeQuietly(inputStream);
             IOUtils.closeQuietly(outputStream);
+        }
+        return model;
+    }
+
+    /**
+     * 生成小程序码
+     * @param request
+     * @param response
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/saveWxaCode", method = RequestMethod.POST)
+    public Map<String, Object> saveWxaCode (final HttpServletRequest request,
+                                                  final HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+        try{
+            String scene = request.getParameter("id");
+            if(StringUtils.isNotEmpty(scene)) {
+                String page = "page/msg_waist/msg_waist";
+                BxToken bxToken = bxTokenService.getToken(0);
+                if (bxToken != null && bxToken.getAccessToken() != null && !bxToken.getAccessToken().equals("")) {
+                    String token = bxToken.getAccessToken();
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put("scene", scene);  //参数
+                    //            params.put("page", "page/msg_waist/msg_waist"); //位置
+                    params.put("width", 430);
+                    CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+                    HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + token);  // 接口
+                    httpPost.addHeader(HTTP.CONTENT_TYPE, "application/json");
+                    String body = JSON.toJSONString(params);           //必须是json模式的 post
+                    StringEntity entity;
+                    entity = new StringEntity(body);
+                    entity.setContentType("image/png");
+                    httpPost.setEntity(entity);
+                    HttpResponse response1;
+                    response1 = httpClient.execute(httpPost);
+                    InputStream inputStream = response1.getEntity().getContent();
+                    String name = scene + ".png";
+                    String filePath = Constants.memberImgWxaCodePath;
+                    String path = (String) request.getSession().getServletContext().getAttribute("webproRoot");
+                    int result = PictureChange.saveToImgByInputStream(inputStream, path + filePath, name);  //保存图片
+                    if (result == 1) {//保存成功
+                        //保存数据
+                        bxTokenService.updateMemberWxaCodeById(scene, name);
+                    }
+                    model.put("info", "1");
+                    model.put("message", "删除成功!");
+                }
+            }
+        } catch (Exception e) {
+            _logger.error("删除招聘信息失败：" + ExceptionUtil.getMsg(e));
+            model.put("info", "删除失败");
         }
         return model;
     }
