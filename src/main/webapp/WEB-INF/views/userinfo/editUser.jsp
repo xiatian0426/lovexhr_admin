@@ -203,10 +203,10 @@
                         <input id="wechat" name="wechat" value="${userInfo.wechat}" type="text" style="width: 172px;"
                                class="validate[required,noSpecialCaracters,,maxSize[30]] text-input self-form-control"/>
                     </td>
-                    <td style="background:#A0E0F7;padding: 10px 15px;">头像：</td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">邮箱：</td>
                     <td>
-                        <input type="file" name="file"/>
-                        <img src="${userInfo.memberImg}" width="50" height="50"/>
+                        <input id="email" name="email" value="${userInfo.email}" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[30]] text-input self-form-control"/>
                     </td>
                 </tr>
                 <tr>
@@ -243,13 +243,20 @@
                                class="validate[required,noSpecialCaracters,,maxSize[500]] text-input self-form-control"/>
                     </td>
                 </tr>
-                <c:if test="${staff.roleId eq '1' }">
-                    <td style="background:#A0E0F7;padding: 10px 15px;">小程序码：</td>
-                    <td colspan="3">
-                        <img src="${userInfo.wxaCode}" width="50" height="50"/>&nbsp;&nbsp;
-                        <a href="${userInfo.wxaCode}">查看原图</a>
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">头像：</td>
+                    <td>
+                        <input type="file" name="file"/>
+                        <img src="${userInfo.memberImg}" width="50" height="50"/>
                     </td>
+                    <c:if test="${staff.roleId eq '1' }">
+                        <td style="background:#A0E0F7;padding: 10px 15px;">小程序码：</td>
+                        <td colspan="3">
+                            <img src="${userInfo.wxaCode}" width="50" height="50"/>&nbsp;&nbsp;
+                            <a href="${userInfo.wxaCode}">查看原图</a>
+                        </td>
                 </c:if>
+                </tr>
 			</table>
 			<div class="sub_div">
 				<input type="submit" class="sub_btn" value=" "/>

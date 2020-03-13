@@ -239,9 +239,10 @@
                         <input id="wechat" name="wechat" value="" type="text" style="width: 172px;"
                                class="validate[required,noSpecialCaracters,,maxSize[30]] text-input self-form-control"/>
                     </td>
-                    <td style="background:#A0E0F7;padding: 10px 15px;">头像：</td>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">邮箱：</td>
                     <td>
-                        <input type="file" id="memberImg" name="file">
+                        <input id="email" name="email" value="${userInfo.email}" type="text" style="width: 172px;"
+                               class="validate[required,noSpecialCaracters,,maxSize[30]] text-input self-form-control"/>
                     </td>
                 </tr>
 
@@ -271,6 +272,12 @@
                     <td colspan="3">
                         <input id="introduce" name="introduce" value="" type="text" style="width: 435px;"
                                class="validate[required,noSpecialCaracters,maxSize[500]] text-input self-form-control"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background:#A0E0F7;padding: 10px 15px;">头像：</td>
+                    <td colspan="3">
+                        <input type="file" id="memberImg" name="file">
                     </td>
                 </tr>
             </table>
