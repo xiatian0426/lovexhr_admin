@@ -49,12 +49,9 @@
         <acc:oa opId="0">
             <li><a href="/user/goEdit?customerFlag=1" target="main"><img src="../../../res/images/main/customer.png" height="25px;" width="25px;">&nbsp;个人信息管理</a></li>
         </acc:oa>
-		<acc:oa opId="1">
-			<li><a href="/user/index" target="main"><img src="../../../res/images/main/user.png" height="25px;" width="25px;">&nbsp;后台用户管理</a></li>
-		</acc:oa>
-        <%--<acc:oa opId="0,1">--%>
-            <%--<li><a href="/product/getProductVideoList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;用户视频管理</a></li>--%>
-        <%--</acc:oa>--%>
+        <acc:oa opId="0,1">
+            <li><a href="/proVideo/getProVideoList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;用户视频管理</a></li>
+        </acc:oa>
         <%--<acc:oa opId="0,1">--%>
         <%--<li><a href="/product/getProductVideoList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;点赞管理</a></li>--%>
         <%--</acc:oa>--%>
@@ -70,6 +67,9 @@
 		<%--<acc:oa opId="1">--%>
 			<%--<li><a href="/manage/roleList" target="main"><img src="../../../res/images/main/form.png" height="25px;" width="25px;">&nbsp;用户角色查询</a></li>--%>
 		<%--</acc:oa>--%>
+        <acc:oa opId="1">
+            <li><a href="/user/index" target="main"><img src="../../../res/images/main/user.png" height="25px;" width="25px;">&nbsp;后台用户管理</a></li>
+        </acc:oa>
 	</ul>
 </body>
 </html>

@@ -55,6 +55,9 @@ public class AjaxController {
     @Autowired
     private IBxTokenService bxTokenService;
 
+    @Autowired
+    private IBxProVideoService bxProVideoService;
+
 
     /**
      * 删除产品信息
@@ -294,6 +297,40 @@ public class AjaxController {
             }
         } catch (Exception e) {
             _logger.error("删除招聘信息失败：" + ExceptionUtil.getMsg(e));
+            model.put("info", "删除失败");
+        }
+        return model;
+    }
+
+    /**
+     * 删除用户视频
+     * @param request
+     * @param response
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/deleteProVideoById", method = RequestMethod.POST)
+    public Map<String, Object> deleteProVideoById (final HttpServletRequest request,
+                                                final HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+        try{
+            String id = request.getParameter("id");
+            String memberId = request.getParameter("memberId");
+            String videoUrl = request.getParameter("videoUrl");
+            if(StringUtils.isNotEmpty(id)){
+                bxProVideoService.deleteById(id);
+                String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                String fileSavePath=path + Constants.proVideoPath + memberId + "/";
+                String oldVideoUrl = null;
+                if(videoUrl!=null && !"".equals(videoUrl)){
+                    oldVideoUrl = videoUrl.split("/")[videoUrl.split("/").length-1];
+                }
+                new File(fileSavePath+oldVideoUrl).delete();
+                model.put("info","1");
+                model.put("message","删除成功!");
+            }
+        } catch (Exception e) {
+            _logger.error("删除用户视频失败：" + ExceptionUtil.getMsg(e));
             model.put("info", "删除失败");
         }
         return model;

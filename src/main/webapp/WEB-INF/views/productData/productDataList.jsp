@@ -131,7 +131,7 @@
                         </td>
                         <c:if test="${userInfoList != null}">
                             <td align="center">
-                                    ${userInfoDictMap[data.memberId].userRealname }
+                                    ${userInfoDictMap[data.memberId].userName }
                             </td>
                         </c:if>
                         <td align="center">

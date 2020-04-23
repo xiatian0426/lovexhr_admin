@@ -26,20 +26,20 @@
 		<script type="text/javascript">
             $(function(){
                 //函数来源page.js
-                page("recruitListForm", ${page.pageInfo}, "pageRecruitList");
+                page("proVideoListForm", ${page.pageInfo}, "pageProVideoList");
                 var result = $("#result").val();
                 if(result != ""){
                     alert(result);
                 }
             });
 
-            function deleteById(id,memberId,imageUrl){
+            function deleteById(id,memberId,videoUrl){
                 $.ajax({
-                    url:'/ajax/deleteRecruitById',
+                    url:'/ajax/deleteProVideoById',
                     data:{
                         id:id,
                         memberId:memberId,
-                        imageUrl:imageUrl
+                        videoUrl:videoUrl
                     },
                     dataType:'json',
                     type:'post',
@@ -48,7 +48,7 @@
                     success:function(data) {
                         if(data.info=='1'){
                             alert("操作成功!");
-                            $("#recruitListForm").submit();
+                            $("#proVideoListForm").submit();
                         }else{
                             alert("操作失败!");
                         }
@@ -58,39 +58,14 @@
                     }
                 });
             }
+
             function updateData(id){
-                var recruitOrder = $("#recruitOrder"+id).val();
-                var re = new RegExp("^[0-9]*[1-9][0-9]*$");
-                if (recruitOrder != "") {
-                    if (!re.test(recruitOrder)) {
-                        $("#recruitOrder"+id).validationEngine("showPrompt","排序只能为整数!","error");
-                        $("#recruitOrder"+id).focus();
-                        return false;
-                    }
-                }else{
-                    $("#recruitOrder"+id).validationEngine("showPrompt","排序不能为空!","error");
-                    $("#recruitOrder"+id).focus();
-                    return false;
-                }
             }
             function saveData(){
                 var fileNew = $("#fileNew").val().length;
                 if(fileNew==""){
-                    $("#fileNew").validationEngine("showPrompt","招聘图片不能为空!","error");
+                    $("#fileNew").validationEngine("showPrompt","用户视频不能为空!","error");
                     $("#fileNew").focus();
-                    return false;
-                }
-                var recruitOrder = $("#recruitOrderNew").val();
-                var re = new RegExp("^[0-9]*[1-9][0-9]*$");
-                if (recruitOrder != "") {
-                    if (!re.test(recruitOrder)) {
-                        $("#recruitOrderNew").validationEngine("showPrompt","排序只能为整数!","error");
-                        $("#recruitOrderNew").focus();
-                        return false;
-                    }
-                }else{
-                    $("#recruitOrderNew").validationEngine("showPrompt","排序不能为空!","error");
-                    $("#recruitOrderNew").focus();
                     return false;
                 }
                 var memberIdFlag = $("#memberIdFlag").val();
@@ -104,31 +79,42 @@
                     }
                 }
             }
+
+            function openVideo(videoUrl){
+                var openUrl = "/product/openVideo?videoUrl="+videoUrl;//弹出窗口的url
+                var iWidth=700; //弹出窗口的宽度;
+                var iHeight=500; //弹出窗口的高度;
+                var iTop = (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
+                var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+                var opener= window.open(openUrl,"","height="+iHeight+", width="+iWidth+", top="+iTop+",left="+iLeft+",toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
+            }
 		</script>
 	</head>
 <body style="width: 95%;  font-size: 13px;">
 <input id="result" value="${result}" type="hidden"/>
     <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
-        招聘信息列表
+        用户视频列表
     </div>
-    <form class="form-horizontal" id="recruitListForm" action="/recruit/getRecruitList" method="POST">
-        <div class="r_box" style="margin-top: 10px;">
-            <div style="height: 15px; width: 100%;"><span></span></div>
-            <span class="infoLable">所属人：</span>
-            <select class="select-nosearch" name="memberId" style="width: 200px;height: 28px;">
-                <option value="0" selected="selected">---请选择---</option>
-                <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
-                    <option value='${userInfo.id}'<c:if test="${userInfo.id==query.memberId }">selected="selected"</c:if>>
-                        ${userInfo.userName}
-                    </option>
-                </c:forEach>
-            </select>
-            <button type="submit" class="btn btn-default"
-                    style="background-color:#337ab7;">搜索</button>
-            <br />
-            <div><span></span></div>
-        </div>
-        <div class="pageRecruitList" style="height:52px;margin-top:-30px;"></div>
+    <form class="form-horizontal" id="proVideoListForm" action="/proVideo/getProVideoList" method="POST">
+        <c:if test="${staff.roleId eq '1' }">
+            <div class="r_box" style="margin-top: 10px;">
+                <div style="height: 15px; width: 100%;"><span></span></div>
+                <span class="infoLable">所属人：</span>
+                <select class="select-nosearch" name="memberId" style="width: 200px;height: 28px;">
+                    <option value="0" selected="selected">---请选择---</option>
+                    <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
+                        <option value='${userInfo.id}'<c:if test="${userInfo.id==query.memberId }">selected="selected"</c:if>>
+                                ${userInfo.userName}
+                        </option>
+                    </c:forEach>
+                </select>
+                <button type="submit" class="btn btn-default"
+                        style="background-color:#337ab7;">搜索</button>
+                <br />
+                <div><span></span></div>
+            </div>
+        </c:if>
+        <div class="pageProVideoList" style="height:52px;margin-top:-30px;"></div>
     </form>
     <div class="r_box" style="border:0px dashed #00F" >
         <table width="100%" cellpadding="0" cellspacing="0" class="table-bordered">
@@ -140,10 +126,7 @@
                     预览
                 </th>
                 <th width="35%" align="center">
-                    图片
-                </th>
-                <th width="5%" align="center">
-                    排序
+                    视频
                 </th>
                 <c:if test="${userInfoList != null}">
                     <th width="10%" align="center">
@@ -155,34 +138,29 @@
                 </th>
             </tr>
             <c:forEach items="${page.result}" var="data" varStatus="count">
-                <form class="form-horizontal" id="recruitDataListForm" action="/recruit/addRecruit" method="POST" onsubmit="return updateData('${data.id}');" enctype="multipart/form-data">
+                <form class="form-horizontal" id="proVideoDataListForm" action="/proVideo/updateById" method="POST" onsubmit="return updateData('${data.id}');" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="${data.id }">
                     <c:if test="${data.id!=null && data.id!=0}">
-                        <input type="hidden" name="imageUrl" value="${data.imageUrl }">
+                        <input type="hidden" name="videoUrl" value="${data.videoUrl }">
                     </c:if>
                     <tr>
                         <td align="center" height="33" align="center">
                             ${count.count}
                         </td>
                         <td align="center">
-                            <img src="${data.imageUrl}" width="50" height="50"/>
+                            <a style="cursor:pointer" onclick="openVideo('${data.videoUrl}')">点击查看</a>
                         </td>
                         <td align="center">
                             <input type="file" name="file"/>
                         </td>
-                        <td align="center">
-                            <input id="recruitOrder${data.id}" name="recruitOrder" value="${data.recruitOrder}" type="text" style="width: 90%;"
-                                   class="text-input self-form-control"/>
-                        </td>
                         <c:if test="${userInfoList != null}">
                             <td align="center">
-                                <input type="hidden" name="memberId" value="${data.memberId }">
                                 ${userInfoDictMap[data.memberId].userName }
                             </td>
                         </c:if>
                         <td align="center">
                             <button type="submit" class="btn btn-success">更新</button>
-                            <button type="button" class="btn btn-success" onclick="deleteById('${data.id}','${data.memberId}','${data.imageUrl}')" target="_blank">删除</button>
+                            <button type="button" class="btn btn-success" onclick="deleteById('${data.id}','${data.memberId}','${data.videoUrl}')" target="_blank">删除</button>
                         </td>
                     </tr>
                 </form>
@@ -193,32 +171,23 @@
     <div class="r_box" >
         <br/>
         <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
-            添加招聘信息
+            添加用户视频
         </div>
-        <form class="form-horizontal" id="recruitDataForm" action="/recruit/addRecruit" method="POST" onsubmit="return saveData();" enctype="multipart/form-data">
+        <form class="form-horizontal" id="proVideoDataForm" action="/proVideo/addProVideo" method="POST" onsubmit="return saveData();" enctype="multipart/form-data">
             <div class="clearB"></div>
             <div class="r_box" style="padding: 5px;">
                 <table width="60%" cellpadding="0" cellspacing="0" class="table-bordered" align="center">
                     <tr>
                         <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
-                            <font color="red">*</font>&nbsp;招聘图片：
+                            <font color="red">*</font>&nbsp;用户视频：
                         </td>
                         <td align="center" style="width: 40%;">
                             <input type="file" id="fileNew" name="file" value="">
                         </td>
-                        <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
-                            <font color="red">*</font>&nbsp;排序：
-                        </td>
-                        <td align="center" style="width: 40%;">
-                            <input id="recruitOrderNew" name="recruitOrder" value="" type="text" style="width: 90%"
-                                   class="text-input self-form-control"/>
-                        </td>
-                    </tr>
-                    <c:if test="${userInfoList != null}">
-                        <tr>
+                        <c:if test="${userInfoList != null}">
                             <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
                                 <input type="hidden" name="memberIdFlag" id="memberIdFlag" value="1">
-                                <font color="red">*</font>&nbsp;所属人：
+                                &nbsp;&nbsp;&nbsp;<font color="red">*</font>&nbsp;所属人：
                             </td>
                             <td align="center" style="width: 40%;">
                                 <select class="select-nosearch" id="memberIdNew" name="memberId" style="width: 90%;height: 28px;">
@@ -230,8 +199,8 @@
                                     </c:forEach>
                                 </select>
                             </td>
-                        </tr>
-                    </c:if>
+                        </c:if>
+                    </tr>
                 </table>
                 <div class="sub_div">
                     <input type="submit" class="sub_btn" value=" "/>
