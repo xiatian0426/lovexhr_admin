@@ -58,6 +58,9 @@ public class AjaxController {
     @Autowired
     private IBxProVideoService bxProVideoService;
 
+    @Autowired
+    private IBxThumbUpService thumbUpService;
+
 
     /**
      * 删除产品信息
@@ -331,6 +334,30 @@ public class AjaxController {
             }
         } catch (Exception e) {
             _logger.error("删除用户视频失败：" + ExceptionUtil.getMsg(e));
+            model.put("info", "删除失败");
+        }
+        return model;
+    }
+    /**
+     * 删除点赞信息
+     * @param request
+     * @param response
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/deleteThumbUpById", method = RequestMethod.POST)
+    public Map<String, Object> deleteThumbUpById (final HttpServletRequest request,
+                                                final HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+        try{
+            String id = request.getParameter("id");
+            if(StringUtils.isNotEmpty(id)){
+                thumbUpService.deleteById(Integer.valueOf(id));
+                model.put("info","1");
+                model.put("message","删除成功!");
+            }
+        } catch (Exception e) {
+            _logger.error("删除点赞信息失败：" + ExceptionUtil.getMsg(e));
             model.put("info", "删除失败");
         }
         return model;
