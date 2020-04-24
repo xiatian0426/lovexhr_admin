@@ -28,4 +28,9 @@ public class BxQuestionServiceImpl extends BaseServiceImpl<BxQuestion> implement
         return bxQuestionMapper.getQuestionById(id);
     }
 
+    @Override
+    public void updateById(BxQuestion bxQuestion) throws Exception{
+        bxQuestionMapper.updateById(bxQuestion);
+    }
+
 }

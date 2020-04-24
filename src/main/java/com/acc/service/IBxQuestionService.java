@@ -9,4 +9,6 @@ public interface IBxQuestionService extends IBaseService<BxQuestion> {
 
     BxQuestion getQuestionById(String id) throws SelectException;
 
+    void updateById(BxQuestion bxQuestion) throws Exception;
+
 }

@@ -56,6 +56,10 @@
                     }
                 });
             }
+
+            function goEdit(id){
+                window.location="/question/goEdit?id="+id;
+            }
 		</script>
 	</head>
 <body style="width: 95%;  font-size: 13px;">
@@ -120,7 +124,6 @@
                 </th>
             </tr>
             <c:forEach items="${page.result}" var="data" varStatus="count">
-            <form class="form-horizontal" id="questionDataListForm" action="/question/updateById" method="POST" onsubmit="return updateData('${data.id}');">
                 <tr>
                     <td align="center" height="33" align="center">
                         ${count.count}
@@ -154,11 +157,12 @@
                         </td>
                     </c:if>
                     <td align="center">
-                        <button type="submit" class="btn btn-success">更新</button>
+                        <c:if test="${data.status == 0}">
+                            <button type="button" class="btn btn-success" onclick="goEdit('${data.id}')">处理</button>
+                        </c:if>
                         <button type="button" class="btn btn-success" onclick="deleteById('${data.id}')" target="_blank">删除</button>
                     </td>
                 </tr>
-            </form>
             </c:forEach>
         </table>
     </div>

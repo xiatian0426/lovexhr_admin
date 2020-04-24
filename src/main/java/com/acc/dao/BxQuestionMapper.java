@@ -11,4 +11,6 @@ public interface BxQuestionMapper {
     BxQuestion getQuestionById(@Param("id") String id) throws SelectException;
 
     void insert(BxQuestion bxQuestion) throws Exception;
+
+    void updateById(BxQuestion bxQuestion) throws Exception;
 }

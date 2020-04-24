@@ -14,6 +14,9 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
         <result property="memberId" column="MEMBER_ID" jdbcType="INTEGER"/>
         <result property="status" column="STATUS" jdbcType="INTEGER"/>
         <result property="createDate" column="CREATE_DATE" jdbcType="VARCHAR"/>
+        <result property="answer" column="ANSWER" jdbcType="VARCHAR"/>
+        <result property="checkId" column="CHECK_ID" jdbcType="INTEGER"/>
+        <result property="checkDate" column="CHECK_DATE" jdbcType="VARCHAR"/>
 	</resultMap>
 
     <select id="pageCount" resultType="long">
@@ -30,7 +33,8 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
     <!-- 分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页 因为分页查询将传 offset,pageSize,lastRows
         三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现 -->
     <select id="findPage" resultMap="bxQuestion">
-        SELECT c.ID,CAST(c.QUESTION AS CHAR(10000) CHARACTER SET utf8mb4) QUESTION,c.PHONE,c.MEMBER_ID,c.STATUS,DATE_FORMAT(c.CREATE_DATE,'%Y-%m-%d %H:%i:%s') CREATE_DATE
+        SELECT c.ID,CAST(c.QUESTION AS CHAR(10000) CHARACTER SET utf8mb4) QUESTION,c.PHONE,c.MEMBER_ID,c.STATUS,DATE_FORMAT(c.CREATE_DATE,'%Y-%m-%d %H:%i:%s') CREATE_DATE,
+        ANSWER,CHECK_ID,CHECK_DATE
         FROM BX_QUESTION c,BX_MEMBER m
         WHERE c.MEMBER_ID=m.id
         AND m.STATUS=1
@@ -50,9 +54,19 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
         WHERE ID = #{id}
     </update>
     <select id="getQuestionById" resultMap="bxQuestion">
-        SELECT c.ID,CAST(c.QUESTION AS CHAR(10000) CHARACTER SET utf8mb4) QUESTION,c.PHONE,c.MEMBER_ID,c.STATUS,DATE_FORMAT(c.CREATE_DATE,'%Y-%m-%d %H:%i:%s') CREATE_DATE
+        SELECT c.ID,CAST(c.QUESTION AS CHAR(10000) CHARACTER SET utf8mb4) QUESTION,c.PHONE,c.MEMBER_ID,c.STATUS,DATE_FORMAT(c.CREATE_DATE,'%Y-%m-%d %H:%i:%s') CREATE_DATE,
+        ANSWER,CHECK_ID,CHECK_DATE
         FROM BX_QUESTION c
         WHERE c.id = #{id}
     </select>
+
+    <update id="updateById" >
+        UPDATE BX_QUESTION SET
+        ANSWER = #{answer},
+        STATUS = 1,
+        CHECK_ID = #{checkId},
+        CHECK_DATE = now()
+        WHERE ID = #{id}
+    </update>
 
 </mapper>

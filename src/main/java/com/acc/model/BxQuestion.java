@@ -28,6 +28,16 @@ public class BxQuestion implements java.io.Serializable, Cloneable{
 
     private int checkId;
 
+    private String answer;
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
     public int getId() {
         return id;
     }

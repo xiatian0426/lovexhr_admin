@@ -82,4 +82,40 @@ public class BxQuestionController {
         }
         return mav;
 	}
+
+    @RequestMapping(value = "/goEdit", method = {RequestMethod.POST,RequestMethod.GET})
+    public ModelAndView goEdit(ModelAndView mav, final HttpServletRequest request) throws IOException {
+        Map<String,Object> model = new HashMap<String, Object>();
+        try{
+            String id = request.getParameter("id");
+            BxQuestion bxQuestion = bxQuestionService.getQuestionById(id);
+            model.put("bxQuestion", bxQuestion);
+            mav=new ModelAndView("/question/goEdit", model);
+        } catch (Exception e) {
+            _logger.error("goEdit失败：" + ExceptionUtil.getMsg(e));
+            mav = new ModelAndView(Constants.SERVICES_ERROR, model);
+            e.printStackTrace();
+        }
+        return mav;
+    }
+    @RequestMapping(value = "/updateById", method = {RequestMethod.POST})
+    public ModelAndView updateById(ModelAndView mav, final HttpServletRequest request,@ModelAttribute BxQuestion bxQuestion) throws IOException {
+        Map<String,Object> model = new HashMap<String, Object>();
+        try{
+            HttpSession session = request.getSession();
+            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
+            model.put("staff", staff);
+            if(staff!=null){
+                bxQuestion.setCheckId(staff.getId());
+                bxQuestionService.updateById(bxQuestion);
+                mav.setViewName("redirect:/question/getQuestionList");
+            }
+        } catch (Exception e) {
+            _logger.error("goEdit失败：" + ExceptionUtil.getMsg(e));
+            mav = new ModelAndView(Constants.SERVICES_ERROR, model);
+            e.printStackTrace();
+        }
+        return mav;
+    }
+
 }
