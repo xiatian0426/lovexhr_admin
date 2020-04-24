@@ -55,9 +55,9 @@
         <acc:oa opId="0,1">
         <li><a href="/thumbUp/getThumbUpList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;点赞管理</a></li>
         </acc:oa>
-        <%--<acc:oa opId="0,1">--%>
-        <%--<li><a href="/product/getProductVideoList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;问题咨询管理</a></li>--%>
-        <%--</acc:oa>--%>
+        <acc:oa opId="0,1">
+        <li><a href="/question/getQuestionList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;问题咨询管理</a></li>
+        </acc:oa>
         <%--<acc:oa opId="0,1">--%>
         <%--<li><a href="/product/getProductVideoList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;评论管理</a></li>--%>
         <%--</acc:oa>--%>
