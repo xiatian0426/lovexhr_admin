@@ -74,7 +74,7 @@ public class BxProVideoController {
                 }
                 String url;
                 for (BxProVideo bxProVideo:page.getResult()){
-                    url = basePath+ Constants.proVideoPath+bxProVideo.getMemberId()+"/"+bxProVideo.getVideoUrl();
+                    url = basePath+ Constants.userVideoPath+bxProVideo.getMemberId()+"/"+bxProVideo.getVideoUrl();
                     bxProVideo.setVideoUrl(url);
                 }
             }
@@ -119,7 +119,7 @@ public class BxProVideoController {
                             BxProVideo oldProVideo = bxProVideoService.getProVideoById(bxProVideo.getId());
                             bxProVideo.setMemberId(oldProVideo.getMemberId());
                             String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
-                            String fileSavePath=path + Constants.proVideoPath + bxProVideo.getMemberId() + "/";
+                            String fileSavePath=path + Constants.userVideoPath + bxProVideo.getMemberId() + "/";
                             Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,true,false);
                             int re = Integer.valueOf((String)mapImg.get("code")).intValue();
                             if(re==0){
@@ -179,7 +179,7 @@ public class BxProVideoController {
                     }
                     bxProVideo.setCreaterId(staff.getId());
                     String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
-                    String fileSavePath=path + Constants.proVideoPath + bxProVideo.getMemberId() + "/";
+                    String fileSavePath=path + Constants.userVideoPath + bxProVideo.getMemberId() + "/";
                     Map<String,Object> mapImg = PictureChange.imageUpload(file,fileSavePath,true,false);
                     int re = Integer.valueOf((String)mapImg.get("code")).intValue();
                     if(re==0){
