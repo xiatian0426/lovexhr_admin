@@ -64,6 +64,9 @@ public class AjaxController {
     @Autowired
     private IBxQuestionService bxQuestionService;
 
+    @Autowired
+    private IBxCompanyService bxCompanyService;
+
 
     /**
      * 删除产品信息
@@ -386,6 +389,40 @@ public class AjaxController {
             }
         } catch (Exception e) {
             _logger.error("删除问题失败：" + ExceptionUtil.getMsg(e));
+            model.put("info", "删除失败");
+        }
+        return model;
+    }
+
+    /**
+     * 删除荣誉
+     * @param request
+     * @param response
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/deleteCompanyById", method = RequestMethod.POST)
+    public Map<String, Object> deleteCompanyById (final HttpServletRequest request,
+                                                final HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+        try{
+            String id = request.getParameter("id");
+            String memberId = request.getParameter("memberId");
+            String imageUrl = request.getParameter("imageUrl");
+            if(StringUtils.isNotEmpty(id)){
+                bxCompanyService.deleteById(id);
+                String path = (String)request.getSession().getServletContext().getAttribute("proRoot");
+                String fileSavePath=path + Constants.companyImgPath + memberId + "/";
+                String imgUrl = null;
+                if(imageUrl!=null && !"".equals(imageUrl)){
+                    imgUrl = imageUrl.split("/")[imageUrl.split("/").length-1];
+                }
+                new File(fileSavePath+imgUrl).delete();
+                model.put("info","1");
+                model.put("message","删除成功!");
+            }
+        } catch (Exception e) {
+            _logger.error("删除荣誉信息失败：" + ExceptionUtil.getMsg(e));
             model.put("info", "删除失败");
         }
         return model;

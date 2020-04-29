@@ -26,19 +26,20 @@
 		<script type="text/javascript">
             $(function(){
                 //函数来源page.js
-                page("qaListForm", ${page.pageInfo}, "pageQAList");
-                //开启表单验证
-                $("#qaDataForm").validationEngine();
+                page("companyListForm", ${page.pageInfo}, "pageCompanyList");
                 var result = $("#result").val();
                 if(result != ""){
                     alert(result);
                 }
             });
-            function deleteById(id){
+
+            function deleteById(id,memberId,imageUrl){
                 $.ajax({
-                    url:'/ajax/deleteQAById',
+                    url:'/ajax/deleteCompanyById',
                     data:{
-                        id:id
+                        id:id,
+                        memberId:memberId,
+                        imageUrl:imageUrl
                     },
                     dataType:'json',
                     type:'post',
@@ -47,7 +48,7 @@
                     success:function(data) {
                         if(data.info=='1'){
                             alert("操作成功!");
-                            $("#qaListForm").submit();
+                            $("#companyListForm").submit();
                         }else{
                             alert("操作失败!");
                         }
@@ -57,45 +58,40 @@
                     }
                 });
             }
+
             function updateData(id){
-                var ask = $("#ask"+id).val();
-                if(ask==""){
-                    $("#ask"+id).validationEngine("showPrompt","问题不能是空!","error");
-                    $("#ask"+id).focus();
-                    return false;
-                }
-                var answer = $("#answer"+id).val();
-                if(answer==""){
-                    $("#answer"+id).validationEngine("showPrompt","答案不能是空!","error");
-                    $("#answer"+id).focus();
-                    return false;
-                }
-                var qaOrder = $("#qaOrder"+id).val();
+                var companyOrder = $("#companyOrder"+id).val();
                 var re = new RegExp("^[0-9]*[0-9][0-9]*$");
-                if (qaOrder != "") {
-                    if (!re.test(qaOrder)) {
-                        $("#qaOrder"+id).validationEngine("showPrompt","排序只能为整数!","error");
-                        $("#qaOrder"+id).focus();
+                if (companyOrder != "") {
+                    if (!re.test(companyOrder)) {
+                        $("#companyOrder"+id).validationEngine("showPrompt","排序只能为整数!","error");
+                        $("#companyOrder"+id).focus();
                         return false;
                     }
                 }else{
-                    $("#qaOrder"+id).validationEngine("showPrompt","排序不能为空!","error");
-                    $("#qaOrder"+id).focus();
+                    $("#companyOrder"+id).validationEngine("showPrompt","排序不能为空!","error");
+                    $("#companyOrder"+id).focus();
                     return false;
                 }
             }
             function saveData(){
-                var qaOrderNew = $("#qaOrderNew").val();
+                var fileNew = $("#fileNew").val().length;
+                if(fileNew==""){
+                    $("#fileNew").validationEngine("showPrompt","企业风采图片不能为空!","error");
+                    $("#fileNew").focus();
+                    return false;
+                }
+                var companyOrder = $("#companyOrderNew").val();
                 var re = new RegExp("^[0-9]*[0-9][0-9]*$");
-                if (qaOrderNew != "") {
-                    if (!re.test(qaOrderNew)) {
-                        $("#qaOrderNew").validationEngine("showPrompt","排序只能为整数!","error");
-                        $("#qaOrderNew").focus();
+                if (companyOrder != "") {
+                    if (!re.test(companyOrder)) {
+                        $("#companyOrderNew").validationEngine("showPrompt","排序只能为整数!","error");
+                        $("#companyOrderNew").focus();
                         return false;
                     }
                 }else{
-                    $("#qaOrderNew").validationEngine("showPrompt","排序不能为空!","error");
-                    $("#qaOrderNew").focus();
+                    $("#companyOrderNew").validationEngine("showPrompt","排序不能为空!","error");
+                    $("#companyOrderNew").focus();
                     return false;
                 }
                 var memberIdFlag = $("#memberIdFlag").val();
@@ -104,24 +100,22 @@
                     var memberIdNew = $("#memberIdNew").val();
                     if(memberIdNew=='0'){
                         $("#memberIdNew").validationEngine("showPrompt","请选择所属人!","error");
-                        $(this).focus();
+                        $("#memberIdNew").focus();
                         return false;
                     }
                 }
             }
 		</script>
 	</head>
-<div style="width: 95%;  font-size: 13px;">
-    <input id="result" value="${result}" type="hidden"/>
+<body style="width: 95%;  font-size: 13px;">
+<input id="result" value="${result}" type="hidden"/>
     <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
-        QA信息列表
+        企业风采列表
     </div>
-    <form class="form-horizontal" id="qaListForm" action="/QA/getQAList" method="POST">
-        <div class="r_box" style="margin-top: 10px;">
-            <div style="height: 15px; width: 100%;"><span></span></div>
-            <span class="infoLable">问题：</span>
-            <input name="ask" type="text" class="self-form-control" style="width: 100px;" value="${query.ask }"/>
-            <c:if test="${staff.roleId eq '1' }">
+    <form class="form-horizontal" id="companyListForm" action="/company/getCompanyList" method="POST">
+        <c:if test="${staff.roleId eq '1' }">
+            <div class="r_box" style="margin-top: 10px;">
+                <div style="height: 15px; width: 100%;"><span></span></div>
                 <span class="infoLable">所属人：</span>
                 <select class="select-nosearch" name="memberId" style="width: 200px;height: 28px;">
                     <option value="0" selected="selected">---请选择---</option>
@@ -131,72 +125,66 @@
                         </option>
                     </c:forEach>
                 </select>
-            </c:if>
-            <button type="submit" class="btn btn-default"
-                    style="background-color:#337ab7;">搜索</button>
-            <br />
-            <div><span></span></div>
-        </div>
-        <div class="pageQAList" style="height:52px;margin-top:-30px;"></div>
+                <button type="submit" class="btn btn-default"
+                        style="background-color:#337ab7;">搜索</button>
+                <br />
+                <div><span></span></div>
+            </div>
+        </c:if>
+        <div class="pageCompanyList" style="height:52px;margin-top:-30px;"></div>
     </form>
     <div class="r_box" style="border:0px dashed #00F" >
         <table width="100%" cellpadding="0" cellspacing="0" class="table-bordered">
             <tr>
-                <th width="5%" align="center" height="38" align="center">
+                <th width="10%" align="center" height="38" align="center">
                     序号
                 </th>
-                <th width="20%" align="center">
-                    问题
+                <th width="25%" align="center">
+                    预览
                 </th>
-                <th width="43%" align="center">
-                    答案
+                <th width="35%" align="center">
+                    图片
                 </th>
                 <th width="5%" align="center">
                     排序
                 </th>
-                <c:if test="${staff.roleId eq '1' }">
+                <c:if test="${userInfoList != null}">
                     <th width="10%" align="center">
                         所属人
                     </th>
                 </c:if>
-                <th width="13%" align="center">
+                <th width="15%" align="center">
                     操作
                 </th>
             </tr>
             <c:forEach items="${page.result}" var="data" varStatus="count">
-                <form class="form-horizontal" id="qaDataListForm" action="/QA/updateById" method="POST" onsubmit="return updateData('${data.id}');">
+                <form class="form-horizontal" id="companyDataListForm" action="/company/updateById" method="POST" onsubmit="return updateData('${data.id}');" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="${data.id }">
+                    <c:if test="${data.id!=null && data.id!=0}">
+                        <input type="hidden" name="imageUrl" value="${data.imageUrl }">
+                    </c:if>
                     <tr>
                         <td align="center" height="33" align="center">
-                                ${count.count}
+                            ${count.count}
                         </td>
                         <td align="center">
-                            <input name="ask" id="ask${data.id}" value="${data.ask}" type="text" style="width: 90%;"
-                                   class="text-input self-form-control"/>
-                        </td>
-                        <td align="center" title="${data.answer}">
-                            <c:if test="${fn:length(data.answer)>40 }">
-                                <input name="answer" id="answer${data.id}" value="${fn:substring(data.answer,0,40) }..." type="text" style="width: 96%"
-                                       class="text-input self-form-control"/>
-                            </c:if>
-                            <c:if test="${fn:length(data.answer)<=40 }">
-                                <input name="answer" id="answer${data.id}" value="${data.answer }" type="text" style="width: 96%"
-                                       class="text-input self-form-control"/>
-                            </c:if>
-
+                            <img src="${data.imageUrl}" width="50" height="50"/>
                         </td>
                         <td align="center">
-                            <input name="qaOrder" id="qaOrder${data.id}" value="${data.qaOrder}" type="text" style="width: 90%"
+                            <input type="file" name="file"/>
+                        </td>
+                        <td align="center">
+                            <input id="companyOrder${data.id}" name="companyOrder" value="${data.companyOrder}" type="text" style="width: 90%;"
                                    class="text-input self-form-control"/>
                         </td>
                         <c:if test="${userInfoList != null}">
                             <td align="center">
-                                    ${userInfoDictMap[data.memberId].userName }
+                                ${userInfoDictMap[data.memberId].userName }
                             </td>
                         </c:if>
                         <td align="center">
                             <button type="submit" class="btn btn-success">更新</button>
-                            <button type="button" class="btn btn-success" onclick="deleteById('${data.id}','1')" target="_blank">删除</button>
+                            <button type="button" class="btn btn-success" onclick="deleteById('${data.id}','${data.memberId}','${data.imageUrl}')" target="_blank">删除</button>
                         </td>
                     </tr>
                 </form>
@@ -207,43 +195,34 @@
     <div class="r_box" >
         <br/>
         <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
-            添加QA信息
+            添加企业风采
         </div>
-        <form class="form-horizontal" id="qaDataForm" action="/QA/addQA" method="POST" onsubmit="return saveData();">
+        <form class="form-horizontal" id="companyDataForm" action="/company/addCompany" method="POST" onsubmit="return saveData();" enctype="multipart/form-data">
             <div class="clearB"></div>
-            <input type="hidden" name="productId" value="${bxProductResult.id }">
             <div class="r_box" style="padding: 5px;">
                 <table width="60%" cellpadding="0" cellspacing="0" class="table-bordered" align="center">
                     <tr>
-                        <td align="center" height="33" align="center"  style="width: 15%;background:#A0E0F7;">
-                            <font color="red">*</font>&nbsp;问题：
+                        <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
+                            <font color="red">*</font>&nbsp;企业风采图片：
                         </td>
                         <td align="center" style="width: 40%;">
-                            <input name="ask" value="" type="text" style="width: 90%;"
-                                   class="validate[required,noSpecialCaracters,maxSize[200]] text-input self-form-control"/>
+                            <input type="file" id="fileNew" name="file" value="">
                         </td>
-                        <td align="center" height="33" align="center"  style="width: 15%;background:#A0E0F7;">
-                            <font color="red">*</font>&nbsp;排序：
+                        <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
+                            &nbsp;&nbsp;&nbsp;&nbsp;<font color="red">*</font>&nbsp;排序：
                         </td>
                         <td align="center" style="width: 40%;">
-                            <input id="qaOrderNew" name="qaOrder" value="" type="text" style="width: 90%"
+                            <input id="companyOrderNew" name="companyOrder" value="" type="text" style="width: 90%"
                                    class="text-input self-form-control"/>
                         </td>
                     </tr>
-                    <tr>
-                        <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
-                            <font color="red">*</font>&nbsp;答案：
-                        </td>
-                        <td align="center">
-                            <input id="answer" name="answer" value="" type="text" style="width: 90%"
-                                   class="validate[required,noSpecialCaracters,maxSize[500]] text-input self-form-control"/>
-                        </td>
-                        <c:if test="${staff.roleId eq '1' }">
+                    <c:if test="${userInfoList != null}">
+                        <tr>
                             <td align="center" height="33" align="center" style="width: 15%;background:#A0E0F7;">
                                 <input type="hidden" name="memberIdFlag" id="memberIdFlag" value="1">
-                                <font color="red">*</font>&nbsp;所属人：
+                                &nbsp;&nbsp;&nbsp;<font color="red">*</font>&nbsp;所属人：
                             </td>
-                            <td align="center">
+                            <td align="center" style="width: 40%;">
                                 <select class="select-nosearch" id="memberIdNew" name="memberId" style="width: 90%;height: 28px;">
                                     <option value="0" selected="selected">---请选择---</option>
                                     <c:forEach items="${userInfoList}" var="userInfo" varStatus="status">
@@ -253,8 +232,8 @@
                                     </c:forEach>
                                 </select>
                             </td>
-                        </c:if>
-                    </tr>
+                        </tr>
+                    </c:if>
                 </table>
                 <div class="sub_div">
                     <input type="submit" class="sub_btn" value=" "/>
@@ -263,6 +242,5 @@
             </div>
         </form>
     </div>
-</div>
 </body>
 </html>

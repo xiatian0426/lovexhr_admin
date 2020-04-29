@@ -62,7 +62,7 @@
 			}
 		}
 		function addData(){
-            var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+            var re = new RegExp("^[0-9]*[0-9][0-9]*$");
             var productOrder = $("#productOrder").val();
             if (productOrder != "") {
                 if (!re.test(productOrder)) {

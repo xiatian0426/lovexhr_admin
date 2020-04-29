@@ -61,7 +61,7 @@
 
             function updateData(id){
                 var honorOrder = $("#honorOrder"+id).val();
-                var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+                var re = new RegExp("^[0-9]*[0-9][0-9]*$");
                 if (honorOrder != "") {
                     if (!re.test(honorOrder)) {
                         $("#honorOrder"+id).validationEngine("showPrompt","排序只能为整数!","error");
@@ -82,7 +82,7 @@
                     return false;
                 }
                 var honorOrder = $("#honorOrderNew").val();
-                var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+                var re = new RegExp("^[0-9]*[0-9][0-9]*$");
                 if (honorOrder != "") {
                     if (!re.test(honorOrder)) {
                         $("#honorOrderNew").validationEngine("showPrompt","排序只能为整数!","error");

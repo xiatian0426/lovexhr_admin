@@ -60,7 +60,7 @@
             }
             function updateData(id){
                 var recruitOrder = $("#recruitOrder"+id).val();
-                var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+                var re = new RegExp("^[0-9]*[0-9][0-9]*$");
                 if (recruitOrder != "") {
                     if (!re.test(recruitOrder)) {
                         $("#recruitOrder"+id).validationEngine("showPrompt","排序只能为整数!","error");
@@ -81,7 +81,7 @@
                     return false;
                 }
                 var recruitOrder = $("#recruitOrderNew").val();
-                var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+                var re = new RegExp("^[0-9]*[0-9][0-9]*$");
                 if (recruitOrder != "") {
                     if (!re.test(recruitOrder)) {
                         $("#recruitOrderNew").validationEngine("showPrompt","排序只能为整数!","error");

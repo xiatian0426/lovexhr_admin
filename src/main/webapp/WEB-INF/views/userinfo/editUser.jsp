@@ -47,7 +47,7 @@
 		})
 		function save(){
             var years = $("#years").val();
-            var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+            var re = new RegExp("^[0-9]*[0-9][0-9]*$");
             if (years != "") {
                 if (!re.test(years)) {
                     $("#years").validationEngine("showPrompt","从业年限只能为整数!","error");

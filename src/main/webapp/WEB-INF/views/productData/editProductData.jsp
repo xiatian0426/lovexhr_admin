@@ -59,7 +59,7 @@
             }
 		});
 		function editProduct(){
-            var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+            var re = new RegExp("^[0-9]*[0-9][0-9]*$");
             var productOrder = $("#productOrder").val();
             if (productOrder != "") {
                 if (!re.test(productOrder)) {
@@ -120,7 +120,7 @@
             }
         }
         function editProductImage(id){
-            var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+            var re = new RegExp("^[0-9]*[0-9][0-9]*$");
             var imageOrder = $("#productOrder"+id).val();
             if (imageOrder != "") {
                 if (!re.test(imageOrder)) {
@@ -141,7 +141,7 @@
                 $("#fileNew").focus();
                 return false;
             }
-            var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+            var re = new RegExp("^[0-9]*[0-9][0-9]*$");
             var imageOrderNew = $("#imageOrderNew").val();
             if (imageOrderNew != "") {
                 if (!re.test(imageOrderNew)) {
