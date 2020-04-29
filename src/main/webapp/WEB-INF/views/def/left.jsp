@@ -44,25 +44,25 @@
             <li><a href="/QA/getQAList" target="main"><img src="../../../res/images/main/form.png" height="25px;" width="25px;">&nbsp;QA管理</a></li>
         </acc:oa>
         <acc:oa opId="0,1">
-            <li><a href="/recruit/getRecruitList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;招聘管理</a></li>
-        </acc:oa>
-        <acc:oa opId="0">
-            <li><a href="/user/goEdit?customerFlag=1" target="main"><img src="../../../res/images/main/customer.png" height="25px;" width="25px;">&nbsp;个人信息管理</a></li>
+            <li><a href="/recruit/getRecruitList" target="main"><img src="../../../res/images/main/report.png" height="25px;" width="25px;">&nbsp;招聘管理</a></li>
         </acc:oa>
         <acc:oa opId="0,1">
-            <li><a href="/proVideo/getProVideoList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;用户视频管理</a></li>
+            <li><a href="/proVideo/getProVideoList" target="main"><img src="../../../res/images/main/customer.png" height="25px;" width="25px;">&nbsp;用户视频管理</a></li>
         </acc:oa>
         <acc:oa opId="0,1">
         <li><a href="/thumbUp/getThumbUpList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;点赞管理</a></li>
         </acc:oa>
         <acc:oa opId="0,1">
-        <li><a href="/question/getQuestionList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;问题咨询管理</a></li>
+        <li><a href="/question/getQuestionList" target="main"><img src="../../../res/images/main/edit.png" height="25px;" width="25px;">&nbsp;问题咨询管理</a></li>
         </acc:oa>
         <acc:oa opId="0,1">
         <li><a href="/momment/getMommentList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;评论管理</a></li>
         </acc:oa>
         <acc:oa opId="0,1">
-        <li><a href="/company/getCompanyList" target="main"><img src="../../../res/images/main/form.png" height="25px;" width="25px;">&nbsp;企业风采管理</a></li>
+        <li><a href="/company/getCompanyList" target="main"><img src="../../../res/images/main/control.png" height="25px;" width="25px;">&nbsp;企业风采管理</a></li>
+        </acc:oa>
+        <acc:oa opId="0">
+            <li><a href="/user/goEdit?customerFlag=1" target="main"><img src="../../../res/images/main/user.png" height="25px;" width="25px;">&nbsp;个人信息管理</a></li>
         </acc:oa>
         <acc:oa opId="1">
             <li><a href="/user/index" target="main"><img src="../../../res/images/main/user.png" height="25px;" width="25px;">&nbsp;后台用户管理</a></li>
