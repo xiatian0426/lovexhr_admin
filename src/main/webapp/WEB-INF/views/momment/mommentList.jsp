@@ -85,9 +85,6 @@
 	</head>
 <body style="width: 95%;  font-size: 13px;">
 <input id="result" value="${result}" type="hidden"/>
-    <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
-        评论列表
-    </div>
     <form class="form-horizontal" id="mommentListForm" action="/momment/getMommentList" method="POST">
         <c:if test="${staff.roleId eq '1' }">
             <div class="r_box" style="margin-top: 10px;">

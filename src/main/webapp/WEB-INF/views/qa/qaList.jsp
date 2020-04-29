@@ -113,9 +113,6 @@
 	</head>
 <div style="width: 95%;  font-size: 13px;">
     <input id="result" value="${result}" type="hidden"/>
-    <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
-        QA信息列表
-    </div>
     <form class="form-horizontal" id="qaListForm" action="/QA/getQAList" method="POST">
         <div class="r_box" style="margin-top: 10px;">
             <div style="height: 15px; width: 100%;"><span></span></div>

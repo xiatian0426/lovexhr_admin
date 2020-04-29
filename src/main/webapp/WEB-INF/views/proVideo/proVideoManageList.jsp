@@ -92,9 +92,6 @@
 	</head>
 <body style="width: 95%;  font-size: 13px;">
 <input id="result" value="${result}" type="hidden"/>
-    <div style="line-height:48px; font-weight: bold;font-size: 20px;" align="center">
-        用户视频列表
-    </div>
     <form class="form-horizontal" id="proVideoListForm" action="/proVideo/getProVideoList" method="POST">
         <c:if test="${staff.roleId eq '1' }">
             <div class="r_box" style="margin-top: 10px;">
