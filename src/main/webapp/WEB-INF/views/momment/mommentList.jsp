@@ -85,6 +85,8 @@
 	</head>
 <body style="width: 95%;  font-size: 13px;">
 <input id="result" value="${result}" type="hidden"/>
+    <div style="line-height:48px; font-weight: bold;font-size: 20px;margin-top: 10px;" align="center">
+    </div>
     <form class="form-horizontal" id="mommentListForm" action="/momment/getMommentList" method="POST">
         <c:if test="${staff.roleId eq '1' }">
             <div class="r_box" style="margin-top: 10px;">
@@ -178,8 +180,13 @@
                     <td align="center">
                             ${data.star_level}
                     </td>
-                    <td align="center">
-                            ${data.comment_tag}
+                    <td align="center" title="${data.comment_tag }">
+                        <c:if test="${fn:length(data.comment_tag)>8 }">
+                            ${fn:substring(data.comment_tag,0,8) }...
+                        </c:if>
+                        <c:if test="${fn:length(data.comment_tag)<=8 }">
+                            ${data.comment_tag }
+                        </c:if>
                     </td>
                     <td align="center">
                             ${data.create_date}

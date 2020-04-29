@@ -60,6 +60,8 @@
 	</head>
 <body style="width: 95%;  font-size: 13px;">
 <input id="result" value="${result}" type="hidden"/>
+    <div style="line-height:48px; font-weight: bold;font-size: 20px;margin-top: 10px;" align="center">
+    </div>
     <form class="form-horizontal" id="thumbUpListForm" action="/thumbUp/getThumbUpList" method="POST">
         <div class="r_box" style="margin-top: 10px;">
             <div style="height: 15px; width: 100%;"><span></span></div>
@@ -78,7 +80,7 @@
             <select class="select-nosearch" name="status" style="width: 200px;height: 28px;">
                 <option value="" selected="selected">---请选择---</option>
                 <option value='0'<c:if test="${query.status==0 }">selected="selected"</c:if>>
-                    正常点赞
+                    点赞成功
                 </option>
                 <option value='1'<c:if test="${query.status==1 }">selected="selected"</c:if>>
                     点赞已取消
@@ -149,7 +151,7 @@
                     </td>
                     <td align="center">
                         <c:if test="${data.status == 0}">
-                            <font color="green">正常点赞</font>
+                            <font color="green">点赞成功</font>
                         </c:if>
                         <c:if test="${data.status == 1}">
                         <font color="red">点赞已取消</font>
