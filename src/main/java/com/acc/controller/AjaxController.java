@@ -1,8 +1,10 @@
 package com.acc.controller;
 
 import com.acc.exception.ExceptionUtil;
+import com.acc.model.BxMomment;
 import com.acc.model.BxProductImg;
 import com.acc.model.BxToken;
+import com.acc.model.UserInfo;
 import com.acc.service.*;
 import com.acc.util.Constants;
 import com.acc.util.PictureChange;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -66,6 +69,9 @@ public class AjaxController {
 
     @Autowired
     private IBxCompanyService bxCompanyService;
+
+    @Autowired
+    private IBxMommentService bxMommentService;
 
 
     /**
@@ -424,6 +430,71 @@ public class AjaxController {
         } catch (Exception e) {
             _logger.error("删除荣誉信息失败：" + ExceptionUtil.getMsg(e));
             model.put("info", "删除失败");
+        }
+        return model;
+    }
+
+    /**
+     * 删除评论信息
+     * @param request
+     * @param response
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/deleteMommentById", method = RequestMethod.POST)
+    public Map<String, Object> deleteMommentById (final HttpServletRequest request,
+                                                  final HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+        try{
+            String id = request.getParameter("id");
+            HttpSession session = request.getSession();
+            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
+            model.put("staff", staff);
+            if(StringUtils.isNotEmpty(id) && staff !=null){
+                BxMomment bxMomment = new BxMomment();
+                bxMomment.setId(Integer.valueOf(id));
+                bxMomment.setModifier_id(Integer.valueOf(id));
+                bxMomment.setStatus(1);
+                bxMommentService.updateById(bxMomment);
+                model.put("info","1");
+                model.put("message","删除成功!");
+            }
+        } catch (Exception e) {
+            _logger.error("删除评论信息失败：" + ExceptionUtil.getMsg(e));
+            model.put("info", "删除失败");
+        }
+        return model;
+    }
+    /**
+     * 审核评论信息
+     * @param request
+     * @param response
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/checkMommentById", method = RequestMethod.POST)
+    public Map<String, Object> checkMommentById (final HttpServletRequest request,
+                                                  final HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+        try{
+            String id = request.getParameter("id");
+            String status = request.getParameter("status");
+            HttpSession session = request.getSession();
+            UserInfo staff = (UserInfo)session.getAttribute(Constants.LOGINUSER);
+            model.put("staff", staff);
+            if(StringUtils.isNotEmpty(id) && staff !=null){
+                BxMomment bxMomment = new BxMomment();
+                bxMomment.setId(Integer.valueOf(id));
+                bxMomment.setStatus(Integer.valueOf(status));
+                bxMomment.setModifier_id(staff.getId());
+                bxMomment.setCheck_id(staff.getId());
+                bxMommentService.updateById(bxMomment);
+                model.put("info","1");
+                model.put("message","审核成功!");
+            }
+        } catch (Exception e) {
+            _logger.error("审核评论信息失败：" + ExceptionUtil.getMsg(e));
+            model.put("info", "审核评论信息失败");
         }
         return model;
     }

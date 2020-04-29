@@ -58,15 +58,12 @@
         <acc:oa opId="0,1">
         <li><a href="/question/getQuestionList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;问题咨询管理</a></li>
         </acc:oa>
-        <%--<acc:oa opId="0,1">--%>
-        <%--<li><a href="/product/getProductVideoList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;评论管理</a></li>--%>
-        <%--</acc:oa>--%>
         <acc:oa opId="0,1">
-        <li><a href="/company/getCompanyList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;企业风采管理</a></li>
+        <li><a href="/momment/getMommentList" target="main"><img src="../../../res/images/main/channel.png" height="25px;" width="25px;">&nbsp;评论管理</a></li>
         </acc:oa>
-		<%--<acc:oa opId="1">--%>
-			<%--<li><a href="/manage/roleList" target="main"><img src="../../../res/images/main/form.png" height="25px;" width="25px;">&nbsp;用户角色查询</a></li>--%>
-		<%--</acc:oa>--%>
+        <acc:oa opId="0,1">
+        <li><a href="/company/getCompanyList" target="main"><img src="../../../res/images/main/form.png" height="25px;" width="25px;">&nbsp;企业风采管理</a></li>
+        </acc:oa>
         <acc:oa opId="1">
             <li><a href="/user/index" target="main"><img src="../../../res/images/main/user.png" height="25px;" width="25px;">&nbsp;后台用户管理</a></li>
         </acc:oa>

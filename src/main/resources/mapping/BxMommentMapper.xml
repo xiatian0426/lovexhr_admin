@@ -9,63 +9,57 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 
 	<resultMap id="bxMomment" type="com.acc.model.BxMomment">
         <result property="id" column="ID" jdbcType="INTEGER"/>
-        <result property="role" column="ROLE" jdbcType="INTEGER"/>
         <result property="commentator_wechat" column="COMMENTATOR_WECHAT" jdbcType="VARCHAR"/>
         <result property="commentator_name" column="COMMENTATOR_NAME" jdbcType="VARCHAR"/>
         <result property="commentator_img" column="COMMENTATOR_IMG" jdbcType="VARCHAR"/>
         <result property="comment_context" column="COMMENT_CONTEXT" jdbcType="VARCHAR"/>
-        <result property="member_img" column="MEMBER_IMG" jdbcType="VARCHAR"/>
-        <result property="member_id" column="MEMBER_ID" jdbcType="INTEGER"/>
         <result property="create_date" column="CREATE_DATE" jdbcType="VARCHAR"/>
+        <result property="check_id" column="CHECK_ID" jdbcType="INTEGER"/>
+        <result property="check_date" column="CHECK_DATE" jdbcType="VARCHAR"/>
         <result property="status" column="STATUS" jdbcType="INTEGER"/>
+        <result property="comment_tag" column="COMMENT_TAG" jdbcType="VARCHAR"/>
+        <result property="star_level" column="STAR_LEVEL" jdbcType="INTEGER"/>
+        <result property="respondent_id" column="RESPONDENT_ID" jdbcType="INTEGER"/>
 	</resultMap>
 
 
-    <select id="getCountByWechat" resultType="java.lang.Integer">
+    <select id="pageCount" resultType="long">
         select count(1)
-    	from BX_COMMENT c
-    	where c.RESPONDENT_ID=#{memberId}
-        and c.`STATUS`=0
+        from BX_COMMENT c,BX_MEMBER m
+        WHERE c.RESPONDENT_ID=m.id
+        AND m.STATUS=1
+        <if test="respondent_id != null and respondent_id != 0">AND c.RESPONDENT_ID=#{respondent_id}</if>
+        <if test="comment_context != null and comment_context != ''">AND c.COMMENT_CONTEXT like CONCAT('%',#{comment_context},'%')</if>
+        AND c.STATUS != 1
     </select>
 
-	<select id="getMommentListByWechat" resultMap="bxMomment">
-    	select c.id,c.role,c.COMMENTATOR_WECHAT,c.COMMENTATOR_IMG,c.COMMENTATOR_NAME,
-    	c.COMMENT_CONTEXT,DATE_FORMAT(c.CREATE_DATE,'%Y-%m-%d %H:%i:%s') CREATE_DATE,c.`STATUS`
-    	from BX_COMMENT c
-    	where c.RESPONDENT_ID=#{memberId}
-        and c.`STATUS`=0
+    <!-- 分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页 因为分页查询将传 offset,pageSize,lastRows
+        三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现 -->
+    <select id="findPage" resultMap="bxMomment">
+        select c.id,c.COMMENTATOR_WECHAT,c.COMMENTATOR_IMG,c.COMMENTATOR_NAME,
+        CAST(c.COMMENT_CONTEXT AS CHAR(10000) CHARACTER SET utf8mb4) COMMENT_CONTEXT,
+        DATE_FORMAT(c.CREATE_DATE,'%Y-%m-%d %H:%i:%s') CREATE_DATE,
+        DATE_FORMAT(c.CHECK_DATE,'%Y-%m-%d %H:%i:%s') CHECK_DATE,
+        c.CHECK_ID,
+        c.`STATUS`,c.COMMENT_TAG,c.STAR_LEVEL,RESPONDENT_ID
+        from BX_COMMENT c,BX_MEMBER m
+        WHERE c.RESPONDENT_ID=m.id
+        AND m.STATUS=1
+        <if test="respondent_id != null and respondent_id != 0">AND c.RESPONDENT_ID=#{respondent_id}</if>
+        <if test="comment_context != null and comment_context != ''">AND c.COMMENT_CONTEXT like CONCAT('%',#{comment_context},'%')</if>
+        AND c.STATUS != 1
+        <if test="sortColumns != null and sortColumns != ''">
+            ORDER BY ${sortColumns}
+        </if>
+        LIMIT #{skip},#{pageSize}
     </select>
 
-    <select id="getCountByMemberId" resultType="java.lang.Integer">
-        select count(1)
-        from BX_COMMENT c
-        where c.RESPONDENT_ID=#{memberId}
-        and c.`STATUS`=0
-    </select>
-
-    <select id="getMommentListByMemberId" resultMap="bxMomment">
-        select c.id,c.role,c.COMMENTATOR_WECHAT,c.COMMENTATOR_IMG,c.COMMENTATOR_NAME,
-        c.COMMENT_CONTEXT,DATE_FORMAT(c.CREATE_DATE,'%Y-%m-%d %H:%i:%s') CREATE_DATE,c.`STATUS`
-        from BX_COMMENT c
-        where c.RESPONDENT_ID=#{memberId}
-        and c.`STATUS`=0
-    </select>
-
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO BX_COMMENT (
-        COMMENTATOR_WECHAT,
-        RESPONDENT_ID,
-        COMMENTATOR_IMG,
-        COMMENTATOR_NAME,
-        COMMENT_CONTEXT,
-        CREATE_DATE
-        ) VALUES (
-        #{commentator_wechat},
-        #{respondent_id},
-        #{commentator_img} ,
-        #{commentator_name},
-        #{comment_context},
-        now()
-        )
-    </insert>
+    <update id="updateById" >
+        UPDATE BX_COMMENT SET
+        MODIFIER_ID = #{modifier_id},
+        MODIFY_DATE = now()
+        <if test="status != null and status != 0">,STATUS = #{status}</if>
+        <if test="check_id != null and check_id != 0">,CHECK_ID = #{check_id},CHECK_DATE = now()</if>
+        WHERE ID = #{id}
+    </update>
 </mapper>

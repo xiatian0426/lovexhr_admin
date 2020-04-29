@@ -1,13 +1,5 @@
-/*
- * Powered By [rapid-framework]
- * Web Site: http://www.rapid-framework.org.cn
- * Google Code: http://code.google.com/p/rapid-framework/
- * Since 2008 - 2016
- */
 
-package com.acc.model;
-
-import java.util.List;
+package com.acc.vo;
 
 /**
  * @author 
@@ -16,11 +8,11 @@ import java.util.List;
  */
 
 
-public class BxMomment implements java.io.Serializable, Cloneable{
+public class MommentQuery extends BaseQuery implements java.io.Serializable, Cloneable{
 	
-	private static final long serialVersionUID = 1756258302889590556L;
+	private static final long serialVersionUID = 1750928302789590552L;
 
-	private int id;
+    private int id;
 
     /**
      * 评论人微信号
@@ -29,46 +21,48 @@ public class BxMomment implements java.io.Serializable, Cloneable{
     /**
      * 评论人昵称
      */
-	private String commentator_name;
+    private String commentator_name;
     /**
      * 评论人头像
      */
-	private String commentator_img;
+    private String commentator_img;
 
     /**
      * 评论内容
      */
-	private String comment_context;
+    private String comment_context;
     /**
      * 评论时间
      */
-	private String create_date;
+    private String create_date;
 
     /**
      * 0：未删除 1：已删除
      */
-	private int status;
+    private int status;
 
-	private String check_date;
+    private String check_date;
 
-	private int check_id;
+    private int check_id;
 
-	private int respondent_id;
+    private int respondent_id;
 
-	private int modifier_id;
+    private int modifier_id;
 
-	private String modify_date;
+    private String modify_date;
 
-	private String comment_tag;
+    private String comment_tag;
 
-	private int star_level;
+    private int star_level;
 
-    public int getStar_level() {
-        return star_level;
+    private String sortColumns;
+
+    public String getSortColumns() {
+        return sortColumns;
     }
 
-    public void setStar_level(int star_level) {
-        this.star_level = star_level;
+    public void setSortColumns(String sortColumns) {
+        this.sortColumns = sortColumns;
     }
 
     public int getId() {
@@ -173,6 +167,14 @@ public class BxMomment implements java.io.Serializable, Cloneable{
 
     public void setComment_tag(String comment_tag) {
         this.comment_tag = comment_tag;
+    }
+
+    public int getStar_level() {
+        return star_level;
+    }
+
+    public void setStar_level(int star_level) {
+        this.star_level = star_level;
     }
 }
 
